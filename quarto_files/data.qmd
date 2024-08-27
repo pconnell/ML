@@ -1,0 +1,27 @@
+# Data Gathering and Exploratory Analysis {#sec-data}
+
+```{python importBlock}
+import pandas as pd, numpy as np
+```
+
+```{python DataImports}
+
+```
+
+## Overview of Collected Data
+
+```{python tbl-datasourceblock}
+#| label: tbl-datasourceblock
+#| tbl-cap: Data Sources, Methods, and References
+#| tbl-cap-location: bottom
+
+pd.DataFrame({
+    'Source':[],
+    'Type':[], #API, scrape, or found / downloaded
+    'Collection Method':[],
+    'Link':[]
+}).style.hide(axis='index')
+```
+
+@tbl-datasourceblock summarizes the sources and methods for data collection in support of this research.  
+

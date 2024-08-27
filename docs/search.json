@@ -1,0 +1,342 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Project Title Here",
+    "section": "",
+    "text": "1 Introduction",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Introduction</span>"
+    ]
+  },
+  {
+    "objectID": "index.html#abstract",
+    "href": "index.html#abstract",
+    "title": "Project Title Here",
+    "section": "1.1 Abstract",
+    "text": "1.1 Abstract",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Introduction</span>"
+    ]
+  },
+  {
+    "objectID": "index.html#concept-and-motivation",
+    "href": "index.html#concept-and-motivation",
+    "title": "Project Title Here",
+    "section": "1.2 Concept and Motivation",
+    "text": "1.2 Concept and Motivation",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Introduction</span>"
+    ]
+  },
+  {
+    "objectID": "index.html#why-it-matters",
+    "href": "index.html#why-it-matters",
+    "title": "Project Title Here",
+    "section": "1.3 Why It Matters",
+    "text": "1.3 Why It Matters",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Introduction</span>"
+    ]
+  },
+  {
+    "objectID": "index.html#research-questions",
+    "href": "index.html#research-questions",
+    "title": "Project Title Here",
+    "section": "1.4 Research Questions",
+    "text": "1.4 Research Questions\nThis research seeks to explore potential answers to the following questions:",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Introduction</span>"
+    ]
+  },
+  {
+    "objectID": "data.html",
+    "href": "data.html",
+    "title": "2  Data Gathering and Exploratory Analysis",
+    "section": "",
+    "text": "2.1 Overview of Collected Data\nSource\nType\nCollection Method\nLink\n\n\n\n\n\n\n\n\nTable 2.1: Data Sources, Methods, and References\nTable 2.1 summarizes the sources and methods for data collection in support of this research.",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Data Gathering and Exploratory Analysis</span>"
+    ]
+  },
+  {
+    "objectID": "pca.html",
+    "href": "pca.html",
+    "title": "3  Principal Component Analysis",
+    "section": "",
+    "text": "3.1 Overview",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Principal Component Analysis</span>"
+    ]
+  },
+  {
+    "objectID": "pca.html#data",
+    "href": "pca.html#data",
+    "title": "3  Principal Component Analysis",
+    "section": "3.2 Data",
+    "text": "3.2 Data",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Principal Component Analysis</span>"
+    ]
+  },
+  {
+    "objectID": "pca.html#code",
+    "href": "pca.html#code",
+    "title": "3  Principal Component Analysis",
+    "section": "3.3 Code",
+    "text": "3.3 Code",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Principal Component Analysis</span>"
+    ]
+  },
+  {
+    "objectID": "pca.html#results",
+    "href": "pca.html#results",
+    "title": "3  Principal Component Analysis",
+    "section": "3.4 Results",
+    "text": "3.4 Results",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Principal Component Analysis</span>"
+    ]
+  },
+  {
+    "objectID": "clustering.html",
+    "href": "clustering.html",
+    "title": "4  Data Clustering",
+    "section": "",
+    "text": "4.1 Overview",
+    "crumbs": [
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Data Clustering</span>"
+    ]
+  },
+  {
+    "objectID": "clustering.html#data",
+    "href": "clustering.html#data",
+    "title": "4  Data Clustering",
+    "section": "4.2 Data",
+    "text": "4.2 Data",
+    "crumbs": [
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Data Clustering</span>"
+    ]
+  },
+  {
+    "objectID": "clustering.html#code",
+    "href": "clustering.html#code",
+    "title": "4  Data Clustering",
+    "section": "4.3 Code",
+    "text": "4.3 Code",
+    "crumbs": [
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Data Clustering</span>"
+    ]
+  },
+  {
+    "objectID": "clustering.html#results",
+    "href": "clustering.html#results",
+    "title": "4  Data Clustering",
+    "section": "4.4 Results",
+    "text": "4.4 Results",
+    "crumbs": [
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Data Clustering</span>"
+    ]
+  },
+  {
+    "objectID": "arm.html",
+    "href": "arm.html",
+    "title": "5  Association Rule Mining",
+    "section": "",
+    "text": "5.1 Overview",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Association Rule Mining</span>"
+    ]
+  },
+  {
+    "objectID": "arm.html#data",
+    "href": "arm.html#data",
+    "title": "5  Association Rule Mining",
+    "section": "5.2 Data",
+    "text": "5.2 Data",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Association Rule Mining</span>"
+    ]
+  },
+  {
+    "objectID": "arm.html#code",
+    "href": "arm.html#code",
+    "title": "5  Association Rule Mining",
+    "section": "5.3 Code",
+    "text": "5.3 Code",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Association Rule Mining</span>"
+    ]
+  },
+  {
+    "objectID": "arm.html#results",
+    "href": "arm.html#results",
+    "title": "5  Association Rule Mining",
+    "section": "5.4 Results",
+    "text": "5.4 Results",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Association Rule Mining</span>"
+    ]
+  },
+  {
+    "objectID": "dt.html",
+    "href": "dt.html",
+    "title": "6  Decision Tree Modeling",
+    "section": "",
+    "text": "6.1 Overview",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Decision Tree Modeling</span>"
+    ]
+  },
+  {
+    "objectID": "dt.html#data",
+    "href": "dt.html#data",
+    "title": "6  Decision Tree Modeling",
+    "section": "6.2 Data",
+    "text": "6.2 Data",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Decision Tree Modeling</span>"
+    ]
+  },
+  {
+    "objectID": "dt.html#code",
+    "href": "dt.html#code",
+    "title": "6  Decision Tree Modeling",
+    "section": "6.3 Code",
+    "text": "6.3 Code",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Decision Tree Modeling</span>"
+    ]
+  },
+  {
+    "objectID": "dt.html#results",
+    "href": "dt.html#results",
+    "title": "6  Decision Tree Modeling",
+    "section": "6.4 Results",
+    "text": "6.4 Results",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Decision Tree Modeling</span>"
+    ]
+  },
+  {
+    "objectID": "nb.html",
+    "href": "nb.html",
+    "title": "7  Naive Bayes",
+    "section": "",
+    "text": "7.1 Overview",
+    "crumbs": [
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Naive Bayes</span>"
+    ]
+  },
+  {
+    "objectID": "nb.html#data",
+    "href": "nb.html#data",
+    "title": "7  Naive Bayes",
+    "section": "7.2 Data",
+    "text": "7.2 Data",
+    "crumbs": [
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Naive Bayes</span>"
+    ]
+  },
+  {
+    "objectID": "nb.html#code",
+    "href": "nb.html#code",
+    "title": "7  Naive Bayes",
+    "section": "7.3 Code",
+    "text": "7.3 Code",
+    "crumbs": [
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Naive Bayes</span>"
+    ]
+  },
+  {
+    "objectID": "nb.html#results",
+    "href": "nb.html#results",
+    "title": "7  Naive Bayes",
+    "section": "7.4 Results",
+    "text": "7.4 Results",
+    "crumbs": [
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Naive Bayes</span>"
+    ]
+  },
+  {
+    "objectID": "reg.html",
+    "href": "reg.html",
+    "title": "8  Regression Modeling",
+    "section": "",
+    "text": "8.1 Overview",
+    "crumbs": [
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Regression Modeling</span>"
+    ]
+  },
+  {
+    "objectID": "reg.html#data",
+    "href": "reg.html#data",
+    "title": "8  Regression Modeling",
+    "section": "8.2 Data",
+    "text": "8.2 Data",
+    "crumbs": [
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Regression Modeling</span>"
+    ]
+  },
+  {
+    "objectID": "reg.html#code",
+    "href": "reg.html#code",
+    "title": "8  Regression Modeling",
+    "section": "8.3 Code",
+    "text": "8.3 Code",
+    "crumbs": [
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Regression Modeling</span>"
+    ]
+  },
+  {
+    "objectID": "reg.html#results",
+    "href": "reg.html#results",
+    "title": "8  Regression Modeling",
+    "section": "8.4 Results",
+    "text": "8.4 Results",
+    "crumbs": [
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Regression Modeling</span>"
+    ]
+  },
+  {
+    "objectID": "svm.html",
+    "href": "svm.html",
+    "title": "9  Support Vector Machine Modeling",
+    "section": "",
+    "text": "9.1 Overview",
+    "crumbs": [
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Support Vector Machine Modeling</span>"
+    ]
+  },
+  {
+    "objectID": "svm.html#data",
+    "href": "svm.html#data",
+    "title": "9  Support Vector Machine Modeling",
+    "section": "9.2 Data",
+    "text": "9.2 Data",
+    "crumbs": [
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Support Vector Machine Modeling</span>"
+    ]
+  },
+  {
+    "objectID": "svm.html#code",
+    "href": "svm.html#code",
+    "title": "9  Support Vector Machine Modeling",
+    "section": "9.3 Code",
+    "text": "9.3 Code",
+    "crumbs": [
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Support Vector Machine Modeling</span>"
+    ]
+  },
+  {
+    "objectID": "svm.html#results",
+    "href": "svm.html#results",
+    "title": "9  Support Vector Machine Modeling",
+    "section": "9.4 Results",
+    "text": "9.4 Results",
+    "crumbs": [
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Support Vector Machine Modeling</span>"
+    ]
+  }
+]

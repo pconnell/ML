@@ -1,0 +1,33 @@
+# Principal Component Analysis {#sec-PCA}
+
+```{python importBlock}
+
+```
+
+```{python dataImport}
+
+```
+
+## Overview
+
+```{python tbl-pca-exp-var}
+#| label: tbl-pca-exp-var
+#| tbl-cap: PCA, explained and cumulative variance
+#| 
+```
+
+
+
+```{python fig-pca-vis}
+#| label: fig-pca-vis
+#| fig-cap: 1D PCA visualization
+
+```
+
+
+## Data
+
+## Code
+
+## Results
+

@@ -1,0 +1,80 @@
+project:
+  type: book
+  output-dir: "../docs"
+
+## Overall settings
+book:
+  title: "Project Title Here"
+  author:
+    - "Patrick Connelly"
+  chapters:
+    - index.qmd
+    - data.qmd
+    - pca.qmd
+    - clustering.qmd
+    - arm.qmd
+    - dt.qmd
+    - nb.qmd
+    - reg.qmd
+    - svm.qmd
+    - conclusion.qmd
+    - references.qmd
+  appendices:
+    - app1.qmd
+    - app2.qmd
+    - app3.qmd
+  downloads: [pdf]
+  #references: refs.bib # Unsure if needed
+  output-file: ML Final Report # PDF filename
+  cover-image: "images/cover.png"
+  repo-url: "https://github.com/pconnell/ML" #update
+  page-navigation: true
+  date: today
+
+bibliography: refs.bib
+nocite: |
+  @*
+
+## Controls for each output format
+format:
+  html:
+    theme: 
+      - cosmo #flatly
+      - custom.scss
+    page-layout: full
+    smooth-scroll: true
+    number-sections: true
+    citations-hover: true
+    link-citations: true
+    grid:
+      body-width: 1000px
+      sidebar-width: 150px
+    quarto-required: ">= 1.4.0" # To fix crossrefs
+  pdf:
+    quarto-required: ">= 1.4.0"
+    documentclass: scrreprt
+    number-depth: 4
+    toc: true
+    geometry:
+      - margin=0.5in
+    link-citations: true
+    header-includes: # dont need?
+      - \usepackage{float}
+      - \usepackage{booktabs, caption, longtable, colortbl, array} # To make gt package work
+      - \floatplacement{table}{H}
+      - \floatplacement{image}{H}
+    hyperrefoptions:
+      - linktoc=all
+    latex-output-dir: "../docs"
+
+## Extra settings
+execute:
+  echo: False # Don't include code in the report
+  freeze: False # Not useful when rendering across multiple users
+  warning: False
+  error: False
+
+## PDF creation settings
+latex-clean: True # delete latex files after rendering
+latex-auto-mk: True
+latex-auto-install: True
