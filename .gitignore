@@ -1,0 +1,59 @@
+﻿data/2018.csv
+data/2019.csv
+data/2020.csv
+data/2021.csv
+data/2022.csv
+data/lei_list.csv
+data/final_clean.csv
+data/final_clean_backup.csv
+data/final_clean_bak.csv
+data/final_clean2.csv
+data/JP Morgan_2022_clean.csv
+data/JP Morgan_2022_conventional.csv
+data/lien{}_loan{}_year{}.csv
+data/Navy Federal Credit Union_2018_conventional.csv
+src/clean_data.py
+src/chunk.ipynb
+src/final_clean.csv
+src/hmda_api.py
+src/Untitled-1.ipynb
+src/Untitled-2.ipynb
+data/Navy Federal Credit Union_2019_conventional.csv
+data/Navy Federal Credit Union_2020_conventional.csv
+data/Navy Federal Credit Union_2021_conventional.csv
+data/Navy Federal Credit Union_2022_conventional.csv
+data/Navy Federal Credit Union_2022_conventional_bak.csv
+data/Navy Federal Credit Union_2022_clean.csv
+data/Navy Federal Credit Union_2023_conventional.csv
+data/Navy Federal Credit Union_2023_clean.csv
+data/Bank of America_2019_conventional.csv
+data/Bank of America_2020_conventional.csv
+data/Bank of America_2021_conventional.csv
+data/Bank of America_2022_conventional.csv
+data/Bank of America_2022_clean.csv
+data/Bank of America_2023_conventional.csv
+data/Bank of America_2023_clean.csv
+data/JP Morgan_2019_conventional.csv
+data/JP Morgan_2020_conventional.csv
+data/JP Morgan_2021_conventional.csv
+data/JP Morgan_2022_conventional.csv
+data/JP Morgan_2023_conventional.csv
+data/JP Morgan_2023_clean.csv
+data/Wells Fargo_2018_conventional.csv
+data/Wells Fargo_2019_conventional.csv
+data/Wells Fargo_2020_conventional.csv
+data/Wells Fargo_2021_conventional.csv
+data/Wells Fargo_2022_conventional.csv
+data/Wells Fargo_2022_clean.csv
+data/Wells Fargo_2023_conventional.csv
+data/Wells Fargo_2023_clean.csv
+data/Rocket Mortgage_2019_conventional.csv
+data/Rocket Mortgage_2020_conventional.csv
+data/Rocket Mortgage_2021_conventional.csv
+data/Rocket Mortgage_2022_conventional.csv
+data/Rocket Mortgage_2022_clean.csv
+data/Rocket Mortgage_2023_conventional.csv
+data/Rocket Mortgage_2023_clean.csv
+src/exp.ipynb
+data/sepher2.0_cleaned.csv
+data/sepher2.0_cleaned_dataDictionary_20211123.xlsx

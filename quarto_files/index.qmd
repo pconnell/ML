@@ -1,86 +1,42 @@
 # Introduction {#sec-intro}
 
-<!--
-Specific Requirements for the Module 1 Project Part 1 Assignment
+How strong is the connection between your age, gender, or race and ability to attain a mortgage?  
 
-1) Create a simple website. You are welcome to make it is complex or fancy website as well :) Add all TABS to the website (and at least those noted above). You will fill in these TABS as we progress through the class and you progress through each Module Project Part. 
+In early 2024, [US Senator Sherrod Brown](https://www.banking.senate.gov/newsroom/majority/brown-colleagues-call-for-a-review-of-navy-federal-after-reported-racial-disparities-in-mortgage-lending), along with colleagues, called for a review of lending practices by Navy Federal Credit Union (NFCU) as a result of a [late 2023 CNN report](https://www.cnn.com/2023/12/14/business/navy-federal-credit-union-black-applicants-invs/index.html) that oulined disparate impact to persons of color seeking to acquire conventional loans for home purchases.  The disparity in results between groups appears damning to the organization's reputation.  CNN's analysis predominantly explored the mathematical differences between racial groups and various lenders, but did not necessarily outline a direct cause-and-effect relationship (e.g. being a person of color seeking a loan at NFCU is guaranteed to decrease your approval chances).  Their analysis instead covered the rates of approval for the different groups, and compared those approval rates between groups and against other financial organizations' approval rates.
 
-2) When you submit this Project Assignment 1, your website will have a navigation menu and you will have at least the TABs noted above. 
+![visual comparison of NFCU to other financial institutions regarding loans to persons of color](./imgs/CNN_img.png "CNN Graphic")
 
-Recall that a TAB is a LINK on a website that allows the User to navigate. 
+Each of the organizations in the above graphic (from CNN) appear to have some degree of disparity in holding higher approvals for White/Caucasian applicants than for Black/African American, at first glance.  The graphic certainly highlights the highest difference in approval rates at NFCU vs that of other financial institutions.  Being at the top of the list of disparity absolutely draws ire from onlookers, yet the other institutions on the list may also be worthy of similar scrutiny.  Disparate outcomes are disparate outcomes, and any case in which there are significant differences in outcomes for individuals on a basis of age, gender, race, or ethnicity (also called protected classes) is of concern to everyone.  
 
-2) Choose a topic/area
+A [follow-up article](https://www.cnn.com/2024/03/23/business/navy-federal-external-review-invs/index.html) by CNN includes statements from NFCU and an external reviewer.  Some of the statements claim that non-race factors such as income verification and incomplete credit applications weren't included in CNN's study, and that other proprietary and non-public information are included in the organization's mortgage underwriting processes.
 
-(a) Your project will depend on this topic and the data you gather will support research and exploration in this area. Your topic can be anything you wish. It can be in health, sports, finance, stock, sustainability, education, farming, forestry, zoology, etc. etc. 
+Also of interest is an August 2024 story from Lehigh University on Artificial Intelligence, in particular Large Language Models, [exhibiting bias in mortgage underwriting decisions](https://www2.lehigh.edu/news/ai-exhibits-racial-bias-in-mortgage-underwriting-decisions).  The article covers a study done using ChatGPT 3.5 and 4.0, Llama3-8B and 3-70, and Claude3 Sonnet and Opus, in which the LLMs were prompted to decide whether or not to approve a loan application based on provided data.  The study found that the LLMs had similar biases for recommending interest rates, and great variation in bias as to whether or not loans would be approved.  When the LLMs were directly instructed to use no bias and ignore race in making the decisions, the disparity in approval outcomes disappeared.  This suggests that technology in decision-making processes is a double-edged sword, capable of doing both great harm and great good, depending on how it is weilded.
 
-As long as you can collect labeled data for your topic and it is PG13, its OK with me :)
+The [Home Mortgage Disclosure Act (HMDA)](https://www.consumerfinance.gov/data-research/hmda/) is a federal law that establishes mandatory reporting for financial institutions that provide loans to borrowers.  It mandates reporting of various values, metrics, and qualities of applicants and co-applicants, such as their debt-to-income ratio, loan amount requested vs. property value, age/gender/race of applicants, whether or not the loan was approved, along with many other datapoints.  Part of the intent of this law is to enable the examination of lenders for potential discriminatory practices in lending, and enable accountability and oversight to combat such issues.  HMDA data was leveraged for both the CNN's report and for the study referenced in Lehigh University's article.
 
-**Please do not do your project on predicting the stock market :) This topic is not permitted.
+In an ideal world, a potential borrower's protected class features should have no impact on their ability to attain a loan, but instead be based solely on the borrower's overall ability to repay the loan, given multiple financial factors.  This research seeks to leverage HMDA data to explore CNN's identified disparities, and explore other possible disparities within other lending organizations, through predictive modeling.  <!--Predictive modeling may be a portion of one or more of these financial institutions' processes for mortgage underwriting.  Should any such decision models include protected classes, or proxies for protected class, the possibility of discrimination and disparate impact quickly arise.  -->Leveraging multiple techniques such as identifying common associations and trends within the data, performing statistical analyses, developing multiple model constructs, and via inclusion and exclusion of protected classes as part of model training and evaluation data, this study seeks to explore and answer some of the following questions (solely using publically available data):
 
-KIND WARNING: There are many "completed projects" on the web. It is cheating to use one. This can result in an F in the class (not just on the project) and report to the Director. PLEASE do your work - that's why we are here. 
+1. Which factors within avaialble HMDA data are the greatest influencers in mortgage approvals?
 
-(b) Once you choose your topic, write at least 2 paragraphs (more is better) for your Introduction. Place this directly into the TAB called Introduction on your website.
+1. Are protected classes of applicants and co-applicants strong predictors for determining loan approval?
 
-Recall that the Introduction will include what the topic is, why it matters, who it affects, what work has already been done,  etc. The Introduction is NOT about models, methods, or techy jargon. 
+1. If protected classes are strong predictors for loan approval, is the predictive strength greater for one institution over another?
 
-Choosing a topic is not easy or done on Kaggle :) I suggest that you try something that interests you. 
+1. If protected classes are strong predictors for loan approval, is the predictor's strength higher within a particular geographic region?
 
-(b) In the Introduction TAB on your website, under your at least 2 paragraphs, also write out 10 questions that you would like to answer about your topic. (It is OK if these change or shift later - this is part of the "brainstorming").
+1. How is predictive model performance impacted when including or excluding protected class data in training and testing data? e.g. Does performance increase when including?  If so, by how much?
 
-TOPIC EXAMPLE:
+1. How well do predictive models perform when trained using protected class information that was collected by a lender observationally (e.g. via inspection of surname or visually seeing the applicant)?
 
-Does air quality affect life expectancy and health and therefore do gas powered lawn care machines, such as leaf blowers, reduce air quality, and negatively affect health and life expectancy?
+1. How do loan-specific or home-specific qualities and features, absent borrower features, impact predictions of approval or denial?
 
-Notice that this is a large and compound question. It is a blend of "environment", "Air quality", "Health", and "the negative effects of gas-lawncare".  
+1. Are borrower features aside from race as or more associated with a result of loan denial? e.g. is being female or being under or over a certain age as associated with loan denial as being a certain race?
 
-Notice that the introduction pulls together the focus on the topic(s). The introduction is about the topics and not about you :) Nowhere in the Introduction did you find the use of "I", "me", "my", or "in my project....". 
+1. Can available HMDA data be leveraged to effectively predict mortgage borrower interest rates?
 
-Your final project submission will have a 5 - paragraph Introduction that contains images. Each paragraph is ~10 sentences. 
+1. If effective mortgage rate predictions are possible, how do they change when including or controlling for protected class data in the model?
 
-As you choose your topic, start to create your Introduction by researching and writing about your topic. 
+1. Can selected / identified features and outcome (e.g. debt-to-income-ratio, loan-to-value ratio, *and* decision for approval or denial of the loan) be used to predict the borrower's protected class features of race, gender, or age group?
 
-This deliverable requires that you write at least 2 paragraphs, have one image, and include 10 questions you want to answer. 
-
--->
-
-<!--
-must:
-
-* Gather some data via API
-
-* can download data (e.g. via .gov, kaggle, or some other website...)
-
-* can scrape / extract
-
--->
-
-## Abstract
-
-## Concept and Motivation
-
-## Why It Matters
-
-## Research Questions 
-
-This research seeks to explore potential answers to the following questions:
-
-1. 
-
-1. 
-
-1. 
-
-1. 
-
-1. 
-
-1. 
-
-1. 
-
-1. 
-
-1. 
-
-1. 
+1. As inferred by lenders, can various latent variables be identified as impactful within modeling, and can the degree or extent of their impact on the decision process be determined as it pertains to mortgage underwriting decisions?
 

@@ -4,7 +4,7 @@ project:
 
 ## Overall settings
 book:
-  title: "Project Title Here"
+  title: "Exploring Predictive Power of Protected Classes in Mortgage Approvals"
   author:
     - "Patrick Connelly"
   chapters:

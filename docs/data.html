@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Project Title Here - 2&nbsp; Data Gathering and Exploratory Analysis</title>
+<title>Exploring Predictive Power of Protected Classes in Mortgage Approvals - 2&nbsp; Data Gathering and Exploratory Analysis</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -73,6 +73,35 @@ ul.task-list li input[type="checkbox"] {
 
 <script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -100,7 +129,7 @@ ul.task-list li input[type="checkbox"] {
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="./">Project Title Here</a> 
+      <a href="./">Exploring Predictive Power of Protected Classes in Mortgage Approvals</a> 
         <div class="sidebar-tools-main">
     <a href="https://github.com/pconnell/ML" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
     <a href="./ML-Final-Report.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
@@ -219,7 +248,17 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#overview-of-collected-data" id="toc-overview-of-collected-data" class="nav-link active" data-scroll-target="#overview-of-collected-data"><span class="header-section-number">2.1</span> Overview of Collected Data</a></li>
+  <li><a href="#data-gathering" id="toc-data-gathering" class="nav-link active" data-scroll-target="#data-gathering"><span class="header-section-number">2.1</span> Data Gathering</a></li>
+  <li><a href="#data-cleaning" id="toc-data-cleaning" class="nav-link" data-scroll-target="#data-cleaning"><span class="header-section-number">2.2</span> Data Cleaning</a>
+  <ul class="collapse">
+  <li><a href="#dimensionality-reduction" id="toc-dimensionality-reduction" class="nav-link" data-scroll-target="#dimensionality-reduction"><span class="header-section-number">2.2.1</span> Dimensionality Reduction</a></li>
+  <li><a href="#row-elimination" id="toc-row-elimination" class="nav-link" data-scroll-target="#row-elimination"><span class="header-section-number">2.2.2</span> Row Elimination</a></li>
+  <li><a href="#ordinal-encoding" id="toc-ordinal-encoding" class="nav-link" data-scroll-target="#ordinal-encoding"><span class="header-section-number">2.2.3</span> Ordinal Encoding</a></li>
+  <li><a href="#missing-and-blank-values" id="toc-missing-and-blank-values" class="nav-link" data-scroll-target="#missing-and-blank-values"><span class="header-section-number">2.2.4</span> Missing and Blank Values</a></li>
+  <li><a href="#incorrect-column-values" id="toc-incorrect-column-values" class="nav-link" data-scroll-target="#incorrect-column-values"><span class="header-section-number">2.2.5</span> Incorrect Column Values</a></li>
+  </ul></li>
+  <li><a href="#further-exploratory-data-analysis" id="toc-further-exploratory-data-analysis" class="nav-link" data-scroll-target="#further-exploratory-data-analysis"><span class="header-section-number">2.3</span> Further Exploratory Data Analysis</a></li>
+  <li><a href="#last-thoughts-on-source-data" id="toc-last-thoughts-on-source-data" class="nav-link" data-scroll-target="#last-thoughts-on-source-data"><span class="header-section-number">2.4</span> Last Thoughts on Source Data</a></li>
   </ul>
 </nav>
     </div>
@@ -245,37 +284,821 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="overview-of-collected-data" class="level2" data-number="2.1">
-<h2 data-number="2.1" class="anchored" data-anchor-id="overview-of-collected-data"><span class="header-section-number">2.1</span> Overview of Collected Data</h2>
-<div class="cell" data-execution_count="2" data-tbl-cap-location="bottom">
-<div id="tbl-datasourceblock" class="cell quarto-float anchored" data-execution_count="2" data-tbl-cap-location="bottom">
+<p>In efforts to answer the established research questions, data was collected, predominantly, from the HMDA database for the top 5 lenders listed within CNN’s reporting. As both CNN and the Lehigh University articles leveraged this data, working with and examining the same type of data is ideal in the pursuit of furthering the research.</p>
+<section id="data-gathering" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="data-gathering"><span class="header-section-number">2.1</span> Data Gathering</h2>
+<p>To pursue the established research objectives, the following resources were identified and leveraged as data sources:</p>
+<ul>
+<li><p><a href="https://documenter.getpostman.com/view/7679680/SVYrrxuU">The Global Legal Entity Identifier (GLEIF) API</a></p></li>
+<li><p><a href="https://ffiec.cfpb.gov/documentation/api/data-browser/">The FFIEC Home Mortgage Disclosure Act (HMDA) API</a></p></li>
+</ul>
+<p>CNN provides explicit data selection, cleaning, and transformation information at the base of their <a href="https://www.cnn.com/2023/12/14/business/navy-federal-credit-union-black-applicants-invs/index.html">first article</a> in the section labeled “How We Reported This Story.” The scope of this research includes the scope identified by CNN, as the nature of their filtration and focus could be ascribed to what one would consider being part of the American dream - the ability to attain a first loan for a single-family property as a primary residence, not for the purpose of business or commerce. The CNN article predominantly leveraged 2022 and prior year data, whereas this research will inspect 2023 data.</p>
+<p>Lenders in question, listed in the graphics for the first CNN article, are identified via the <a href="https://documenter.getpostman.com/view/7679680/SVYrrxuU">GLEIF API</a>. HMDA Data solely contains the Legal Entity Identifier (LEI) in each record as opposed to the name of the entity. In order to perform aggregate analysis and labeling of data as being linked to one of these organizations, it is necessary to query another source to identify the appropriate LEIs for use in querying HMDA. Furthermore, HMDA is a large database, and being able to provide filtering conditions substantially reduces the size of the returned data. Absent key filters, large volumes are returned in a single file. At the same time, the number of filters that can be supplied to the HMDA API simultaneously is limited, so filtering by organization and other key filters will minimize the data pull before further cleaning.</p>
+<p>The HMDA API provides simple access to a wide array of data on mortgages. Additionally, the API provides a well-documented <a href="https://ffiec.cfpb.gov/documentation/publications/loan-level-datasets/lar-data-fields">data dictionary</a> that spells out the returned features and their meanings in the context of the Loan Application Register. An API query returns a total of 99 columns with quantitative and qualitative data on the prospective borrower, the property they seek to purchase, aspects and features of the loan, and the final action taken on the loan application. Some of these columns may exceed the scope of this research, whereas many others are necessary and important to the established research questions. Finding creative and effective means of reducing dimensionality is key.</p>
+<p>Neither of the API endpoints leveraged in data collection for this research required an API key, thus simplifying the data gathering process.</p>
+<p>The source code for data gathering efforts in this research is located <a href="../src/pull_data.py">here</a>.</p>
+<p>Example use of the GLEIF API</p>
+<pre><code>import requests
+endpoint = ""
+params = {
+
+}
+
+requests.get(endpoint,params)</code></pre>
+<p>Example use of the HMDA API</p>
+<pre><code>
+hmda_endpoint = ""
+hmda_params = {
+
+}
+resp = requests.get(endpoint,params)
+
+with open('/file/path/here.csv','wb') as f:
+    f.write(resp.content)
+    f.close()</code></pre>
+<p>Of note for the HMDA endpoint in this case is the fact that it natively returns record data in CSV format. As such, the means to store the data is relatively simple, requiring no substantial parsing of JSON content to process the data into record or dataframe format.</p>
+<p>The data, from the initial API queries and prior to further cleaning and tailoring, is located <a href="https://drive.google.com/drive/u/2/folders/1I5d1ryo96WYdH_l9ijinSocEAjf1jmGO">here</a></p>
+</section>
+<section id="data-cleaning" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="data-cleaning"><span class="header-section-number">2.2</span> Data Cleaning</h2>
+<p>The primary methods of cleaning in this research revolve around dimensionality reduction and row reduction. The goal for cleaning is to minimize the number of columns in the dataset to key quantitative and qualitative features holding potential use in modeling, eliminating records out of the scope of this research, and handling blank/missing/incorrect values in the remaining records.</p>
+<section id="dimensionality-reduction" class="level3" data-number="2.2.1">
+<h3 data-number="2.2.1" class="anchored" data-anchor-id="dimensionality-reduction"><span class="header-section-number">2.2.1</span> Dimensionality Reduction</h3>
+<section id="collapsing-redundant-columns-with-binary-encoding" class="level4" data-number="2.2.1.1">
+<h4 data-number="2.2.1.1" class="anchored" data-anchor-id="collapsing-redundant-columns-with-binary-encoding"><span class="header-section-number">2.2.1.1</span> Collapsing Redundant Columns with Binary Encoding</h4>
+<p>This research collapses the following columns to deduplicate data and reduce columnar dimensionality:</p>
+<p>Approximately 29 columns in the data contain categorical information that can be encoded in binary and summed into a single column to retain all data while reducing dimensionality. These columns pertain to applicant and co-applicant race and ethnicity, the automated underwriting systems used by organizations to support decision making in approving or denying loan applications, and reasons for loan denial, if applicable.</p>
+<p>Since each of these columns can take on multiple values, the HMDA dataset owners have allowed for up to 5 columns for each of these categorical variables. By translating each possible value to a unique binary encoding (with number of bits equal to the number of classes, and solely a single 1 in each encoding), the sum across multiple columns will provide for a unique value containing <em>all</em> classifications in a single categorical variable.</p>
+<p>Furthermore - this transformation addressses some potential biases in CNN’s methods. Their report excluded records in the case of mixed-race applicants and co-applicants as being members of a racial group. The binary encoding allows for their inclusion as being part of such groups; while individuals of mixed race may not be fully part of any single group, they remain part of it.</p>
+<p>The data contain multiple column datapoints for the ethnicity and race of applicants and co-applicants for a total of 20 additional columns (e.g.&nbsp;“co-applicant_race-1, co-applicant_race-2…”). Not all of these columns contain viable data. An individual can have multiple races and ethnicities. To allow for retaining of the data while also eliminating unnecessary blank columns, these columns are collapsed to a single column, each - reducing the data by 16 columns.</p>
+<p>Another set of column collapses are performed on the ‘aus-’ (automated underwriting system) and ‘denial_reason’ columns. There are 5 columns in the source data containing the different system(s) used by lenders to support underwriting decision making processes. The denial_reason is rich with potentially important information that could lend itself to the identification of latent or unavailable variables (e.g.&nbsp;credit score, income verification, etc). These columns are collapsed in the same manner as for the aforementioned race and ethnicities of applicants.</p>
+<p>Each value was translated from the digit representing it to instead a binary representation with a number of bits equivalent to the number of valid classes available for the variable from the data dictionary. After each value in each column was mapped to a bitwise representation, the sum across each column was taken to produce a final column with bits containing all of the original information. This transformation enables simple bitwise AND operations to identify records that meet a specific condition (or combination of conditions) while also eliminating columnar redundancy.</p>
+<div class="cell" data-execution_count="4">
+<div id="tbl-race-df" class="cell quarto-float anchored" data-execution_count="4">
 <figure class="quarto-float quarto-float-tbl figure">
-<div aria-describedby="tbl-datasourceblock-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="cell-output cell-output-display" data-execution_count="2">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-race-df-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;2.1: Remapping of Racial Categories for applicants and co-applicants
+</figcaption>
+<div aria-describedby="tbl-race-df-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display" data-execution_count="4">
 <style type="text/css">
 </style>
 
-<table id="T_2d0b3" class="do-not-create-environment cell" data-quarto-postprocess="true">
+<table id="T_80001" class="do-not-create-environment cell table table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
-<th id="T_2d0b3_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Source</th>
-<th id="T_2d0b3_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">Type</th>
-<th id="T_2d0b3_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">Collection Method</th>
-<th id="T_2d0b3_level0_col3" class="col_heading level0 col3" data-quarto-table-cell-role="th">Link</th>
+<th id="T_80001_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Valid Classes</th>
+<th id="T_80001_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">HMDA Encoding</th>
+<th id="T_80001_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">Binary Encoding</th>
 </tr>
 </thead>
 <tbody>
+<tr class="odd">
+<td id="T_80001_row0_col0" class="data row0 col0">American Indian or Alaska Native</td>
+<td id="T_80001_row0_col1" class="data row0 col1">1</td>
+<td id="T_80001_row0_col2" class="data row0 col2">1</td>
+</tr>
+<tr class="even">
+<td id="T_80001_row1_col0" class="data row1 col0">Asian</td>
+<td id="T_80001_row1_col1" class="data row1 col1">2</td>
+<td id="T_80001_row1_col2" class="data row1 col2">2</td>
+</tr>
+<tr class="odd">
+<td id="T_80001_row2_col0" class="data row2 col0">Asian Indian</td>
+<td id="T_80001_row2_col1" class="data row2 col1">21</td>
+<td id="T_80001_row2_col2" class="data row2 col2">4</td>
+</tr>
+<tr class="even">
+<td id="T_80001_row3_col0" class="data row3 col0">Chinese</td>
+<td id="T_80001_row3_col1" class="data row3 col1">22</td>
+<td id="T_80001_row3_col2" class="data row3 col2">8</td>
+</tr>
+<tr class="odd">
+<td id="T_80001_row4_col0" class="data row4 col0">Filipino</td>
+<td id="T_80001_row4_col1" class="data row4 col1">23</td>
+<td id="T_80001_row4_col2" class="data row4 col2">16</td>
+</tr>
+<tr class="even">
+<td id="T_80001_row5_col0" class="data row5 col0">Japanese</td>
+<td id="T_80001_row5_col1" class="data row5 col1">24</td>
+<td id="T_80001_row5_col2" class="data row5 col2">32</td>
+</tr>
+<tr class="odd">
+<td id="T_80001_row6_col0" class="data row6 col0">Korean</td>
+<td id="T_80001_row6_col1" class="data row6 col1">25</td>
+<td id="T_80001_row6_col2" class="data row6 col2">64</td>
+</tr>
+<tr class="even">
+<td id="T_80001_row7_col0" class="data row7 col0">Vietnamese</td>
+<td id="T_80001_row7_col1" class="data row7 col1">26</td>
+<td id="T_80001_row7_col2" class="data row7 col2">128</td>
+</tr>
+<tr class="odd">
+<td id="T_80001_row8_col0" class="data row8 col0">Other Asian</td>
+<td id="T_80001_row8_col1" class="data row8 col1">27</td>
+<td id="T_80001_row8_col2" class="data row8 col2">256</td>
+</tr>
+<tr class="even">
+<td id="T_80001_row9_col0" class="data row9 col0">Black or African American</td>
+<td id="T_80001_row9_col1" class="data row9 col1">3</td>
+<td id="T_80001_row9_col2" class="data row9 col2">512</td>
+</tr>
+<tr class="odd">
+<td id="T_80001_row10_col0" class="data row10 col0">Native Hawaiian or Other Pacific Islander</td>
+<td id="T_80001_row10_col1" class="data row10 col1">4</td>
+<td id="T_80001_row10_col2" class="data row10 col2">1024</td>
+</tr>
+<tr class="even">
+<td id="T_80001_row11_col0" class="data row11 col0">Native Hawaiian</td>
+<td id="T_80001_row11_col1" class="data row11 col1">41</td>
+<td id="T_80001_row11_col2" class="data row11 col2">2048</td>
+</tr>
+<tr class="odd">
+<td id="T_80001_row12_col0" class="data row12 col0">Guamanian or Chamorro</td>
+<td id="T_80001_row12_col1" class="data row12 col1">42</td>
+<td id="T_80001_row12_col2" class="data row12 col2">4096</td>
+</tr>
+<tr class="even">
+<td id="T_80001_row13_col0" class="data row13 col0">Samoan</td>
+<td id="T_80001_row13_col1" class="data row13 col1">43</td>
+<td id="T_80001_row13_col2" class="data row13 col2">8192</td>
+</tr>
+<tr class="odd">
+<td id="T_80001_row14_col0" class="data row14 col0">Other Pacific Islander</td>
+<td id="T_80001_row14_col1" class="data row14 col1">44</td>
+<td id="T_80001_row14_col2" class="data row14 col2">16384</td>
+</tr>
+<tr class="even">
+<td id="T_80001_row15_col0" class="data row15 col0">White</td>
+<td id="T_80001_row15_col1" class="data row15 col1">5</td>
+<td id="T_80001_row15_col2" class="data row15 col2">32768</td>
+</tr>
+<tr class="odd">
+<td id="T_80001_row16_col0" class="data row16 col0">Information not provided by applicant in mail, internet, or telephone application</td>
+<td id="T_80001_row16_col1" class="data row16 col1">6</td>
+<td id="T_80001_row16_col2" class="data row16 col2">65536</td>
+</tr>
+<tr class="even">
+<td id="T_80001_row17_col0" class="data row17 col0">Not applicable</td>
+<td id="T_80001_row17_col1" class="data row17 col1">7</td>
+<td id="T_80001_row17_col2" class="data row17 col2">131072</td>
+</tr>
+<tr class="odd">
+<td id="T_80001_row18_col0" class="data row18 col0">No co-applicant</td>
+<td id="T_80001_row18_col1" class="data row18 col1">8</td>
+<td id="T_80001_row18_col2" class="data row18 col2">262144</td>
+</tr>
 </tbody>
 </table>
 </div>
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-tbl" id="tbl-datasourceblock-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table&nbsp;2.1: Data Sources, Methods, and References
+</figure>
+</div>
+</div>
+<div class="cell" data-execution_count="5">
+<div id="tbl-ethn-df" class="cell quarto-float anchored" data-execution_count="5">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-ethn-df-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;2.2: Remapping of Ethnic Categories for applicants and co-applicants
+</figcaption>
+<div aria-describedby="tbl-ethn-df-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display" data-execution_count="5">
+<style type="text/css">
+</style>
+
+<table id="T_3ae47" class="do-not-create-environment cell table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th id="T_3ae47_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Valid Classes</th>
+<th id="T_3ae47_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">HMDA Encoding</th>
+<th id="T_3ae47_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">Binary Encoding</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td id="T_3ae47_row0_col0" class="data row0 col0">Hispanic or Latino</td>
+<td id="T_3ae47_row0_col1" class="data row0 col1">1</td>
+<td id="T_3ae47_row0_col2" class="data row0 col2">1</td>
+</tr>
+<tr class="even">
+<td id="T_3ae47_row1_col0" class="data row1 col0">Mexican</td>
+<td id="T_3ae47_row1_col1" class="data row1 col1">11</td>
+<td id="T_3ae47_row1_col2" class="data row1 col2">2</td>
+</tr>
+<tr class="odd">
+<td id="T_3ae47_row2_col0" class="data row2 col0">Puerto Rican</td>
+<td id="T_3ae47_row2_col1" class="data row2 col1">12</td>
+<td id="T_3ae47_row2_col2" class="data row2 col2">4</td>
+</tr>
+<tr class="even">
+<td id="T_3ae47_row3_col0" class="data row3 col0">Cuban</td>
+<td id="T_3ae47_row3_col1" class="data row3 col1">13</td>
+<td id="T_3ae47_row3_col2" class="data row3 col2">8</td>
+</tr>
+<tr class="odd">
+<td id="T_3ae47_row4_col0" class="data row4 col0">Other Hispanic or Latino</td>
+<td id="T_3ae47_row4_col1" class="data row4 col1">14</td>
+<td id="T_3ae47_row4_col2" class="data row4 col2">16</td>
+</tr>
+<tr class="even">
+<td id="T_3ae47_row5_col0" class="data row5 col0">Not Hispanic or Latino</td>
+<td id="T_3ae47_row5_col1" class="data row5 col1">2</td>
+<td id="T_3ae47_row5_col2" class="data row5 col2">32</td>
+</tr>
+<tr class="odd">
+<td id="T_3ae47_row6_col0" class="data row6 col0">Information not provided by applicant in mail, internet, or telephone application</td>
+<td id="T_3ae47_row6_col1" class="data row6 col1">3</td>
+<td id="T_3ae47_row6_col2" class="data row6 col2">64</td>
+</tr>
+<tr class="even">
+<td id="T_3ae47_row7_col0" class="data row7 col0">Not applicable</td>
+<td id="T_3ae47_row7_col1" class="data row7 col1">4</td>
+<td id="T_3ae47_row7_col2" class="data row7 col2">128</td>
+</tr>
+<tr class="odd">
+<td id="T_3ae47_row8_col0" class="data row8 col0">No co-applicant</td>
+<td id="T_3ae47_row8_col1" class="data row8 col1">5</td>
+<td id="T_3ae47_row8_col2" class="data row8 col2">256</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<div class="cell" data-execution_count="6">
+<div id="tbl-aus-df" class="cell quarto-float anchored" data-execution_count="6">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-aus-df-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;2.3: Remapping of Automated Underwriting Systems
+</figcaption>
+<div aria-describedby="tbl-aus-df-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display" data-execution_count="6">
+<style type="text/css">
+</style>
+
+<table id="T_6bae1" class="do-not-create-environment cell table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th id="T_6bae1_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Valid Classes</th>
+<th id="T_6bae1_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">HMDA Encoding</th>
+<th id="T_6bae1_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">Binary Encoding</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td id="T_6bae1_row0_col0" class="data row0 col0">Desktop Underwriter (DU)</td>
+<td id="T_6bae1_row0_col1" class="data row0 col1">1</td>
+<td id="T_6bae1_row0_col2" class="data row0 col2">1</td>
+</tr>
+<tr class="even">
+<td id="T_6bae1_row1_col0" class="data row1 col0">Loan Prospector (LP) or Loan Product Advisor</td>
+<td id="T_6bae1_row1_col1" class="data row1 col1">2</td>
+<td id="T_6bae1_row1_col2" class="data row1 col2">2</td>
+</tr>
+<tr class="odd">
+<td id="T_6bae1_row2_col0" class="data row2 col0">Technology Open to Approved Lenders (TOTAL) Scorecard</td>
+<td id="T_6bae1_row2_col1" class="data row2 col1">3</td>
+<td id="T_6bae1_row2_col2" class="data row2 col2">4</td>
+</tr>
+<tr class="even">
+<td id="T_6bae1_row3_col0" class="data row3 col0">Guaranteed Underwriting System (GUS)</td>
+<td id="T_6bae1_row3_col1" class="data row3 col1">4</td>
+<td id="T_6bae1_row3_col2" class="data row3 col2">8</td>
+</tr>
+<tr class="odd">
+<td id="T_6bae1_row4_col0" class="data row4 col0">Other</td>
+<td id="T_6bae1_row4_col1" class="data row4 col1">5</td>
+<td id="T_6bae1_row4_col2" class="data row4 col2">16</td>
+</tr>
+<tr class="even">
+<td id="T_6bae1_row5_col0" class="data row5 col0">Internal Proprietary System</td>
+<td id="T_6bae1_row5_col1" class="data row5 col1">7</td>
+<td id="T_6bae1_row5_col2" class="data row5 col2">32</td>
+</tr>
+<tr class="odd">
+<td id="T_6bae1_row6_col0" class="data row6 col0">Not applicable</td>
+<td id="T_6bae1_row6_col1" class="data row6 col1">6</td>
+<td id="T_6bae1_row6_col2" class="data row6 col2">64</td>
+</tr>
+<tr class="even">
+<td id="T_6bae1_row7_col0" class="data row7 col0">Exempt</td>
+<td id="T_6bae1_row7_col1" class="data row7 col1">1111</td>
+<td id="T_6bae1_row7_col2" class="data row7 col2">128</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<div class="cell" data-execution_count="7">
+<div id="tbl-denial-df" class="cell quarto-float anchored" data-execution_count="7">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-denial-df-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;2.4: Remapping of Denial Reasons
+</figcaption>
+<div aria-describedby="tbl-denial-df-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display" data-execution_count="7">
+<style type="text/css">
+</style>
+
+<table id="T_42bc4" class="do-not-create-environment cell table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th id="T_42bc4_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Valid Classes</th>
+<th id="T_42bc4_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">HMDA Encoding</th>
+<th id="T_42bc4_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">Binary Encoding</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td id="T_42bc4_row0_col0" class="data row0 col0">Debt-to-income ratio</td>
+<td id="T_42bc4_row0_col1" class="data row0 col1">1</td>
+<td id="T_42bc4_row0_col2" class="data row0 col2">1</td>
+</tr>
+<tr class="even">
+<td id="T_42bc4_row1_col0" class="data row1 col0">Employment history</td>
+<td id="T_42bc4_row1_col1" class="data row1 col1">2</td>
+<td id="T_42bc4_row1_col2" class="data row1 col2">2</td>
+</tr>
+<tr class="odd">
+<td id="T_42bc4_row2_col0" class="data row2 col0">Credit history</td>
+<td id="T_42bc4_row2_col1" class="data row2 col1">3</td>
+<td id="T_42bc4_row2_col2" class="data row2 col2">4</td>
+</tr>
+<tr class="even">
+<td id="T_42bc4_row3_col0" class="data row3 col0">Collateral</td>
+<td id="T_42bc4_row3_col1" class="data row3 col1">4</td>
+<td id="T_42bc4_row3_col2" class="data row3 col2">8</td>
+</tr>
+<tr class="odd">
+<td id="T_42bc4_row4_col0" class="data row4 col0">Insufficient cash (downpayment, closing costs)</td>
+<td id="T_42bc4_row4_col1" class="data row4 col1">5</td>
+<td id="T_42bc4_row4_col2" class="data row4 col2">16</td>
+</tr>
+<tr class="even">
+<td id="T_42bc4_row5_col0" class="data row5 col0">Unverifiable information</td>
+<td id="T_42bc4_row5_col1" class="data row5 col1">6</td>
+<td id="T_42bc4_row5_col2" class="data row5 col2">32</td>
+</tr>
+<tr class="odd">
+<td id="T_42bc4_row6_col0" class="data row6 col0">Credit application incomplete</td>
+<td id="T_42bc4_row6_col1" class="data row6 col1">7</td>
+<td id="T_42bc4_row6_col2" class="data row6 col2">64</td>
+</tr>
+<tr class="even">
+<td id="T_42bc4_row7_col0" class="data row7 col0">Mortgage insurance denied</td>
+<td id="T_42bc4_row7_col1" class="data row7 col1">8</td>
+<td id="T_42bc4_row7_col2" class="data row7 col2">128</td>
+</tr>
+<tr class="odd">
+<td id="T_42bc4_row8_col0" class="data row8 col0">Other</td>
+<td id="T_42bc4_row8_col1" class="data row8 col1">9</td>
+<td id="T_42bc4_row8_col2" class="data row8 col2">256</td>
+</tr>
+<tr class="even">
+<td id="T_42bc4_row9_col0" class="data row9 col0">Not applicable</td>
+<td id="T_42bc4_row9_col1" class="data row9 col1">10</td>
+<td id="T_42bc4_row9_col2" class="data row9 col2">512</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>Examining <a href="#tbl-denial-df" class="quarto-xref">Table&nbsp;<span>2.4</span></a>, for instance consider a cell value of 96 in the ‘denial_reason’ column. There are two unique binary encoding values - 32 and 64, that produce this sum. The value 96, then, would signify a loan that was denied both for having ‘Unverifiable Information’ and for ‘Credit application incomplete’. Similarly, referencing <a href="#tbl-race-df" class="quarto-xref">Table&nbsp;<span>2.1</span></a>, a value of 32770 in this column would signify a person whose races are Asian (32768) and White (2) (2+32768=32770).</p>
+<p>This binary numeric representation of categorical data allows the column to contain multiple distinct and potentially impactful datum while reducing dimensionality. E.g. to filter the dataset to records pertaining to the race Asian, the filter can be performed by selecting records where the binary AND of 32768 &amp; [column_value] = 32768. Other races may also be present in the filtered records, but all Asians will be captured.</p>
+<p>Leveraging the columns natively for tasks such as clustering may not be effective or efficient, and could pose challenges in performing unsupervised learning. Further cleaning may be necessary for such tasks, but collapsing and retaining the data ensures its availablity for further transformation and cleaning. For instances, the re-splitting and pivoting of these columns into boolean values could be leveraged in association rule mining or in Bernoulli Naive Bayes analyses.</p>
+<p>Notice also that encodings for not available or not applicable types of data are higher values within each encoding list. This actually provides a very simple data validation technique, and allows for the identification or elimination of potentially erroneous records. Namely any value:</p>
+<ul>
+<li><p>within the exclusive interval (65536,131072), or greater than 131072 for applicant_race</p></li>
+<li><p>within the exclusive intervals (65536,131072) and (131072,262144), or greater than 262144 for co-applicant_race</p></li>
+<li><p>within the exculsive interval (64, 128), or greater than 128 for applicant_ethnicity</p></li>
+<li><p>within the exclusive intervals (64,128) and (128,256), or greater than 256 for co-applicant_ethnicity</p></li>
+<li><p>within the exclusive interval (64,128), or greater than 128 for aus (automated underwriting system)</p></li>
+<li><p>greater than 512 for denial_reason</p></li>
+</ul>
+<p>will signify an <em>erroneous</em> record. Namely, if any value is found to include “Not Applicable” in conjunction with another valid selection, one of the two selections were selected in error, and the data is not reliable. As such, these records can be filtered from the source data. As such, records meeting the above criteria are removed from the source data.</p>
+<p>Because the totality of racial and ethnicity information can now be contained within a single column, the derived_ columns for ethnicity and race can be dropped from the dataset.</p>
+</section>
+<section id="column-elimination" class="level4" data-number="2.2.1.2">
+<h4 data-number="2.2.1.2" class="anchored" data-anchor-id="column-elimination"><span class="header-section-number">2.2.1.2</span> Column Elimination</h4>
+<p>The following list of columns were eliminated from the source data</p>
+<div id="bd0e3e38" class="cell" data-execution_count="8">
+<div class="cell-output cell-output-display" data-execution_count="8">
+<style type="text/css">
+</style>
+
+<table id="T_678d7" data-quarto-postprocess="true" class="table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th id="T_678d7_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Column Dropped</th>
+<th id="T_678d7_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">Reason</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td id="T_678d7_row0_col0" class="data row0 col0">activity_year</td>
+<td id="T_678d7_row0_col1" class="data row0 col1">2023 Data Only</td>
+</tr>
+<tr class="even">
+<td id="T_678d7_row1_col0" class="data row1 col0">derived_msa-md</td>
+<td id="T_678d7_row1_col1" class="data row1 col1">Using county_code</td>
+</tr>
+<tr class="odd">
+<td id="T_678d7_row2_col0" class="data row2 col0">census_tract</td>
+<td id="T_678d7_row2_col1" class="data row2 col1">Using county_code</td>
+</tr>
+<tr class="even">
+<td id="T_678d7_row3_col0" class="data row3 col0">derived_loan_product_type</td>
+<td id="T_678d7_row3_col1" class="data row3 col1">Available in other columns</td>
+</tr>
+<tr class="odd">
+<td id="T_678d7_row4_col0" class="data row4 col0">derived_dwelling_category</td>
+<td id="T_678d7_row4_col1" class="data row4 col1">Available in other columns</td>
+</tr>
+<tr class="even">
+<td id="T_678d7_row5_col0" class="data row5 col0">conforming_loan_limit</td>
+<td id="T_678d7_row5_col1" class="data row5 col1">Project scope</td>
+</tr>
+<tr class="odd">
+<td id="T_678d7_row6_col0" class="data row6 col0">lien_status</td>
+<td id="T_678d7_row6_col1" class="data row6 col1">Project scope</td>
+</tr>
+<tr class="even">
+<td id="T_678d7_row7_col0" class="data row7 col0">reverse_mortgage</td>
+<td id="T_678d7_row7_col1" class="data row7 col1">One value after scope applied</td>
+</tr>
+<tr class="odd">
+<td id="T_678d7_row8_col0" class="data row8 col0">business_or_commercial_purpose</td>
+<td id="T_678d7_row8_col1" class="data row8 col1">Project scope</td>
+</tr>
+<tr class="even">
+<td id="T_678d7_row9_col0" class="data row9 col0">negative_amortization</td>
+<td id="T_678d7_row9_col1" class="data row9 col1">One value after scope applied</td>
+</tr>
+<tr class="odd">
+<td id="T_678d7_row10_col0" class="data row10 col0">occupancy_type</td>
+<td id="T_678d7_row10_col1" class="data row10 col1">Project scope</td>
+</tr>
+<tr class="even">
+<td id="T_678d7_row11_col0" class="data row11 col0">construction_method</td>
+<td id="T_678d7_row11_col1" class="data row11 col1">Project scope</td>
+</tr>
+<tr class="odd">
+<td id="T_678d7_row12_col0" class="data row12 col0">manufactured_home_secured_property_type</td>
+<td id="T_678d7_row12_col1" class="data row12 col1">Project scope</td>
+</tr>
+<tr class="even">
+<td id="T_678d7_row13_col0" class="data row13 col0">manufactured_home_land_property_interest</td>
+<td id="T_678d7_row13_col1" class="data row13 col1">Project scope</td>
+</tr>
+<tr class="odd">
+<td id="T_678d7_row14_col0" class="data row14 col0">submission_of_application</td>
+<td id="T_678d7_row14_col1" class="data row14 col1">Project scope</td>
+</tr>
+<tr class="even">
+<td id="T_678d7_row15_col0" class="data row15 col0">initially_payable_to_institution</td>
+<td id="T_678d7_row15_col1" class="data row15 col1">Project scope</td>
+</tr>
+<tr class="odd">
+<td id="T_678d7_row16_col0" class="data row16 col0">derived_ethnicity</td>
+<td id="T_678d7_row16_col1" class="data row16 col1">Available in other columns</td>
+</tr>
+<tr class="even">
+<td id="T_678d7_row17_col0" class="data row17 col0">derived_race</td>
+<td id="T_678d7_row17_col1" class="data row17 col1">Available in other columns</td>
+</tr>
+<tr class="odd">
+<td id="T_678d7_row18_col0" class="data row18 col0">loan_type</td>
+<td id="T_678d7_row18_col1" class="data row18 col1">Project scope</td>
+</tr>
+<tr class="even">
+<td id="T_678d7_row19_col0" class="data row19 col0">prepayment_penalty_term</td>
+<td id="T_678d7_row19_col1" class="data row19 col1">?</td>
+</tr>
+<tr class="odd">
+<td id="T_678d7_row20_col0" class="data row20 col0">applicant_age_above_62</td>
+<td id="T_678d7_row20_col1" class="data row20 col1">Available in other columns</td>
+</tr>
+<tr class="even">
+<td id="T_678d7_row21_col0" class="data row21 col0">co-applicant_age_above_62</td>
+<td id="T_678d7_row21_col1" class="data row21 col1">Available in other columns</td>
+</tr>
+<tr class="odd">
+<td id="T_678d7_row22_col0" class="data row22 col0">total_points_and_fees</td>
+<td id="T_678d7_row22_col1" class="data row22 col1">&lt;1% of records have values</td>
+</tr>
+<tr class="even">
+<td id="T_678d7_row23_col0" class="data row23 col0">rate_spread</td>
+<td id="T_678d7_row23_col1" class="data row23 col1">&lt;1% of records have values</td>
+</tr>
+<tr class="odd">
+<td id="T_678d7_row24_col0" class="data row24 col0">multifamily_affordable_units</td>
+<td id="T_678d7_row24_col1" class="data row24 col1">&lt;1% of records have values</td>
+</tr>
+<tr class="even">
+<td id="T_678d7_row25_col0" class="data row25 col0">lei</td>
+<td id="T_678d7_row25_col1" class="data row25 col1">Substituting company name</td>
+</tr>
+<tr class="odd">
+<td id="T_678d7_row26_col0" class="data row26 col0">state_code</td>
+<td id="T_678d7_row26_col1" class="data row26 col1">Using county_code</td>
+</tr>
+<tr class="even">
+<td id="T_678d7_row27_col0" class="data row27 col0">hoepa_status</td>
+<td id="T_678d7_row27_col1" class="data row27 col1">Single value in column after scope applied</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+</section>
+<section id="row-elimination" class="level3" data-number="2.2.2">
+<h3 data-number="2.2.2" class="anchored" data-anchor-id="row-elimination"><span class="header-section-number">2.2.2</span> Row Elimination</h3>
+<p>The initial pull from the HMDA API allowed solely for filtering by one or two filters. This effort pulled data for 5 selected lenders in the year 2023, for conventional loans only. To reduce the data to the same scope stipulated in the CNN article, row records must further be eliminated based upon the following criteria:</p>
+<ul>
+<li><p>exact duplication of another row (from the source data, before any transformations are applied). The nature of the data is such that the probability of an exact duplicate of 99 column values between two records is negligible, and as such exact duplicates should be ignored.</p></li>
+<li><p>scoping to same frame as CNN:</p>
+<ul>
+<li><p>lien_status != 1, or only first lien secured properties</p></li>
+<li><p>total_units not in [1,2,3,4], or only 1-4 unit homes</p></li>
+<li><p>conforming_loan_limit != ‘C’, or only conforming loans</p></li>
+<li><p>business_or_commercial purpose != 2, or non-commercial and non-business properties</p></li>
+<li><p>occupancy_type != 1, or primary residence</p></li>
+<li><p>loan_purpose != 1, or for the purchase of a home</p></li>
+</ul></li>
+<li><p>records in which there is no value for county_code</p></li>
+<li><p>records for which the loan would be neither approved nor denied: when the action_taken value is 4 (Application Withdrawn) or 5 (File closed for incompleteness).</p></li>
+<li><p>records that have invalid values as defined in the binary encoding section above for 6 variables (applicant_race, co-applicant_race, applicant_ethnicity, co-applicant_ethnicity, aus, denial_reason).</p></li>
+</ul>
+</section>
+<section id="ordinal-encoding" class="level3" data-number="2.2.3">
+<h3 data-number="2.2.3" class="anchored" data-anchor-id="ordinal-encoding"><span class="header-section-number">2.2.3</span> Ordinal Encoding</h3>
+<p>The following columns are re-encoded as ordinal data:</p>
+<ul>
+<li><p>total_units</p></li>
+<li><p>applicant_age</p></li>
+<li><p>debt_to_income_ratio</p></li>
+</ul>
+</section>
+<section id="missing-and-blank-values" class="level3" data-number="2.2.4">
+<h3 data-number="2.2.4" class="anchored" data-anchor-id="missing-and-blank-values"><span class="header-section-number">2.2.4</span> Missing and Blank Values</h3>
+<p>The following aspects of the dataset have the potential for missing or blank values. The reporting requirements vary for the different columns in the HMDA LAR, and the blanks and missing values can occur for a multitude of reasons:</p>
+<ul>
+<li><p>applicant didn’t provide the information</p></li>
+<li><p>applicant withdrew their application</p></li>
+<li><p>data was not entered or submitted by the institution</p></li>
+<li><p>institution did not have or receive the data for the applicant or their prospective property</p></li>
+<li><p>the column may not be applicable or filled because the application was denied, or was not applicable for the particular loan circumstances (e.g.&nbsp;an introductory rate period wouldn’t be applicable for an adjustable rate mortgage)</p></li>
+</ul>
+<p>Each of the following is replaced by the median value of the variable when the data is grouped by state_code and total_units (e.g.&nbsp;number of rooms in the home):</p>
+<ul>
+<li><p>property_value</p></li>
+<li><p>loan_to_value_ratio. special note: when property_value and loan_amount are available for a record, this value is filled with the value of the loan amount (times 100) divided by the listed property value. Otherwise, any blanks are filled with the median loan to value ratio when the data is grouped by state and number of rooms.</p></li>
+</ul>
+<p>Each of the following is replaced by the median value of the variable when the data is grouped by state_code and company (e.g.&nbsp;institution processing the mortgage application):</p>
+<ul>
+<li><p>lender_credits</p></li>
+<li><p>intro_rate_period</p></li>
+<li><p>interest_rate</p></li>
+<li><p>origination_charges</p></li>
+<li><p>discount_points</p></li>
+<li><p>total_loan_costs</p>
+<ul>
+<li>Note: Whenever the grouping by state_code and company produced N/A values, these were replaced with the value 1 in the event of a need for logarithmic transformations on these variables.</li>
+</ul></li>
+</ul>
+<p>Each of the following is replaced with the mode of the variable when the data is grouped by state_code and company (e.g.&nbsp;institution processing the mortgage application):</p>
+<ul>
+<li><p>intro_rate_period</p></li>
+<li><p>debt_to_income_ratio</p>
+<ul>
+<li>Note: Whenever the grouping by state_code and total_units produced N/A values, these were replaced with the value 0 as they better align with categorical variables than as numeric, and may not undergo transformations.</li>
+</ul></li>
+</ul>
+<p>Another common blank value included the income feature. Blanks and missing values are replaced with the value from the column ffiec_msa_md_median_family_income divided by 1000. This value is an approximation for median family income in the specific metropolitan statistical area (MSA) in which the home is located.</p>
+</section>
+<section id="incorrect-column-values" class="level3" data-number="2.2.5">
+<h3 data-number="2.2.5" class="anchored" data-anchor-id="incorrect-column-values"><span class="header-section-number">2.2.5</span> Incorrect Column Values</h3>
+<p>Some values of interest for inspection include loan_to_value_ratio, property_value, and loan_amount, which should, in theory, all be related and have reasonable values. A first-lien for-the-purpose-of-purchase, conventional, conforming loan is highly unlikely to have a value greater than 100%. This is because a savvy lender would not secure a property as collateral for a loan that greatly exceeds its value.</p>
+<p>That being said, there may be cases were this ratio could stretch further based upon qualities of the borrower and status of the market, and especially if the borrower seeks to include the overage as part of plans for improvements of the home, or covering closing costs or other mortgage requirements - in combination with the borrower having an excellent credit score or having a very high income. The case of high loan-to-value-ratio (henceforth LTV Ratio), may be unlikely, but is not impossible.</p>
+<p>Below is an examination for each lender for extreme values in LTV ratio:</p>
+<div id="cell-fig-ltr-violin" class="cell" data-execution_count="9">
+<div class="cell-output cell-output-display">
+<div id="fig-ltr-violin" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-ltr-violin-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="data_files/figure-html/fig-ltr-violin-output-1.png" width="723" height="449" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ltr-violin-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2.1: Violin plot of Loan To Value Ratio, by lender
 </figcaption>
 </figure>
 </div>
 </div>
-<p><a href="#tbl-datasourceblock" class="quarto-xref">Table&nbsp;<span>2.1</span></a> summarizes the sources and methods for data collection in support of this research.</p>
+</div>
+<p>There appear to be some extreme values to the high right for each lender, in some cases with the ratio nearing 1000%. To examine further, whether or not the loan was approved should be considered, and if the loan was denied, the reason for denial should be considered as well.</p>
+<p>If any values in this extreme range consist of loans that were denied, and reasons for denial include items such as “insufficient collateral”, then these items may simply be extreme case outliers that are valid and real as opposed to errors in the data.</p>
+<p>Considering a range of 100% or greater loan_to_value_ratio, the following information is available:</p>
+<div id="cell-fig-pct-denial" class="cell" data-execution_count="10">
+<div class="cell-output cell-output-display">
+<div id="fig-pct-denial" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-pct-denial-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="data_files/figure-html/fig-pct-denial-output-1.png" width="472" height="409" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-pct-denial-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2.2: Approvals/Denials for Applications with LTV &gt; 100%
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>In <a href="#fig-pct-denial" class="quarto-xref">Figure&nbsp;<span>2.2</span></a>, it is clear that the majority of loans in this category were denied by lenders. There is a subset of loans that were approved (~40%), and examining further to examine factors such as the loan_to_value_ratios in this group, as well as reasons for denial amongst the denied applications, is necessary before determining need for identifying these records as errors vs.&nbsp;outliers.</p>
+<div id="cell-fig-reason-denial" class="cell" data-execution_count="11">
+<div class="cell-output cell-output-display">
+<div id="fig-reason-denial" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-reason-denial-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="data_files/figure-html/fig-reason-denial-output-1.png" width="862" height="431" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-reason-denial-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2.3: Reasons Cited for Loan Denials with LTV Ratio &gt; 100%
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>This plot makes it apparent that many of these high LTV ratio loan applications are likely legitimate. Many of them were denied on the bases of debt to income ratio and collateral (e.g.&nbsp;the property is insufficient collateral to cover the risk of the loan).</p>
+<p>That being said, it’s also necessary to examine the 40% of loans that were actually approved in this window.</p>
+<div id="cell-fig-ltv-strip" class="cell" data-execution_count="12">
+<div class="cell-output cell-output-display">
+<div id="fig-ltv-strip" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-ltv-strip-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="data_files/figure-html/fig-ltv-strip-output-1.png" width="601" height="467" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ltv-strip-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2.4: strip plot of high LTV (&gt;100%) 2023 loans by approval
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>From <a href="#fig-ltv-strip" class="quarto-xref">Figure&nbsp;<span>2.4</span></a>, its apparent that the approved loans in this excess range tended to be on the much lower end of the spectrum, seemingly hovering just above 100%, whereas the denied applications span from just over 100% all the way up to 1000%. All in all, it would seem these extreme values, in both the cases of approved and denied loans, are legitimate values.</p>
+<p>A remaining concern is for potential discrepancy in the loan to value ratio itself. It’s appears odd that many data points bunch up at the 1000% mark as opposed to going above or below it, like it’s an arbitrary cap on the actual value. Below the same plot is examined, but instead the Loan to Value Ratio is replaced the value of Loan Amount * 100 / Property Value.</p>
+<div id="cell-fig-ltv-strip2" class="cell" data-execution_count="13">
+<div class="cell-output cell-output-display">
+<div id="fig-ltv-strip2" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-ltv-strip2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="data_files/figure-html/fig-ltv-strip2-output-1.png" width="610" height="467" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ltv-strip2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2.5: strip plot of high LTV (&gt;100%) 2023 loans by approval, with adjusted LTV value
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>It would seem that the 1000% mark may indeed be an arbitrary cap, or a potential error of some sort. Per the <a href="https://files.consumerfinance.gov/f/documents/201710_cfpb_reportable-hmda-data_regulatory-and-reporting-overview-reference-chart.pdf">Consumer Financial Protection Bureau</a> on reporting requirements, the value for the combined loan to value ratio is to be “the ratio of the total amount of debt secured by the property to the value of the property relied on in making the credit decision.”</p>
+<p>In most other cases in which the values sit below 100%, this calculated value is within a small unit difference of the reported value. This may be because the decimal places on the decision are only to be included if those decimal points were relied upon to make the decision on whether or not to approve the loan.</p>
+<p>In light of the exploration on loan to value ratio, the feature loan_to_value_ratio will be replaced with the value of <span class="math inline">\(\frac{100\cdot\text{loan amount}}{\text{property value}}\)</span> . In cases where one of these values is blank, the loan_to_value_ratio will be filled with the median value for loan_to_value_ratio when the data is grouped by state_code and total_units (or number of rooms) in the home.</p>
+<p>Another feature worth exploring is income. This feature, per the HMDA LAR Data Dictionary, is in thousands of dollars. There are millionaires and even billionaires in the United States. Generally, though, one might expect to see an exponential distribution of income in the source dataset. Furthermore, one should expect to see a narrow string of values getting thinner and thinner as it approaches the upper end of the dataset. Inspecting income with a boxplot, we see some challenges:</p>
+<div id="cell-fig-inc-box" class="cell" data-execution_count="14">
+<div class="cell-output cell-output-display">
+<div id="fig-inc-box" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-inc-box-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="data_files/figure-html/fig-inc-box-output-1.png" width="545" height="467" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-inc-box-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2.6: boxplot of borrower income
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>A cursory inspection of this data suggests that there may be a single, erroneous outlier sitting at a value of approximately $209M worth of income, compressing the visibility of the boxplot down to nearly nothing. It is possible that this datapoint is real and correct, and that there was a single, very wealthy applicant for a mortgage in the data. However, below is an examination of the data with and without this high-end datapoint using kernel density estimation for the natural logarithm of income:</p>
+<div id="cell-fig-inc-box-c" class="cell" data-execution_count="15">
+<div class="cell-output cell-output-display">
+<div id="fig-inc-box-c" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-inc-box-c-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="data_files/figure-html/fig-inc-box-c-output-1.png" width="666" height="475" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-inc-box-c-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2.7: distribution
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>With the exception of some deviations from normality in the central portions of the curve, these plots appear to showcase a normally distributed variable. Examining the mean and standard deviations for the log of income, with and without the extreme outlier, produces the following:</p>
+<div class="cell" data-execution_count="16">
+<div id="tbl-income-log" class="cell quarto-float anchored" data-execution_count="16">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-income-log-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;2.5: mean and standard deviation, with and without extreme outlier for income
+</figcaption>
+<div aria-describedby="tbl-income-log-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display" data-execution_count="16">
+<div>
+
+
+<table class="dataframe do-not-create-environment cell table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">mean</th>
+<th data-quarto-table-cell-role="th">std</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">With Outlier</td>
+<td>4.725800</td>
+<td>0.623842</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">Without Outlier</td>
+<td>4.725769</td>
+<td>0.623654</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>The mean and standard deviation of the log-transformed feature, income, appears to retain the same features of central tendency with or without this extreme value. Provided that a log transformation of the feature is used within any models, this outlier should have little to no impact on training and testing data, as the underlying parent distribution can be approximated by that of the normal distribution <span class="math inline">\(N(4.726,0.624)\)</span> in either case. As such, the row will be retained, and the value will not be adjusted (minus the log-transformation).</p>
+</section>
+</section>
+<section id="further-exploratory-data-analysis" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="further-exploratory-data-analysis"><span class="header-section-number">2.3</span> Further Exploratory Data Analysis</h2>
+<p>To examine the data under similar conditions as CNN for 2023 data, below is a plot of the top 5 lenders and their approval rates for select racial groups, controlling for no other variables:</p>
+<div id="cell-fig-rc-app-lend" class="cell" data-execution_count="17">
+<div class="cell-output cell-output-display">
+<div id="fig-rc-app-lend" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-rc-app-lend-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="data_files/figure-html/fig-rc-app-lend-output-1.png" width="1429" height="381" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-rc-app-lend-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2.8: 2023 Loan Approval Rates, By Company and Select Race
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>The above appears to flow from 2022’s findings into 2023 - that, at least for NFCU, the trend appears to continue under the specified scope with approval rates of about 76% for White applicants, and 43.8% for Black/African American Applicants. Comparing <a href="#fig-rc-app-lend" class="quarto-xref">Figure&nbsp;<span>2.8</span></a> to CNN’s figures, the outcomes are remarkably similar for 2023.</p>
+<p>Similar exploration into sex and age is also of interest for this study:</p>
+<div id="cell-fig-sex-inst" class="cell" data-execution_count="18">
+<div class="cell-output cell-output-display">
+<div id="fig-sex-inst" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-sex-inst-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="data_files/figure-html/fig-sex-inst-output-1.png" width="1429" height="287" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-sex-inst-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2.9: Approval Rates by Institution and Borrower Sex
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>This chart also reveals some interesting trends, not just for NFCU, but across lenders. Notably - when no sex is provided by the applicant, 100% of loans across lenders received approval of some sort. Somewhat similarly, for lenders like JP Morgan, Rocket Mortgage, and Wells Fargo, the institutions had high approval rates in cases for which the applicant selected both sexes on their application.</p>
+<p>Other portions of the data are also important to examine for consistency, even outside of race, gender, ethnicity, and age. It could be impactful to examine for consistency on when Debt-to-Income (DTI) ratio is cited for a rejection reason for a loan application. In theory, few if any applications should be rejected for DTI when the DTI is relatively low, absent any other causes or contributory factors.</p>
+<div id="cell-fig-dti-bars" class="cell" data-execution_count="19">
+<div class="cell-output cell-output-display">
+<div id="fig-dti-bars" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-dti-bars-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="data_files/figure-html/fig-dti-bars-output-1.png" width="1430" height="428" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-dti-bars-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2.10: Debt to Income Ratio, by Lender
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>It appears that for some lenders, there’s a slight but interesting occurence of loan application denials for a subset of potential borrowers with very low debt to income ratios (specifically less than 20%). This is interesting, as one might think that this is a completely invalid reason for rejection, as the immediately available facts in the dataset don’t directly support such a conclusion.</p>
+<p>This finding lends to the research question of potential latent variables in this dataset. While the data do not directly support the conclusion reached, it is within the realm of possibility that, in light of other factors unavailable, the DTI ratio becomes a deciding factor when</p>
+</section>
+<section id="last-thoughts-on-source-data" class="level2" data-number="2.4">
+<h2 data-number="2.4" class="anchored" data-anchor-id="last-thoughts-on-source-data"><span class="header-section-number">2.4</span> Last Thoughts on Source Data</h2>
+<p>More exploration is necessary within this data, and potentially additional cleaning and transformations. Few if any numeric variables were scaled or transformed to collapse them all within similar ranges. This will be needed for building certain models within this research effort. Further understanding of categorical variable associations and relationships need further exploration and study. This will be an ongoing effort throughout this</p>
 
 
 </section>

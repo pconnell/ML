@@ -1,27 +1,1020 @@
 # Data Gathering and Exploratory Analysis {#sec-data}
-
 ```{python importBlock}
-import pandas as pd, numpy as np
+import pandas as pd, numpy as np,seaborn as sns,matplotlib.pyplot as plt
 ```
 
 ```{python DataImports}
+mapper = {
+    'applicant_race':{
+        'American Indian/Alaska Native':0b0000000000000000001,
+        'Asian':0b0000000000000000010,
+        'Asian Indian':0b0000000000000000100,
+        'Chinese':0b0000000000000001000,
+        'Filipino':0b0000000000000010000,
+        'Japanese':0b0000000000000100000,
+        'Korean':0b0000000000001000000,
+        'Vietnamese':0b0000000000010000000,
+        'Other Asian':0b0000000000100000000,
+        'Black/African American':0b0000000001000000000,
+        'Native Hawaiian/Pacific Islander':0b0000000010000000000,
+        'Native Hawaiian':0b0000000100000000000,
+        'Guamanian/Chamorro':0b0000001000000000000,
+        'Samoan':0b0000010000000000000,
+        'Other Pacific Islander':0b0000100000000000000,
+        'White':0b0001000000000000000,
+        'Information not provided':0b0010000000000000000,
+        'Not Applicable':0b0100000000000000000,
+        'No Co-applicant':0b1000000000000000000
+    },
+    'co-applicant_race':{
+        'American Indian/Alaska Native':0b0000000000000000001,
+        'Asian':0b0000000000000000010,
+        'Asian Indian':0b0000000000000000100,
+        'Chinese':0b0000000000000001000,
+        'Filipino':0b0000000000000010000,
+        'Japanese':0b0000000000000100000,
+        'Korean':0b0000000000001000000,
+        'Vietnamese':0b0000000000010000000,
+        'Other Asian':0b0000000000100000000,
+        'Black/African American':0b0000000001000000000,
+        'Native Hawaiian/Pacific Islander':0b0000000010000000000,
+        'Native Hawaiian':0b0000000100000000000,
+        'Guamanian/Chamorro':0b0000001000000000000,
+        'Samoan':0b0000010000000000000,
+        'Other Pacific Islander':0b0000100000000000000,
+        'White':0b0001000000000000000,
+        'Information not provided':0b0010000000000000000,
+        'Not Applicable':0b0100000000000000000,
+        'No Co-applicant':0b1000000000000000000
+    },
+    'applicant_ethnicity':{
+        'Hispanic/Latino':0b000000001,
+        'Mexican':0b000000010,
+        'Puerto Rican':0b000000100,
+        'Cuban':0b000001000,
+        'Other Hispanic/Latino':0b000010000,
+        'Not Hispanic/Latino':0b000100000,
+        'Information Not Provided':0b001000000,
+        'Not Applicable':0b010000000,
+        'No Co-applicant':0b100000000
+    },
+    'co-applicant_ethnicity':{
+        'Hispanic/Latino':0b000000001,
+        'Mexican':0b000000010,
+        'Puerto Rican':0b000000100,
+        'Cuban':0b000001000,
+        'Other Hispanic/Latino':0b000010000,
+        'Not Hispanic/Latino':0b000100000,
+        'Information Not Provided':0b001000000,
+        'Not Applicable':0b010000000,
+        'No Co-applicant':0b100000000
+    },
+    'aus':{
+        'Desktop Underwriter':0b00000001,
+        'Loan Prospector/Product Advisor':0b00000010,
+        'TOTAL Scorecard':0b00000100,
+        'GUS':0b00001000,
+        'Other':0b00010000,
+        'Internal Proprietary':0b00100000,
+        'Not applicable':0b01000000,
+        'Exempt':0b10000000,
+    }, 
+    'denial_reason':{
+        'DTI':0b0000000001,
+        'Employment History':0b0000000010,
+        'Credit History':0b0000000100,
+        'Collateral':0b0000001000,
+        'Insufficient Cash':0b0000010000,
+        'Unverifiable Information':0b0000100000,
+        'Credit Application Incomplete':0b0001000000,
+        'Mortgage Insurance Denied':0b0010000000,
+        'Other':0b0100000000,
+        'Not Applicable':0b1000000000
+    }
+}
+
+fr = pd.read_csv('../data/final_clean2.csv')
+```
+
+In efforts to answer the established research questions, data was collected, predominantly, from the HMDA database for the top 5 lenders listed within CNN's reporting.  As both CNN and the Lehigh University articles leveraged this data, working with and examining the same type of data is ideal in the pursuit of furthering the research.
+
+## Data Gathering 
+
+To pursue the established research objectives, the following resources were identified and leveraged as data sources: 
+
+* [The Global Legal Entity Identifier (GLEIF) API](https://documenter.getpostman.com/view/7679680/SVYrrxuU)
+
+* [The FFIEC Home Mortgage Disclosure Act (HMDA) API](https://ffiec.cfpb.gov/documentation/api/data-browser/)
+
+CNN provides explicit data selection, cleaning, and transformation information at the base of their [first article](https://www.cnn.com/2023/12/14/business/navy-federal-credit-union-black-applicants-invs/index.html) in the section labeled "How We Reported This Story." The scope of this research includes the scope identified by CNN, as the nature of their filtration and focus could be ascribed to what one would consider being part of the American dream - the ability to attain a first loan for a single-family property as a primary residence, not for the purpose of business or commerce.  The CNN article predominantly leveraged 2022 and prior year data, whereas this research will inspect 2023 data.
+
+Lenders in question, listed in the graphics for the first CNN article, are identified via the [GLEIF API](https://documenter.getpostman.com/view/7679680/SVYrrxuU).  HMDA Data solely contains the Legal Entity Identifier (LEI) in each record as opposed to the name of the entity.  In order to perform aggregate analysis and labeling of data as being linked to one of these organizations, it is necessary to query another source to identify the appropriate LEIs for use in querying HMDA.  Furthermore, HMDA is a large database, and being able to provide filtering conditions substantially reduces the size of the returned data.  Absent key filters, large volumes are returned in a single file.  At the same time, the number of filters that can be supplied to the HMDA API simultaneously is limited, so filtering by organization and other key filters will minimize the data pull before further cleaning.
+
+The HMDA API provides simple access to a wide array of data on mortgages.  Additionally, the API provides a well-documented [data dictionary](https://ffiec.cfpb.gov/documentation/publications/loan-level-datasets/lar-data-fields) that spells out the returned features and their meanings in the context of the Loan Application Register.  An API query returns a total of 99 columns with quantitative and qualitative data on the prospective borrower, the property they seek to purchase, aspects and features of the loan, and the final action taken on the loan application.  Some of these columns may exceed the scope of this research, whereas many others are necessary and important to the established research questions.  Finding creative and effective means of reducing dimensionality is key.
+
+Neither of the API endpoints leveraged in data collection for this research required an API key, thus simplifying the data gathering process.
+
+The source code for data gathering efforts in this research is located [here](../src/pull_data.py). 
+
+Example use of the GLEIF API
+
+```
+import requests
+endpoint = ""
+params = {
+
+}
+
+requests.get(endpoint,params)
+```
+
+Example use of the HMDA API
 
 ```
 
-## Overview of Collected Data
+hmda_endpoint = ""
+hmda_params = {
 
-```{python tbl-datasourceblock}
-#| label: tbl-datasourceblock
-#| tbl-cap: Data Sources, Methods, and References
-#| tbl-cap-location: bottom
+}
+resp = requests.get(endpoint,params)
 
-pd.DataFrame({
-    'Source':[],
-    'Type':[], #API, scrape, or found / downloaded
-    'Collection Method':[],
-    'Link':[]
-}).style.hide(axis='index')
+with open('/file/path/here.csv','wb') as f:
+    f.write(resp.content)
+    f.close()
 ```
 
-@tbl-datasourceblock summarizes the sources and methods for data collection in support of this research.  
+Of note for the HMDA endpoint in this case is the fact that it natively returns record data in CSV format.  As such, the means to store the data is relatively simple, requiring no substantial parsing of JSON content to process the data into record or dataframe format.
 
+The data, from the initial API queries and prior to further cleaning and tailoring, is located [here](https://drive.google.com/drive/u/2/folders/1I5d1ryo96WYdH_l9ijinSocEAjf1jmGO)
+
+## Data Cleaning
+
+The primary methods of cleaning in this research revolve around dimensionality reduction and row reduction.  The goal for cleaning is to minimize the number of columns in the dataset to key quantitative and qualitative features holding potential use in modeling, eliminating records out of the scope of this research, and handling blank/missing/incorrect values in the remaining records.
+
+### Dimensionality Reduction
+
+#### Collapsing Redundant Columns with Binary Encoding
+
+This research collapses the following columns to deduplicate data and reduce columnar dimensionality:
+
+Approximately 29 columns in the data contain categorical information that can be encoded in binary and summed into a single column to retain all data while reducing dimensionality.  These columns pertain to applicant and co-applicant race and ethnicity, the automated underwriting systems used by organizations to support decision making in approving or denying loan applications, and reasons for loan denial, if applicable.  
+
+Since each of these columns can take on multiple values, the HMDA dataset owners have allowed for up to 5 columns for each of these categorical variables.  By translating each possible value to a unique binary encoding (with number of bits equal to the number of classes, and solely a single 1 in each encoding), the sum across multiple columns will provide for a unique value containing *all* classifications in a single categorical variable.
+
+Furthermore - this transformation addressses some potential biases in CNN's methods.  Their report excluded records in the case of mixed-race applicants and co-applicants as being members of a racial group.  The binary encoding allows for their inclusion as being part of such groups; while individuals of mixed race may not be fully part of any single group, they remain part of it.
+
+The data contain multiple column datapoints for the ethnicity and race of applicants and co-applicants for a total of 20 additional columns (e.g. "co-applicant_race-1, co-applicant_race-2...").  Not all of these columns contain viable data.  An individual can have multiple races and ethnicities.  To allow for retaining of the data while also eliminating unnecessary blank columns, these columns are collapsed to a single column, each - reducing the data by 16 columns.  
+
+Another set of column collapses are performed on the 'aus-' (automated underwriting system) and 'denial_reason' columns.  There are 5 columns in the source data containing the different system(s) used by lenders to support underwriting decision making processes.  The denial_reason is rich with potentially important information that could lend itself to the identification of latent or unavailable variables (e.g. credit score, income verification, etc).  These columns are collapsed in the same manner as for the aforementioned race and ethnicities of applicants.  
+
+Each value was translated from the digit representing it to instead a binary representation with a number of bits equivalent to the number of valid classes available for the variable from the data dictionary.  After each value in each column was mapped to a bitwise representation, the sum across each column was taken to produce a final column with bits containing all of the original information.  This transformation enables simple bitwise AND operations to identify records that meet a specific condition (or combination of conditions) while also eliminating columnar redundancy.
+
+```{python}
+collapser = {
+    'applicant_race-':{
+         1:0b0000000000000000001,
+         2:0b0000000000000000010,
+        21:0b0000000000000000100,
+        22:0b0000000000000001000,
+        23:0b0000000000000010000,
+        24:0b0000000000000100000,
+        25:0b0000000000001000000,
+        26:0b0000000000010000000,
+        27:0b0000000000100000000,
+         3:0b0000000001000000000,
+         4:0b0000000010000000000,
+        41:0b0000000100000000000,
+        42:0b0000001000000000000,
+        43:0b0000010000000000000,
+        44:0b0000100000000000000,
+         5:0b0001000000000000000,
+         6:0b0010000000000000000,
+         7:0b0100000000000000000,
+         8:0b1000000000000000000
+    },
+    'co-applicant_race-':{
+         1:0b0000000000000000001,
+         2:0b0000000000000000010,
+        21:0b0000000000000000100,
+        22:0b0000000000000001000,
+        23:0b0000000000000010000,
+        24:0b0000000000000100000,
+        25:0b0000000000001000000,
+        26:0b0000000000010000000,
+        27:0b0000000000100000000,
+         3:0b0000000001000000000,
+         4:0b0000000010000000000,
+        41:0b0000000100000000000,
+        42:0b0000001000000000000,
+        43:0b0000010000000000000,
+        44:0b0000100000000000000,
+         5:0b0001000000000000000,
+         6:0b0010000000000000000,
+         7:0b0100000000000000000,
+         8:0b1000000000000000000
+    },
+    'applicant_ethnicity-':{
+        1:0b000000001,
+        11:0b000000010,
+        12:0b000000100,
+        13:0b000001000,
+        14:0b000010000,
+        2:0b000100000,
+        3:0b001000000,
+        4:0b010000000,
+        5:0b100000000
+    },
+    'co-applicant_ethnicity-':{
+        1:0b000000001,
+        11:0b000000010,
+        12:0b000000100,
+        13:0b000001000,
+        14:0b000010000,
+        2:0b000100000,
+        3:0b001000000,
+        4:0b010000000,
+        5:0b100000000
+    },
+    'aus-':{
+        1:0b00000001,
+        2:0b00000010,
+        3:0b00000100,
+        4:0b00001000,
+        5:0b00010000,
+        7:0b00100000,
+        6:0b01000000,
+        1111:0b10000000,
+    }, 
+    'denial_reason-':{
+        1:0b0000000001,
+        2:0b0000000010,
+        3:0b0000000100,
+        4:0b0000001000,
+        5:0b0000010000,
+        6:0b0000100000,
+        7:0b0001000000,
+        8:0b0010000000,
+        9:0b0100000000,
+        10:0b1000000000
+    }
+}
+
+app_race_fr = pd.DataFrame({
+    'Valid Classes':[
+        "American Indian or Alaska Native",
+        "Asian",
+        "Asian Indian",
+        "Chinese",
+        "Filipino",
+        "Japanese",
+        "Korean",
+        "Vietnamese",
+        "Other Asian",
+        "Black or African American",
+        "Native Hawaiian or Other Pacific Islander",
+        "Native Hawaiian",
+        "Guamanian or Chamorro",
+        "Samoan",
+        "Other Pacific Islander",
+        "White",
+        "Information not provided by applicant in mail, internet, or telephone application",
+        "Not applicable",
+        "No co-applicant"
+    ],
+    'HMDA Encoding':collapser['applicant_race-'].keys(),
+    'Binary Encoding':collapser['applicant_race-'].values()
+})
+
+app_ethn_fr = pd.DataFrame({
+    'Valid Classes':[
+        "Hispanic or Latino",
+        "Mexican",
+        "Puerto Rican",
+        "Cuban",
+        "Other Hispanic or Latino",
+        "Not Hispanic or Latino",
+        "Information not provided by applicant in mail, internet, or telephone application",
+        "Not applicable",
+        "No co-applicant"
+    ],
+    'HMDA Encoding':collapser['applicant_ethnicity-'].keys(),
+    'Binary Encoding':collapser['applicant_ethnicity-'].values()
+})
+
+aus_fr = pd.DataFrame({
+    'Valid Classes':[
+        "Desktop Underwriter (DU)",
+        "Loan Prospector (LP) or Loan Product Advisor",
+        "Technology Open to Approved Lenders (TOTAL) Scorecard",
+        "Guaranteed Underwriting System (GUS)",
+        "Other",
+        "Internal Proprietary System",
+        "Not applicable",
+        "Exempt"
+    ],
+    'HMDA Encoding':collapser['aus-'].keys(),
+    'Binary Encoding':collapser['aus-'].values()
+})
+
+denial_fr = pd.DataFrame({
+    'Valid Classes':[
+        "Debt-to-income ratio",
+        "Employment history",
+        "Credit history",
+        "Collateral",
+        "Insufficient cash (downpayment, closing costs)",
+        "Unverifiable information",
+        "Credit application incomplete",
+        "Mortgage insurance denied",
+        "Other",
+        "Not applicable"
+    ],
+    'HMDA Encoding':collapser['denial_reason-'].keys(),
+    'Binary Encoding':collapser['denial_reason-'].values()
+})
+
+```
+
+```{python tbl-race-df}
+#| label: tbl-race-df
+#| tbl-cap: Remapping of Racial Categories for applicants and co-applicants
+
+app_race_fr.style.hide(axis='index')
+```
+
+```{python tbl-ethn-df}
+#| label: tbl-ethn-df
+#| tbl-cap: Remapping of Ethnic Categories for applicants and co-applicants
+
+app_ethn_fr.style.hide(axis='index')
+```
+
+```{python tbl-aus-df}
+#| label: tbl-aus-df
+#| tbl-cap: Remapping of Automated Underwriting Systems
+
+aus_fr.style.hide(axis='index')
+```
+
+```{python tbl-denial-df}
+#| label: tbl-denial-df
+#| tbl-cap: Remapping of Denial Reasons
+
+denial_fr.style.hide(axis='index')
+```
+
+Examining @tbl-denial-df, for instance consider a cell value of 96 in the 'denial_reason' column.  There are two unique binary encoding values - 32 and 64, that produce this sum.  The value 96, then, would signify a loan that was denied both for having 'Unverifiable Information' and for 'Credit application incomplete'.  Similarly, referencing @tbl-race-df, a value of 32770 in this column would signify a person whose races are Asian (32768) and White (2) (2+32768=32770).
+
+This binary numeric representation of categorical data allows the column to contain multiple distinct and potentially impactful datum while reducing dimensionality.  E.g. to filter the dataset to records pertaining to the race Asian, the filter can be performed by selecting records where the binary AND of 32768 & \[column_value\] = 32768.  Other races may also be present in the filtered records, but all Asians will be captured.
+
+Leveraging the columns natively for tasks such as clustering may not be effective or efficient, and could pose challenges in performing unsupervised learning.  Further cleaning may be necessary for such tasks, but collapsing and retaining the data ensures its availablity for further transformation and cleaning.  For instances, the re-splitting and pivoting of these columns into boolean values could be leveraged in association rule mining or in Bernoulli Naive Bayes analyses.
+
+Notice also that encodings for not available or not applicable types of data are higher values within each encoding list.  This actually provides a very simple data validation technique, and allows for the identification or elimination of potentially erroneous records.  Namely any value:
+
+* within the exclusive interval (65536,131072), or greater than 131072 for applicant_race
+
+* within the exclusive intervals (65536,131072) and (131072,262144), or greater than 262144 for co-applicant_race
+
+* within the exculsive interval (64, 128), or greater than 128 for applicant_ethnicity
+
+* within the exclusive intervals (64,128) and (128,256), or greater than 256 for co-applicant_ethnicity
+
+* within the exclusive interval (64,128), or greater than 128 for aus (automated underwriting system)
+
+* greater than 512 for denial_reason
+
+will signify an *erroneous* record.  Namely, if any value is found to include "Not Applicable" in conjunction with another valid selection, one of the two selections were selected in error, and the data is not reliable.  As such, these records can be filtered from the source data.  As such, records meeting the above criteria are removed from the source data.
+
+Because the totality of racial and ethnicity information can now be contained within a single column, the derived_ columns for ethnicity and race can be dropped from the dataset.
+
+#### Column Elimination
+
+The following list of columns were eliminated from the source data
+
+```{python tbl-dropped-cols}
+labels=[
+    'activity_year', #only one year
+    'derived_msa-md', #not sure if needed or if it is redundant...
+    #'state_code', #less detailed, maybe need, maybe don't.
+    'census_tract', #do we eliminate or keep?
+    'derived_loan_product_type', #not needed ? justify
+    'derived_dwelling_category', #not needed ? justify
+    'conforming_loan_limit', #one type by scope definition
+    'lien_status', #one type by scope definition
+    'reverse_mortgage', #results in only one type, eliminate
+    'business_or_commercial_purpose', #one type by scope definition
+    'negative_amortization', #only different on 11 rows; not worth it.
+    'occupancy_type', #one type by scope definition
+    'construction_method', #only going to use site-built - scope limits count to approx 7300 manufactured homes
+        'manufactured_home_secured_property_type', #need to justify
+        'manufactured_home_land_property_interest', #need to justify
+    'submission_of_application', #maybe?
+    'initially_payable_to_institution', #?
+    'derived_ethnicity', #contained in collapsed column - all ethnic data
+    'derived_race', #contained in collapsed column
+    'loan_type', #defined in scope, i think (conventional)
+    'prepayment_penalty_term', #not sure...
+    'applicant_age_above_62', #available in other columns
+    'co-applicant_age_above_62', #available in other columns
+    'total_points_and_fees', #little to no data available in entire dataset
+    'rate_spread', #not sure eliminating this is justified...yet.
+    'multifamily_affordable_units',# justify?
+    #'total_units' #defined within scope of search of being 1-4 units - or should we keep?
+    'lei',
+    'state_code',
+    'hoepa_status'
+]
+# print(len(labels))
+dropped = pd.DataFrame({
+    'Column Dropped':labels,
+    'Reason':[
+        '2023 Data Only',
+        'Using county_code',
+        'Using county_code',
+        'Available in other columns',
+        'Available in other columns',
+        'Project scope',
+        'Project scope',
+        'One value after scope applied',
+        'Project scope',
+        'One value after scope applied',
+        'Project scope',
+        'Project scope',
+        'Project scope',
+        'Project scope',
+        'Project scope',
+        'Project scope',
+        'Available in other columns',
+        'Available in other columns',
+        'Project scope',
+        '?',
+        'Available in other columns',
+        'Available in other columns',
+        '<1% of records have values',
+        '<1% of records have values',
+        '<1% of records have values',
+        'Substituting company name',
+        'Using county_code',
+        'Single value in column after scope applied'
+    ]
+})
+dropped.style.hide(axis='index')
+```
+
+### Row Elimination
+
+The initial pull from the HMDA API allowed solely for filtering by one or two filters.  This effort pulled data for 5 selected lenders in the year 2023, for conventional loans only.  To reduce the data to the same scope stipulated in the CNN article, row records must further be eliminated based upon the following criteria:
+
+* exact duplication of another row (from the source data, before any transformations are applied). The nature of the data is such that the probability of an exact duplicate of 99 column values between two records is negligible, and as such exact duplicates should be ignored.
+
+* scoping to same frame as CNN:
+
+    * lien_status != 1, or only first lien secured properties
+
+    * total_units not in [1,2,3,4], or only 1-4 unit homes
+
+    * conforming_loan_limit != 'C', or only conforming loans 
+
+    * business_or_commercial purpose != 2, or non-commercial and non-business properties
+
+    * occupancy_type != 1, or primary residence
+
+    * loan_purpose != 1, or for the purchase of a home
+
+* records in which there is no value for county_code
+
+* records for which the loan would be neither approved nor denied: when the action_taken value is 4 (Application Withdrawn) or 5 (File closed for incompleteness).
+
+* records that have invalid values as defined in the binary encoding section above for 6 variables (applicant_race, co-applicant_race, applicant_ethnicity, co-applicant_ethnicity, aus, denial_reason).
+
+### Ordinal Encoding
+
+The following columns are re-encoded as ordinal data: 
+
+* total_units
+
+* applicant_age
+
+* debt_to_income_ratio
+
+### Missing and Blank Values
+
+The following aspects of the dataset have the potential for missing or blank values.  The reporting requirements vary for the different columns in the HMDA LAR, and the blanks and missing values can occur for a multitude of reasons: 
+
+* applicant didn't provide the information
+
+* applicant withdrew their application
+
+* data was not entered or submitted by the institution
+
+* institution did not have or receive the data for the applicant or their prospective property
+
+* the column may not be applicable or filled because the application was denied, or was not applicable for the particular loan circumstances (e.g. an introductory rate period wouldn't be applicable for an adjustable rate mortgage)
+
+Each of the following is replaced by the median value of the variable when the data is grouped by state_code and total_units (e.g. number of rooms in the home):
+
+* property_value
+
+* loan_to_value_ratio. special note: when property_value and loan_amount are available for a record, this value is filled with the value of the loan amount (times 100) divided by the listed property value.  Otherwise, any blanks are filled with the median loan to value ratio when the data is grouped by state and number of rooms.
+
+Each of the following is replaced by the median value of the variable when the data is grouped by state_code and company (e.g. institution processing the mortgage application):
+
+* lender_credits
+
+* intro_rate_period
+
+* interest_rate
+
+* origination_charges 
+
+* discount_points
+
+* total_loan_costs 
+
+    * Note:  Whenever the grouping by state_code and company produced N/A values, these were replaced with the value 1 in the event of a need for logarithmic transformations on these variables.
+
+Each of the following is replaced with the mode of the variable when the data is grouped by state_code and company (e.g. institution processing the mortgage application):
+
+* intro_rate_period
+
+* debt_to_income_ratio 
+
+    * Note: Whenever the grouping by state_code and total_units produced N/A values, these were replaced with the value 0 as they better align with categorical variables than as numeric, and may not undergo transformations.
+
+Another common blank value included the income feature.  Blanks and missing values are replaced with the value from the column ffiec_msa_md_median_family_income divided by 1000. This value is an approximation for median family income in the specific metropolitan statistical area (MSA) in which the home is located.
+
+### Incorrect Column Values
+
+Some values of interest for inspection include loan_to_value_ratio, property_value, and loan_amount, which should, in theory, all be related and have reasonable values.  A first-lien for-the-purpose-of-purchase, conventional, conforming loan is highly unlikely to have a value greater than 100%.  This is because a savvy lender would not secure a property as collateral for a loan that greatly exceeds its value.  
+
+That being said, there may be cases were this ratio could stretch further based upon qualities of the borrower and status of the market, and especially if the borrower  seeks to include the overage as part of plans for improvements of the home, or covering closing costs or other mortgage requirements - in combination with the borrower having an excellent credit score or having a very high income.  The case of high loan-to-value-ratio (henceforth LTV Ratio), may be unlikely, but is not impossible.
+
+Below is an examination for each lender for extreme values in LTV ratio: 
+
+```{python fig-ltr-violin}
+#| label: fig-ltr-violin
+#| fig-cap: Violin plot of Loan To Value Ratio, by lender
+
+fr['company'] = fr['company'].astype('category')
+sns.violinplot(data=fr,x='loan_to_value_ratio',hue='company',y='company')
+plt.title("Examining Extreme Loan to Value Ratios for Large Lenders")
+plt.ylabel("")
+plt.xlabel("LTV Ratio")
+plt.show()
+```
+
+There appear to be some extreme values to the high right for each lender, in some cases with the ratio nearing 1000%.  To examine further, whether or not the loan was approved should be considered, and if the loan was denied, the reason for denial should be considered as well.
+
+If any values in this extreme range consist of loans that were denied, and reasons for denial include items such as "insufficient collateral", then these items may simply be extreme case outliers that are valid and real as opposed to errors in the data.
+
+Considering a range of 100% or greater loan_to_value_ratio, the following information is available:
+
+```{python fig-pct-denial}
+#| label: fig-pct-denial
+#| fig-cap: Approvals/Denials for Applications with LTV > 100%
+
+ltv_outliers = fr[
+    fr['loan_to_value_ratio'] > 100
+][[
+    'loan_amount',
+    'property_value',
+    'loan_to_value_ratio',
+    'income',
+    'denial_reason',
+    'action_taken',
+    'company'
+]].copy()
+
+ltv_outliers['actual_ltv'] = 100*ltv_outliers['loan_amount'] / ltv_outliers['property_value']
+
+ltv_outliers['approved'] = ltv_outliers['denial_reason'] & 512 > 0
+
+temp = ltv_outliers.value_counts(subset='approved',normalize=True).reset_index()
+
+temp['approved'] = np.select(
+    [temp['approved']==True],
+    ['approved'],
+    'denied'
+)
+
+temp.set_index('approved',inplace=True)
+
+temp.plot(
+    kind='pie',
+    y='proportion',
+    autopct= lambda x: f'{x:.1f}%\n({x/100*len(ltv_outliers):.0f} applications)',
+    textprops={'color':"w"}
+    #color='white'
+    # fontdict=dict(color='white')
+)
+plt.legend(loc='lower right')
+# plt.legend().remove()
+plt.ylabel('')
+plt.title('The majority of high LTV ratio loans were denied in 2023')
+plt.show()
+```
+
+In @fig-pct-denial, it is clear that the majority of loans in this category were denied by lenders.  There is a subset of loans that were approved (~40%), and examining further to examine factors such as the loan_to_value_ratios in this group, as well as reasons for denial amongst the denied applications, is necessary before determining need for identifying these records as errors vs. outliers.
+
+```{python fig-reason-denial}
+#| label: fig-reason-denial
+#| fig-cap: Reasons Cited for Loan Denials with LTV Ratio > 100%
+
+for i in range(0,10):
+    v = 2**i
+    ltv_outliers['{}'.format(v)] = (ltv_outliers['denial_reason'] & v == v).astype(int)
+
+counts = ltv_outliers.groupby('approved',as_index=False).agg({
+    '1':sum,'2':sum,
+    '4':sum,'8':sum,
+    '16':sum,'32':sum,
+    '64':sum,'128':sum,
+    '256':sum
+})
+
+for i in range(0,9):
+    col = '{}'.format(2**i)
+    counts[col] = counts[col] / len(ltv_outliers[ltv_outliers['denial_reason']!=512])
+
+counts.drop(index=1,inplace=True,axis=0)
+
+counts = counts.T.reset_index().drop(index=0)
+counts['index'] = counts['index'].astype(int)
+counts = counts.merge(right=denial_fr,how='left',left_on='index',right_on='Binary Encoding')
+counts.drop(columns=['index','HMDA Encoding','Binary Encoding'],inplace=True)
+counts.columns=['Percent Cited','Reason']
+counts['Percent Cited'] *= 100
+counts.set_index('Reason',inplace=True)
+counts.sort_values(by='Percent Cited',inplace=True)
+counts.plot(kind='barh')
+plt.title("2023 High LTV Loans Denied For DTI and Collateral Issues")
+leg = plt.legend(loc='lower right').remove()
+plt.ylabel('')
+plt.show()
+```
+
+This plot makes it apparent that many of these high LTV ratio loan applications are likely legitimate.  Many of them were denied on the bases of debt to income ratio and collateral (e.g. the property is insufficient collateral to cover the risk of the loan). 
+
+That being said, it's also necessary to examine the 40% of loans that were actually approved in this window. 
+
+```{python fig-ltv-strip}
+#| label: fig-ltv-strip
+#| fig-cap: strip plot of high LTV (>100%) 2023 loans by approval
+
+sns.stripplot(
+    data=ltv_outliers,
+    x='approved',
+    y='loan_to_value_ratio',
+    hue='approved'
+)
+
+plt.title("Denied High LTV Loan Applications\nTended to Have Very High LTV")
+plt.ylabel("LTV Ratio")
+plt.legend().remove()
+plt.show()
+```
+
+From @fig-ltv-strip, its apparent that the approved loans in this excess range tended to be on the much lower end of the spectrum, seemingly hovering just above 100%, whereas the denied applications span from just over 100% all the way up to 1000%.  All in all, it would seem these extreme values, in both the cases of approved and denied loans, are legitimate values.  
+
+A remaining concern is for potential discrepancy in the loan to value ratio itself.  It's appears odd that many data points bunch up at the 1000% mark as opposed to going above or below it, like it's an arbitrary cap on the actual value.  Below the same plot is examined, but instead the Loan to Value Ratio is replaced the value of Loan Amount * 100 / Property Value.
+
+```{python fig-ltv-strip2}
+#| label: fig-ltv-strip2
+#| fig-cap: strip plot of high LTV (>100%) 2023 loans by approval, with adjusted LTV value
+
+sns.stripplot(
+    data=ltv_outliers,
+    x='approved',
+    y='actual_ltv',
+    hue='approved'
+)
+
+plt.title("Adjusted / Actual LTV Values Show\nGreater Difference Between Approval and Disapproval")
+plt.ylabel("LTV Ratio (from raw data)")
+plt.legend().remove()
+plt.show()
+```
+
+It would seem that the 1000% mark may indeed be an arbitrary cap, or a potential error of some sort.  Per the [Consumer Financial Protection Bureau](https://files.consumerfinance.gov/f/documents/201710_cfpb_reportable-hmda-data_regulatory-and-reporting-overview-reference-chart.pdf) on reporting requirements, the value for the combined loan to value ratio is to be "the ratio of the total amount of debt secured by the property to the value of the property relied on in making the credit decision."  
+
+In most other cases in which the values sit below 100%, this calculated value is within a small unit difference of the reported value.  This may be because the decimal places on the decision are only to be included if those decimal points were relied upon to make the decision on whether or not to approve the loan.
+
+In light of the exploration on loan to value ratio, the feature loan_to_value_ratio will be replaced with the value of $\frac{100\cdot\text{loan amount}}{\text{property value}}$ .  In cases where one of these values is blank, the loan_to_value_ratio will be filled with the median value for loan_to_value_ratio when the data is grouped by state_code and total_units (or number of rooms) in the home.
+
+Another feature worth exploring is income.  This feature, per the HMDA LAR Data Dictionary, is in thousands of dollars.  There are millionaires and even billionaires in the United States.  Generally, though, one might expect to see an exponential distribution of income in the source dataset.  Furthermore, one should expect to see a narrow string of values getting thinner and thinner as it approaches the upper end of the dataset.  Inspecting income with a boxplot, we see some challenges: 
+
+```{python fig-inc-box}
+#| label: fig-inc-box
+#| fig-cap: boxplot of borrower income
+
+sns.boxplot(
+    data=fr,
+    x='income'
+)
+
+plt.xlabel('Borrower Income (in thousands of dollars)')
+
+plt.title("Income in Dataset Appears Skewed by Single\nMulti-Million Dollar Annual Income Not Impacted by Outlier")
+
+plt.show()
+```
+
+A cursory inspection of this data suggests that there may be a single, erroneous outlier sitting at a value of approximately $209M worth of income, compressing the visibility of the boxplot down to nearly nothing.  It is possible that this datapoint is real and correct, and that there was a single, very wealthy applicant for a mortgage in the data.  However, below is an examination of the data with and without this high-end datapoint using kernel density estimation for the natural logarithm of income: 
+
+```{python fig-inc-box-c}
+#| label: fig-inc-box-c
+#| fig-cap: distribution
+
+fig,axes = plt.subplots(nrows=1,ncols=2)
+
+sns.kdeplot(
+    x=np.log(fr[fr['income']<1000]['income']),
+    ax=axes[0]
+)
+
+sns.kdeplot(x=np.log(fr['income']),ax=axes[1])
+
+axes[0].set_title('without outiler')
+axes[1].set_title('with outlier')
+axes[1].set_ylabel('')
+plt.suptitle("Logarithmic Kernel Density Estimate \nfor Applicant Income")
+plt.tight_layout()
+plt.show()
+```
+
+With the exception of some deviations from normality in the central portions of the curve, these plots appear to showcase a normally distributed variable.  Examining the mean and standard deviations for the log of income, with and without the extreme outlier, produces the following:
+
+```{python tbl-income-log}
+#| label: tbl-income-log
+#| tbl-cap: mean and standard deviation, with and without extreme outlier for income
+
+x1 = pd.DataFrame(np.log(
+    fr[(fr['income']>0)]['income']
+).describe())
+x1.columns = ['With Outlier']
+
+x2 = pd.DataFrame(np.log(
+    fr[(fr['income']>0)&(fr['income']<max(fr['income']))]['income']
+).describe())
+x2.columns = ['Without Outlier']
+
+pd.concat([x1.T,x2.T])[['mean','std']]
+```
+
+The mean and standard deviation of the log-transformed feature, income, appears to retain the same features of central tendency with or without this extreme value.  Provided that a log transformation of the feature is used within any models, this outlier should have little to no impact on training and testing data, as the underlying parent distribution can be approximated by that of the normal distribution $N(4.726,0.624)$ in either case.  As such, the row will be retained, and the value will not be adjusted (minus the log-transformation).
+
+## Further Exploratory Data Analysis
+
+To examine the data under similar conditions as CNN for 2023 data, below is a plot of the top 5 lenders and their approval rates for select racial groups, controlling for no other variables: 
+
+```{python fig-rc-app-lend}
+#| label: fig-rc-app-lend
+#| fig-cap: 2023 Loan Approval Rates, By Company and Select Race
+
+def org(frm:pd.DataFrame,race:str)->pd.DataFrame:
+    frm = frm.groupby(
+        by='company'
+    ).value_counts(
+        subset=['outcome'],
+        normalize=True
+    ).reset_index()
+    frm['proportion'] *= 100
+    frm['outcome'] = np.select(
+        [frm['outcome']==1, frm['outcome']==0],
+        ['approval','disapproval'],
+        np.nan
+    )
+    frm = frm.pivot_table(
+        index='company',
+        columns='outcome',
+        values='proportion'
+    )
+    frm.sort_values(by='disapproval',inplace=True,ascending=False)
+    frm.drop(columns='disapproval',inplace=True,axis=1)
+    frm['Race'] = race
+    return frm.reset_index()
+
+dat = pd.concat([
+    org(fr[fr['applicant_race']^512==0].copy(),'Black/African American'),
+    org(fr[fr['applicant_race']^32768==0].copy(),'White'),
+    org(fr[fr['applicant_race']^2==0].copy(),'Asian'),
+    org(fr[fr['applicant_race']^1024==0].copy(),'Pacific Islander'),
+    org(fr[fr['applicant_race']>=65536].copy(),'No Race Reported')
+])
+
+dat['company'] = dat['company'].astype('category')
+
+dat.sort_values(by='approval',inplace=True,ascending=False)
+
+g = sns.FacetGrid(data=dat,col='Race')
+g.fig.set_figheight(4)
+g.map_dataframe(
+    sns.barplot,x='approval',y='company',hue='company'
+)
+g.fig.suptitle("Trend in Approval Rates from 2022 Carries Into 2023")
+for i in range(len(g.axes[0])):
+    g.axes[0,i].set_xlabel("Approval Rate")
+
+for ax in g.axes.ravel():
+
+    for p in ax.patches:
+        # print(p.get_width(),p.get_height())
+        ax.annotate(
+            '%0.1f'%p.get_width()+'%',
+            (
+                p.get_width() - 13,
+                p.get_y()+p.get_height()/2
+            ),
+            ha='center',va='center',
+            color='white',weight='bold'
+        )
+
+plt.legend(bbox_to_anchor=(1,0.5))
+plt.tight_layout()
+plt.show()
+```
+
+The above appears to flow from 2022's findings into 2023 - that, at least for NFCU, the trend appears to continue under the specified scope with approval rates of about 76% for White applicants, and 43.8% for Black/African American Applicants.  Comparing @fig-rc-app-lend to CNN's figures, the outcomes are remarkably similar for 2023.
+
+Similar exploration into sex and age is also of interest for this study:
+
+```{python fig-sex-inst}
+#| label: fig-sex-inst
+#| fig-cap: Approval Rates by Institution and Borrower Sex
+tem = fr.copy()
+
+tem = tem.groupby(by=['company','applicant_sex']).value_counts(subset=['outcome'],normalize=True).reset_index()
+
+tem['proportion'] = tem['proportion']*100
+
+tem['outcome'] = np.select(
+    [tem['outcome']==1,tem['outcome']==0],
+    ['approval','disapproval'],
+    np.nan
+)
+tem = tem.pivot_table(
+    index=['company','applicant_sex'],
+    columns='outcome',
+    values='proportion'
+).reset_index()
+mapper = {
+    1:'male',
+    2:'female',
+    3:'joint',
+    4:'not provided',
+    6:'both sexes selected'
+}
+tem['applicant_sex'] = [mapper[c] for c in tem['applicant_sex']]
+tem.rename({'applicant_sex':'sex','approval':'approval rate'},inplace=True,axis=1)
+
+tem['sex'] = tem['sex'].astype('category')
+
+g=sns.FacetGrid(
+    data=tem,
+    col='company',
+)
+g.map_dataframe(
+    sns.barplot,
+    x='approval rate',
+    y='sex',
+    hue='sex'
+)
+
+for ax in g.axes.ravel():
+
+    for p in ax.patches:
+        # print(p.get_width(),p.get_height())
+        ax.annotate(
+            '%0.1f'%p.get_width()+'%',
+            (
+                p.get_width() - 13,
+                p.get_y()+p.get_height()/2
+            ),
+            ha='center',va='center',
+            color='white',weight='bold'
+        )
+
+# for ax in g.axes.ravel():
+#     for p in ax.patches:
+#         if p.get_height()!=0:
+#             ax.annotate(
+#                 '%0.1f'%p.get_height()+'%',
+#                 (p.get_x()+p.get_width()/2.,
+#                 p.get_height()),
+#                 ha='center',
+#                 va='center',
+#                 xytext=(0,8),
+#                 textcoords='offset points',
+#                 fontsize=8
+#             )
+
+g.fig.suptitle("Loan Applications Without Sex Listed Saw Greater Approvals in 2023")
+plt.tight_layout()
+plt.legend(bbox_to_anchor=(-2,0),loc='upper left')
+plt.show()
+```
+
+This chart also reveals some interesting trends, not just for NFCU, but across lenders. Notably - when no sex is provided by the applicant, 100% of loans across lenders received approval of some sort.  Somewhat similarly, for lenders like JP Morgan, Rocket Mortgage, and Wells Fargo, the institutions had high approval rates in cases for which the applicant selected both sexes on their application.
+
+Other portions of the data are also important to examine for consistency, even outside of race, gender, ethnicity, and age.  It could be impactful to examine for consistency on when Debt-to-Income (DTI) ratio is cited for a rejection reason for a loan application.  In theory, few if any applications should be rejected for DTI when the DTI is relatively low, absent any other causes or contributory factors.  
+
+```{python fig-dti-bars}
+#| label: fig-dti-bars
+#| fig-cap: Debt to Income Ratio, by Lender
+
+q=fr[
+    #(fr['applicant_race'] ^ 512 == 0) &
+    (fr['denial_reason'] & 1 > 0)
+].value_counts(
+    subset=['company','debt_to_income_ratio']
+).reset_index()
+
+totals = q.groupby('company').agg({'count':sum}).reset_index()
+
+q['proportion']=0
+
+for co in q.company.unique():
+    i = q.loc[q.company==co].index
+    q.loc[i,'proportion'] = 100*q.loc[i,'count'] / totals.loc[totals['company']==co,'count'].iloc[0] 
+
+#q
+
+#.sort_values(by='debt_to_income_ratio')
+DTI=[
+    '<20%',
+    '20%-<30%',
+    '30%-<36%',
+    '36',
+    '37',
+    '38',
+    '39',
+    '40',
+    '41',
+    '42',
+    '43',
+    '44',
+    '45',
+    '46',
+    '47',
+    '48',
+    '49',
+    '50%-60%',
+    '>60%',
+    # 'NA',
+    # 'Exempt'
+]
+
+v = [DTI[int(i)] for i in q['debt_to_income_ratio']]
+
+# print(v)
+
+q['debt_to_income_ratio'] = pd.Categorical([DTI[int(i)] for i in q['debt_to_income_ratio']],categories=DTI,ordered=True)
+
+# q['debt_to_income_ratio'] = q['debt_to_income_ratio'].astype('category')
+
+g = sns.FacetGrid(data=q,col='company')
+g.map_dataframe(
+    sns.barplot,
+    x='proportion',
+    y='debt_to_income_ratio'
+)
+g.fig.suptitle("JP Morgan, Rocket Mortgage, and NFCU cite Poor DTI Ratio for Loan Denial,\nEven When Borrowers were Under 20% in 2023")
+
+for ax in g.axes.ravel():
+    for p in ax.patches:
+        # print(p)
+        #print(p.get_width(),p.get_height())
+        if p.get_width() > 5 and p.get_y() < 0:
+            ax.annotate(
+                '%0.1f'%p.get_width()+'%',
+                (
+                    p.get_width() + 7,
+                    p.get_y()+p.get_height()/2
+                ),
+                ha='center',va='center',
+                color='black',weight='bold'
+            )
+        elif p.get_width() > 5:
+            ax.annotate(
+                '%0.1f'%p.get_width()+'%',
+                (
+                    p.get_width() - 7,
+                    p.get_y()+p.get_height()/2
+                ),
+                ha='center',va='center',
+                color='white'#,weight='bold'
+            )
+g.set_ylabels("DTI Ratio")
+g.fig.set_figheight(4.5)
+plt.tight_layout()
+plt.show()
+
+```
+
+It appears that for some lenders, there's a slight but interesting occurence of loan application denials for a subset of potential borrowers with very low debt to income ratios (specifically less than 20%).  This is interesting, as one might think that this is a completely invalid reason for rejection, as the immediately available facts in the dataset don't directly support such a conclusion.  
+
+This finding lends to the research question of potential latent variables in this dataset.  While the data do not directly support the conclusion reached, it is within the realm of possibility that, in light of other factors unavailable, the DTI ratio becomes a deciding factor when 
+
+## Last Thoughts on Source Data
+
+More exploration is necessary within this data, and potentially additional cleaning and transformations.  Few if any numeric variables were scaled or transformed to collapse them all within similar ranges.  This will be needed for building certain models within this research effort.  Further understanding of categorical variable associations and relationships need further exploration and study.  This will be an ongoing effort throughout this 

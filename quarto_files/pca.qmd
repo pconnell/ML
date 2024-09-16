@@ -1,10 +1,61 @@
 # Principal Component Analysis {#sec-PCA}
 
 ```{python importBlock}
-
+import pandas as pd, numpy as np,seaborn as sns,matplotlib.pyplot as plt
+from sklearn.decomposition import PCA
+from sklearn.preprocessing import MinMaxScaler, StandardScaler
 ```
 
 ```{python dataImport}
+fr = pd.read_csv('../data/final_clean2.csv')
+
+all_cols = [
+    'income', 'total_units',
+    'debt_to_income_ratio',
+    'loan_to_value_ratio',
+    'total_loan_costs',
+    'origination_charges',
+    'discount_points',
+    'lender_credits',
+    'property_value',
+    'tract_minority_population_percent',
+    'tract_median_age_of_housing_units'
+]
+
+fr['loan_to_value_ratio'] = np.select(
+    [fr['loan_to_value_ratio']>100],
+    [fr['loan_amount']/fr['property_value']],
+    fr['loan_to_value_ratio']
+)
+
+fr.loc[fr['income']>200000,'income'] = fr.loc[fr['income']>200000,'income'] / 1000
+
+cols = {
+    'log_norm':[
+        'property_value',
+        'lender_credits',
+        'discount_points',
+        'origination_charges',
+        'total_loan_costs',
+        'property_value',
+        'income'
+    ],
+    'norm':[],
+    'minmax':[
+        'total_units',
+        'tract_median_age_of_housing_units',
+        'tract_minority_population_percent',
+        'loan_to_value_ratio',
+        'debt_to_income_ratio'
+    ]
+}
+
+```
+
+```{python}
+# for col in all_cols:
+#     sns.kdeplot(data=fr,x=col)
+#     plt.show()
 
 ```
 
@@ -13,17 +64,66 @@
 ```{python tbl-pca-exp-var}
 #| label: tbl-pca-exp-var
 #| tbl-cap: PCA, explained and cumulative variance
-#| 
+
+fr2 = fr.copy()
+for col in fr2[cols['log_norm']]:
+    fr2[col] = np.select([fr2[col]==0],[0],np.log(fr[col]))
+
+fr2.dropna(inplace=True)
+
+X1 = StandardScaler().fit_transform(fr2[cols['log_norm']])
+X2 = MinMaxScaler().fit_transform(fr2[cols['minmax']])
+X = np.concatenate((X1,X2),axis=1)
+y=fr2['outcome']
 ```
 
 
 
 ```{python fig-pca-vis}
 #| label: fig-pca-vis
-#| fig-cap: 1D PCA visualization
+#| fig-cap: PCA Calc
+
+pca = PCA()
+w = pca.fit_transform(X,y)
+pca.explained_variance_
 
 ```
 
+
+```{python}
+# from sklearn.linear_model import LogisticRegression
+# from sklearn.model_selection import train_test_split
+# lr = LogisticRegression()
+
+# X_train,X_test,y_train,y_test=train_test_split(
+#     X,
+#     y,
+#     test_size=0.2,
+#     stratify=y,
+#     random_state=9999
+# )
+
+# lr.fit(X_train,y_train)
+
+# y_pred = lr.predict(X_test)
+
+# from sklearn.metrics import (
+#     accuracy_score,f1_score,
+#     precision_score,recall_score, roc_auc_score,
+#     confusion_matrix, ConfusionMatrixDisplay
+# )
+# display(
+# pd.DataFrame({
+#     'Accuracy':accuracy_score(y_test,y_pred),
+#     'Precision':precision_score(y_test,y_pred),
+#     'Recall':recall_score(y_test,y_pred),
+#     'F1':f1_score(y_test,y_pred)
+# },index=[0])
+# )
+# ConfusionMatrixDisplay(
+#     confusion_matrix(y_test,y_pred)
+# ).plot()
+```
 
 ## Data
 
