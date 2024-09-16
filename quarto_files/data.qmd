@@ -93,10 +93,24 @@ mapper = {
     }
 }
 
-fr = pd.read_csv('../data/final_clean2.csv')
+fr = pd.read_csv('../data/final_clean.csv')
 ```
 
 In efforts to answer the established research questions, data was collected, predominantly, from the HMDA database for the top 5 lenders listed within CNN's reporting.  As both CNN and the Lehigh University articles leveraged this data, working with and examining the same type of data is ideal in the pursuit of furthering the research.
+
+## Links to Data and Code
+
+The outcomes of the work performed in this section are present in multiple locations.  The data itself was too large to include as part of the github repository for this effort.
+
+* The GitHub Respository can be found [here](https://github.com/pconnell/ML).
+
+* Script to leverage APIs and download the target data is located [here](https://github.com/pconnell/ML/blob/main/src/pull_data.py).
+
+* Initial data download, prior to scoping and cleaning, is located [here](https://drive.google.com/drive/u/2/folders/1I5d1ryo96WYdH_l9ijinSocEAjf1jmGO).
+
+* The script to scope, clean, and combine the dataset is located [here](https://github.com/pconnell/ML/blob/main/src/data_cleaner.py).
+
+* The cleaned dataset is located [here](https://drive.google.com/drive/u/2/folders/1L003djcF4Eo5pY_muk9GMrArVVnuDYXZ).  
 
 ## Data Gathering 
 
@@ -114,28 +128,36 @@ The HMDA API provides simple access to a wide array of data on mortgages.  Addit
 
 Neither of the API endpoints leveraged in data collection for this research required an API key, thus simplifying the data gathering process.
 
-The source code for data gathering efforts in this research is located [here](../src/pull_data.py). 
+The source code for data gathering efforts in this research is located [here](https://github.com/pconnell/ML/blob/main/src/pull_data.py).
 
-Example use of the GLEIF API
+Example use of the GLEIF API: 
 
 ```
 import requests
-endpoint = ""
+endpoint = "https://api.gleif.org/api/v1/lei-records"
 params = {
-
+    'page[size]':100, #specify number of records to return per page
+    'page[number]':1, #specify the page number to return within the same search scope
+    'filter[entity.names]':'NAVY FEDERAL CREDIT UNION' #provide an organization
 }
 
 requests.get(endpoint,params)
 ```
 
-Example use of the HMDA API
+For the GLEIF API, the JSON response will contain the LEI for organizations with similar names to what is provided in the `filter[entity.names]` parameter.  Depending on how specific one is with the name provided, this could produce a long list of results.  This was the case when examining larger banks like JP Morgan and Wells Fargo while building the code for this research.  In some cases, the GLEIF API returned 400 records.  When this occurs, it is necessary to make use of the `page[size]` and `page[number]` parameters for this API.  
+
+In the case of gathering 400 results, in order to pull all of them into data records via use of this API, one would need to perform 4 API calls, each time updating the `page[number]` parameter to the next valid value.  The API response also always provides a `lastPage` value for valid responses under the path response.meta.pagination.lastPage, which one can use for iteration if needed to extract all LEIs for an entity.
+
+Below depicts example use of the HMDA API in Python: 
 
 ```
-
-hmda_endpoint = ""
+hmda_endpoint = "https://ffiec.cfpb.gov/v2/data-browser-api/view/csv"
 hmda_params = {
-
+    'years':'', #specify the year or list of years for which you seek to query
+    'loan_types':1, #conventional loans only
+    'leis':'' #will change/update based upon what orgs we're downloading
 }
+
 resp = requests.get(endpoint,params)
 
 with open('/file/path/here.csv','wb') as f:
@@ -145,7 +167,7 @@ with open('/file/path/here.csv','wb') as f:
 
 Of note for the HMDA endpoint in this case is the fact that it natively returns record data in CSV format.  As such, the means to store the data is relatively simple, requiring no substantial parsing of JSON content to process the data into record or dataframe format.
 
-The data, from the initial API queries and prior to further cleaning and tailoring, is located [here](https://drive.google.com/drive/u/2/folders/1I5d1ryo96WYdH_l9ijinSocEAjf1jmGO)
+The data, from the initial API queries and prior to further cleaning and tailoring, is located [here](https://drive.google.com/drive/u/2/folders/1I5d1ryo96WYdH_l9ijinSocEAjf1jmGO).
 
 ## Data Cleaning
 
@@ -447,7 +469,7 @@ dropped = pd.DataFrame({
         'Available in other columns',
         'Available in other columns',
         'Project scope',
-        '?',
+        'Project scope',
         'Available in other columns',
         'Available in other columns',
         '<1% of records have values',
@@ -650,6 +672,7 @@ counts.plot(kind='barh')
 plt.title("2023 High LTV Loans Denied For DTI and Collateral Issues")
 leg = plt.legend(loc='lower right').remove()
 plt.ylabel('')
+plt.xlabel("% of Denied Applications Citing Reason")
 plt.show()
 ```
 
@@ -701,7 +724,7 @@ In most other cases in which the values sit below 100%, this calculated value is
 
 In light of the exploration on loan to value ratio, the feature loan_to_value_ratio will be replaced with the value of $\frac{100\cdot\text{loan amount}}{\text{property value}}$ .  In cases where one of these values is blank, the loan_to_value_ratio will be filled with the median value for loan_to_value_ratio when the data is grouped by state_code and total_units (or number of rooms) in the home.
 
-Another feature worth exploring is income.  This feature, per the HMDA LAR Data Dictionary, is in thousands of dollars.  There are millionaires and even billionaires in the United States.  Generally, though, one might expect to see an exponential distribution of income in the source dataset.  Furthermore, one should expect to see a narrow string of values getting thinner and thinner as it approaches the upper end of the dataset.  Inspecting income with a boxplot, we see some challenges: 
+Another feature worth exploring is income.  This feature, per the HMDA LAR Data Dictionary, is in thousands of dollars.  There are millionaires and even billionaires in the United States.  Generally, though, one might expect to see an exponential distribution of income in the source dataset.  Furthermore, one should expect to see a narrow string of values getting thinner and thinner as it approaches the upper end of the dataset.  Inspecting income with a boxplot, there are some clear challenges: 
 
 ```{python fig-inc-box}
 #| label: fig-inc-box
@@ -712,18 +735,42 @@ sns.boxplot(
     x='income'
 )
 
+# sns.histplot(
+#     data=fr,
+#     x='income'
+# )
+
 plt.xlabel('Borrower Income (in thousands of dollars)')
 
-plt.title("Income in Dataset Appears Skewed by Single\nMulti-Million Dollar Annual Income Not Impacted by Outlier")
+plt.title("Income in Dataset Appears Skewed by Single\nMulti-Million Dollar Annual Income")
 
 plt.show()
 ```
 
-A cursory inspection of this data suggests that there may be a single, erroneous outlier sitting at a value of approximately $209M worth of income, compressing the visibility of the boxplot down to nearly nothing.  It is possible that this datapoint is real and correct, and that there was a single, very wealthy applicant for a mortgage in the data.  However, below is an examination of the data with and without this high-end datapoint using kernel density estimation for the natural logarithm of income: 
+A cursory inspection of this data suggests that there may be a single, erroneous outlier sitting at a value of approximately $209M worth of income, compressing the visibility of the boxplot down to nearly nothing.  It is possible that this datapoint is real and correct, and that there was a single, very wealthy applicant for a mortgage in the data.  
+
+Producing the same plot, absent the outlier, however, displays similar results:
+
+```{python fig-inc-box-b}
+#| label: fig-inc-box-b
+#| fig-cap: Boxplot of Income (Outlier Removed)
+
+sns.boxplot(
+    data=fr[fr['income']!=fr['income'].max()],
+    x='income'
+)
+plt.xlabel('Borrower Income (in thousands of dollars)')
+
+plt.title("Removing Outlier Doesn't Substantially Address Skew")
+
+plt.show()
+```
+
+However, below is an examination of the data with and without this high-end datapoint using kernel density estimation for the natural logarithm of income: 
 
 ```{python fig-inc-box-c}
 #| label: fig-inc-box-c
-#| fig-cap: distribution
+#| fig-cap: Logarithmic Kernel Density Estimate for Applicant Income
 
 fig,axes = plt.subplots(nrows=1,ncols=2)
 
@@ -737,7 +784,7 @@ sns.kdeplot(x=np.log(fr['income']),ax=axes[1])
 axes[0].set_title('without outiler')
 axes[1].set_title('with outlier')
 axes[1].set_ylabel('')
-plt.suptitle("Logarithmic Kernel Density Estimate \nfor Applicant Income")
+plt.suptitle("Logarithmic Income Appears\nNormally Distributed")
 plt.tight_layout()
 plt.show()
 ```
@@ -762,6 +809,30 @@ pd.concat([x1.T,x2.T])[['mean','std']]
 ```
 
 The mean and standard deviation of the log-transformed feature, income, appears to retain the same features of central tendency with or without this extreme value.  Provided that a log transformation of the feature is used within any models, this outlier should have little to no impact on training and testing data, as the underlying parent distribution can be approximated by that of the normal distribution $N(4.726,0.624)$ in either case.  As such, the row will be retained, and the value will not be adjusted (minus the log-transformation).
+
+### Cleaned Columns
+
+Prior to cleaning, there were numerous blank or not applicable values within the data.  The below image depicts the state of a subset of the data, after initial download.
+
+![Data, after initial download, held multiple blanks](./imgs/Pre_clean_snip.png)
+
+The column volume is not done justice by this image; the original dataset held nearly 100 columns with large swaths of blank and missing values.  Through the methods described previously, this data was appropriately scoped, transformed, cleaned, and simplified for further use.
+
+The final results of the cleaning process are too large to fully depict in images here.  Despite a substantial cleaning effort, there remains a large volume of columns (~50 down from 100) of varying types.  Here, some key cleanups performed during the cleaning effort are highlighted:
+
+![After Filling Blanks With Medians, Modes](./imgs/Median_Mode_Fill.png "Filled Loan Values")
+
+One can see that there are no blanks in this sector of the dataset, and that there is a wider array of values and reasonable variablility in the columns, examining record by record.  There may be additional work and adjustments to be performed in the realm of cleaning, but having populated columns, filled with median and modal values, provides a point of departure for further examination and analysis.
+
+![Collapsing 29 Columns to 6](./imgs/Collapsed_Columns.png "Collapsed Columns")
+
+The above depiction of the collapsed columns is a substantial dimensionality reduction while retaining all of the underlying data.  Each of these columns were originally 5 columns in the source data (less denial_reason, which was 4 columns). 
+
+In any case where the value in one of these columns holds an exact power of 2, it means that only one of those 4-5 original columns held a value - values like 1, 16, 32, 64, 128, 256, 512, 32768, 65536, 131072, and 262144 (all present in this graphic).
+
+This means there were nearly 24 columns worth of blanks for each record depicted in the above image.  One can nearly count on their fingers the number of instances for these records in which more than one of those columns had legitimate values. This collapsing of records while retaining data is good compression and retention for storage and future modeling.
+
+The cleaned dataset can be found and downloaded [here](https://drive.google.com/drive/u/2/folders/1L003djcF4Eo5pY_muk9GMrArVVnuDYXZ).  Alternatively, one can clone this research project's [GitHub Repository](https://github.com/pconnell/ML), run the [data pulling script](https://github.com/pconnell/ML/blob/main/src/pull_data.py), and then run the [data cleaning script](https://github.com/pconnell/ML/blob/main/src/data_cleaner.py), in order to reproduce the same dataset.
 
 ## Further Exploratory Data Analysis
 
@@ -792,6 +863,7 @@ def org(frm:pd.DataFrame,race:str)->pd.DataFrame:
     frm.sort_values(by='disapproval',inplace=True,ascending=False)
     frm.drop(columns='disapproval',inplace=True,axis=1)
     frm['Race'] = race
+    frm['Race'] = frm['Race'].astype('category')
     return frm.reset_index()
 
 dat = pd.concat([
@@ -804,12 +876,13 @@ dat = pd.concat([
 
 dat['company'] = dat['company'].astype('category')
 
-dat.sort_values(by='approval',inplace=True,ascending=False)
 
-g = sns.FacetGrid(data=dat,col='Race')
+# dat.sort_values(by='approval',inplace=True,ascending=False)
+
+g = sns.FacetGrid(data=dat,col='company')#col='Race')
 g.fig.set_figheight(4)
 g.map_dataframe(
-    sns.barplot,x='approval',y='company',hue='company'
+    sns.barplot,x='approval',y='Race',hue='Race' #y='company',hue='company'
 )
 g.fig.suptitle("Trend in Approval Rates from 2022 Carries Into 2023")
 for i in range(len(g.axes[0])):
@@ -916,105 +989,344 @@ plt.show()
 
 This chart also reveals some interesting trends, not just for NFCU, but across lenders. Notably - when no sex is provided by the applicant, 100% of loans across lenders received approval of some sort.  Somewhat similarly, for lenders like JP Morgan, Rocket Mortgage, and Wells Fargo, the institutions had high approval rates in cases for which the applicant selected both sexes on their application.
 
-Other portions of the data are also important to examine for consistency, even outside of race, gender, ethnicity, and age.  It could be impactful to examine for consistency on when Debt-to-Income (DTI) ratio is cited for a rejection reason for a loan application.  In theory, few if any applications should be rejected for DTI when the DTI is relatively low, absent any other causes or contributory factors.  
+Lastly, as it is pertinent to the established research questions, examination of differences in outcomes for reported age is necessary.
 
-```{python fig-dti-bars}
-#| label: fig-dti-bars
-#| fig-cap: Debt to Income Ratio, by Lender
+```{python fig-age-lender}
+#| label: fig-age-lender
+#| fig-cap: barplots of approval rates by age, 2023
 
-q=fr[
-    #(fr['applicant_race'] ^ 512 == 0) &
-    (fr['denial_reason'] & 1 > 0)
-].value_counts(
-    subset=['company','debt_to_income_ratio']
-).reset_index()
-
-totals = q.groupby('company').agg({'count':sum}).reset_index()
-
-q['proportion']=0
-
-for co in q.company.unique():
-    i = q.loc[q.company==co].index
-    q.loc[i,'proportion'] = 100*q.loc[i,'count'] / totals.loc[totals['company']==co,'count'].iloc[0] 
-
-#q
-
-#.sort_values(by='debt_to_income_ratio')
-DTI=[
-    '<20%',
-    '20%-<30%',
-    '30%-<36%',
-    '36',
-    '37',
-    '38',
-    '39',
-    '40',
-    '41',
-    '42',
-    '43',
-    '44',
-    '45',
-    '46',
-    '47',
-    '48',
-    '49',
-    '50%-60%',
-    '>60%',
-    # 'NA',
-    # 'Exempt'
+age=[
+    '<25',
+    '25-34',
+    '35-44',
+    '45-54',
+    '55-64',
+    '65-74',
+    '>74',
+    'Not Reported'
 ]
 
-v = [DTI[int(i)] for i in q['debt_to_income_ratio']]
+v = [age[int(i)] for i in fr['applicant_age']]
+fr['age'] = pd.Categorical(v,categories=age,ordered=True)
 
-# print(v)
+tmp2 = fr.value_counts(subset=['company','applicant_age','outcome']).reset_index()
 
-q['debt_to_income_ratio'] = pd.Categorical([DTI[int(i)] for i in q['debt_to_income_ratio']],categories=DTI,ordered=True)
+tmp2['outcome'] = [['denied','approved'][int(i)] for i in tmp2['outcome']]
+tmp2 = tmp2.pivot_table(values='count',columns='outcome',index=['company','applicant_age']).reset_index()
 
-# q['debt_to_income_ratio'] = q['debt_to_income_ratio'].astype('category')
+tmp2['approved'] = tmp2['approved'].fillna(0)
+tmp2['denied'] = tmp2['denied'].fillna(0)
 
-g = sns.FacetGrid(data=q,col='company')
+tmp2['tot'] = tmp2['approved'] + tmp2['denied']
+tmp2['approved'] = tmp2['approved'] /tmp2['tot'] 
+tmp2['denied'] = tmp2['denied']/tmp2['tot']
+
+tmp2['age'] = pd.Categorical(
+    [age[int(i)] for i in tmp2['applicant_age']],
+    categories=age,
+    ordered=True
+)
+
+tmp2['approved'] *= 100
+
+tmp2['company'] = tmp2['company'].astype('category')
+
+g = sns.FacetGrid(
+    data=tmp2,
+    col='company'
+)
 g.map_dataframe(
     sns.barplot,
-    x='proportion',
-    y='debt_to_income_ratio'
+    x='approved',
+    hue='age',
+    y='age'
 )
-g.fig.suptitle("JP Morgan, Rocket Mortgage, and NFCU cite Poor DTI Ratio for Loan Denial,\nEven When Borrowers were Under 20% in 2023")
 
 for ax in g.axes.ravel():
     for p in ax.patches:
         # print(p)
         #print(p.get_width(),p.get_height())
-        if p.get_width() > 5 and p.get_y() < 0:
-            ax.annotate(
-                '%0.1f'%p.get_width()+'%',
-                (
-                    p.get_width() + 7,
-                    p.get_y()+p.get_height()/2
-                ),
-                ha='center',va='center',
-                color='black',weight='bold'
-            )
-        elif p.get_width() > 5:
-            ax.annotate(
-                '%0.1f'%p.get_width()+'%',
-                (
-                    p.get_width() - 7,
-                    p.get_y()+p.get_height()/2
-                ),
-                ha='center',va='center',
-                color='white'#,weight='bold'
-            )
-g.set_ylabels("DTI Ratio")
-g.fig.set_figheight(4.5)
+        # if p.get_width() > 5:
+        ax.annotate(
+            '%0.1f'%p.get_width()+'%',
+            (
+                p.get_width() - 13,
+                p.get_y()+p.get_height()/2
+            ),
+            ha='center',va='center',
+            color='white',weight='bold'
+        )
+
+g.fig.suptitle("In 2023 - Top 5 Lenders Approved Nearly All\nMortgages for Applicants that Didn't List Their Sex")
+
 plt.tight_layout()
+
 plt.show()
+```
+
+This examination reveals similar results as for sex; when no age is reported or documented, it appears that the approval rate approaches 100% for applicants.  However, it is not the case when race is not reported.  In @fig-rc-app-lend, one can see that in the case of no race reported, approval rates for such mortgages ranged from 62.9% (NFCU) to 98.6% (JP Morgan).  
+
+These comparisons, however, are simply numerical and do not establish any kind of a cause and effect relationship in either case, for any of the variables.  Just because the outcomes in 2023 when gender or age were not reported to these lenders were nearly 100% of the time an approved mortgage, does not mean that one not reporting their gender or age on a mortgage application *guarantees* that they will be approved by one of these 5 lenders.  
+
+<!-- 
+Other portions of the data are also important to examine for consistency, even outside of race, gender, ethnicity, and age.  It could be impactful to examine for consistency on when Debt-to-Income (DTI) ratio is cited for a rejection reason for a loan application.  In theory, few if any applications should be rejected for DTI when the DTI is relatively low, absent any other causes or contributory factors.   -->
+
+```{python fig-dti-bars}
+#| label: fig-dti-bars
+#| fig-cap: Debt to Income Ratio, by Lender
+
+# q=fr[
+#     #(fr['applicant_race'] ^ 512 == 0) &
+#     (fr['denial_reason'] & 1 > 0)
+# ].value_counts(
+#     subset=['company','debt_to_income_ratio']
+# ).reset_index()
+
+# totals = q.groupby('company').agg({'count':sum}).reset_index()
+
+# q['proportion']=0
+
+# for co in q.company.unique():
+#     i = q.loc[q.company==co].index
+#     q.loc[i,'proportion'] = 100*q.loc[i,'count'] / totals.loc[totals['company']==co,'count'].iloc[0] 
+
+# #q
+
+# #.sort_values(by='debt_to_income_ratio')
+# DTI=[
+#     '<20%',
+#     '20%-<30%',
+#     '30%-<36%',
+#     '36',
+#     '37',
+#     '38',
+#     '39',
+#     '40',
+#     '41',
+#     '42',
+#     '43',
+#     '44',
+#     '45',
+#     '46',
+#     '47',
+#     '48',
+#     '49',
+#     '50%-60%',
+#     '>60%',
+#     # 'NA',
+#     # 'Exempt'
+# ]
+
+# v = [DTI[int(i)] for i in q['debt_to_income_ratio']]
+
+# # print(v)
+
+# q['debt_to_income_ratio'] = pd.Categorical([DTI[int(i)] for i in q['debt_to_income_ratio']],categories=DTI,ordered=True)
+
+# # q['debt_to_income_ratio'] = q['debt_to_income_ratio'].astype('category')
+
+# g = sns.FacetGrid(data=q,col='company')
+# g.map_dataframe(
+#     sns.barplot,
+#     x='proportion',
+#     y='debt_to_income_ratio'
+# )
+# g.fig.suptitle("JP Morgan, Rocket Mortgage, and NFCU cite Poor DTI Ratio for Loan Denial,\nEven When Borrowers were Under 20% in 2023")
+
+# for ax in g.axes.ravel():
+#     for p in ax.patches:
+#         # print(p)
+#         #print(p.get_width(),p.get_height())
+#         if p.get_width() > 5 and p.get_y() < 0:
+#             ax.annotate(
+#                 '%0.1f'%p.get_width()+'%',
+#                 (
+#                     p.get_width() + 7,
+#                     p.get_y()+p.get_height()/2
+#                 ),
+#                 ha='center',va='center',
+#                 color='black',weight='bold'
+#             )
+#         elif p.get_width() > 5:
+#             ax.annotate(
+#                 '%0.1f'%p.get_width()+'%',
+#                 (
+#                     p.get_width() - 7,
+#                     p.get_y()+p.get_height()/2
+#                 ),
+#                 ha='center',va='center',
+#                 color='white'#,weight='bold'
+#             )
+# g.set_ylabels("DTI Ratio")
+# g.fig.set_figheight(4.5)
+# plt.tight_layout()
+# plt.show()
 
 ```
 
-It appears that for some lenders, there's a slight but interesting occurence of loan application denials for a subset of potential borrowers with very low debt to income ratios (specifically less than 20%).  This is interesting, as one might think that this is a completely invalid reason for rejection, as the immediately available facts in the dataset don't directly support such a conclusion.  
+<!-- It appears that for some lenders, there's a slight but interesting occurence of loan application denials for a subset of potential borrowers with very low debt to income ratios (specifically less than 20%).  This is interesting, as one might think that this is a completely invalid reason for rejection, as the immediately available facts in the dataset don't directly support such a conclusion.  
 
-This finding lends to the research question of potential latent variables in this dataset.  While the data do not directly support the conclusion reached, it is within the realm of possibility that, in light of other factors unavailable, the DTI ratio becomes a deciding factor when 
+This finding lends to the research question of potential latent variables in this dataset.  While the data do not directly support the conclusion reached, it is within the realm of possibility that, in light of other factors unavailable, the DTI ratio becomes a deciding factor when  -->
 
 ## Last Thoughts on Source Data
 
-More exploration is necessary within this data, and potentially additional cleaning and transformations.  Few if any numeric variables were scaled or transformed to collapse them all within similar ranges.  This will be needed for building certain models within this research effort.  Further understanding of categorical variable associations and relationships need further exploration and study.  This will be an ongoing effort throughout this 
+The provided visuals and exploration in this research thus far are observations of a snapshot in time - they, in and of themselves, do not establish cause-and-effect relationships or the presence of statistically significant differences in outcomes between protected classes and lenders.
+
+The goals of this research include bi-directional modeling.  While machine learning modeling on its own does not elucidate a cause-and-effect relationship between variables, it comes closer than simple observations or statistical analyses.  Performing bi-directional modeling (can available features and subject's age/gender/race predict their outcome? and can a subject's outcome and features predict the subject's age/gender/race) takes additional steps in the direction of causality.  
+
+Establishing significant differences can show a difference, but not the cause.  Establishing models that effectively predict show that the statistical differences in groups can be leveraged effectively to predict outcomes, but also do not establish cause.  Exploration of latent variables, interjection and intervention of available and latent variables, and further research, are all needed to establish causality.
+
+More exploration is necessary within this data, and potentially additional cleaning and transformations.  Few if any numeric variables were scaled or transformed to collapse them all within similar ranges.  This will be needed for building certain models within this research effort.  Further understanding of categorical variable associations and relationships need further exploration and study.  This will be an ongoing effort throughout this research.
+
+<!-- 
+```{python}
+from scipy import stats
+
+import statsmodels.api as sm
+from statsmodels.formula.api import ols
+
+
+    # org(fr[fr['applicant_race']^512==0].copy(),'Black/African American'),
+    # org(fr[fr['applicant_race']^32768==0].copy(),'White'),
+    # org(fr[fr['applicant_race']^2==0].copy(),'Asian'),
+    # org(fr[fr['applicant_race']^1024==0].copy(),'Pacific Islander'),
+    # org(fr[fr['applicant_race']>=65536].copy(),'No Race Reported')
+
+tmp = fr[
+    (fr['applicant_race']^2==0) |
+    (fr['applicant_race']^512==0) |
+    (fr['applicant_race']^1024==0) |
+    (fr['applicant_race']^32768==0) |
+    (fr['applicant_race']^65536==0)
+].merge(
+    right=app_race_fr[['Valid Classes','Binary Encoding']],
+    how='left',
+    left_on='applicant_race',
+    right_on='Binary Encoding'
+)
+tmp.rename({'Valid Classes':'race'},axis=1,inplace=True)
+tmp['company'] = tmp['company'].astype('category')
+tmp['race'] = tmp['race'].astype('category')
+
+g = sns.FacetGrid(data=tmp,col='company')
+
+g.map_dataframe(
+    sns.kdeplot,
+    x='interest_rate',
+    hue='race'
+)
+
+# sns.kdeplot(
+#     data=tmp,
+#     x='interest_rate',
+#     hue='company'
+# )
+```
+
+
+```{python}
+model=ols('outcome ~ company+race+company:race',data=tmp).fit()
+# model.summary()
+sm.stats.anova_lm(model,typ=2)
+```
+
+```{python}
+from statsmodels.stats.multicomp import pairwise_tukeyhsd, MultiComparison
+mc = MultiComparison(tmp['outcome'],tmp['company'])
+mcresult=mc.tukeyhsd(0.05)
+mcresult.summary()
+```
+
+```{python}
+tmp['co_race'] = (tmp['company'].astype(str)+':'+tmp['race'].astype(str)).astype('category')
+
+tmp = tmp[tmp['race'].str.contains('Black')].copy()
+# tmp
+r = pairwise_tukeyhsd(
+    endog=tmp['outcome'],
+    groups=tmp['company'],
+    alpha=0.003
+)
+r.plot_simultaneous()
+plt.title("Tukey Test for Difference in Approval Rate (Black Applicants Only)")
+```
+
+
+```{python}
+age=[
+    '<25',
+    '25-34',
+    '35-44',
+    '45-54',
+    '55-64',
+    '65-74',
+    '>74',
+    'Not Reported'
+]
+
+v = [age[int(i)] for i in fr['applicant_age']]
+fr['age'] = pd.Categorical(v,categories=age,ordered=True)
+
+tmp2 = fr.value_counts(subset=['company','applicant_age','outcome']).reset_index()
+
+tmp2['outcome'] = [['denied','approved'][int(i)] for i in tmp2['outcome']]
+tmp2 = tmp2.pivot_table(values='count',columns='outcome',index=['company','applicant_age']).reset_index()
+
+tmp2['approved'] = tmp2['approved'].fillna(0)
+tmp2['denied'] = tmp2['denied'].fillna(0)
+
+tmp2['tot'] = tmp2['approved'] + tmp2['denied']
+tmp2['approved'] = tmp2['approved'] /tmp2['tot'] 
+tmp2['denied'] = tmp2['denied']/tmp2['tot']
+
+tmp2['age'] = pd.Categorical(
+    [age[int(i)] for i in tmp2['applicant_age']],
+    categories=age,
+    ordered=True
+)
+
+tmp2['approved'] *= 100
+
+tmp2['company'] = tmp2['company'].astype('category')
+
+g = sns.FacetGrid(
+    data=tmp2,
+    col='company'
+)
+g.map_dataframe(
+    sns.barplot,
+    x='approved',
+    # hue='age',
+    y='age'
+)
+
+for ax in g.axes.ravel():
+    for p in ax.patches:
+        # print(p)
+        #print(p.get_width(),p.get_height())
+        # if p.get_width() > 5:
+        ax.annotate(
+            '%0.1f'%p.get_width()+'%',
+            (
+                p.get_width() - 13,
+                p.get_y()+p.get_height()/2
+            ),
+            ha='center',va='center',
+            color='white',weight='bold'
+        )
+
+g.fig.suptitle("In 2023 - Not Reporting Age Nearly Guaranteed Mortgage Approval\nWith Top 5 Lenders")
+
+plt.tight_layout()
+
+plt.show()
+
+# tmp2
+# tmp2 = tmp2.pivot_table()
+
+# sns.barplot(
+
+# )
+```
+
+ -->
