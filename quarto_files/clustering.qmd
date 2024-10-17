@@ -77,23 +77,6 @@ Clustering is explored in this study to ascertain any connection between the sou
 
 Furthermore, the clustering will be used (when MCA analysis is complete) to evaluate the impact and influence of protected class variables when attempting to marry clustering results to loan outcomes.  If protected classes are impactful and can effectively cluster a loan application to its outcome, this may warrant further investigation as to why.
 
-<!-- * compare and contrast the methods for clustering:
-
-    * hierarchical vs. probabilistic vs overlapping vs. exclusive 
-
-    * KMEANS, DBSCAN, Hierarchy, Density, etc...
-
-* prepare the data
-
-    * choose a labeled dataset and remove the label
-
-        * **in my case - the label may be multiple items in the dataset, depending on prediction goals**
-
-    * perform standard scaling
-
-    * perform PCA on normalized data
-
-    * provide screen images of before and after data? -->
 
 ## Data
 
@@ -101,15 +84,20 @@ The source data available for clustering in this research contains over 200k rec
 
 The data used to perform clustering is based solely on the 3D PCA performed on numeric variables.  The 3D PCA transformed dataset is located [here](https://drive.google.com/file/d/1eReIyY7rT8Ve4Pc26Y8ZA2--tpWaQozZ/view?usp=drive_link).  The steps to produce this dataset are covered in @sec-PCA.  Below is the head of the dataframe of principal components used for clustering. This dataframe is the 20% sample that is leveraged for density-based and hierarchical clustering.
 
-```{python}
+```{python tbl-pca}
+#| label: tbl-pca
+#| tbl-cap: 3D PCA Data
+
 cluster_data[['PC0','PC1','PC2']].head().style.hide(axis='index')
 ```
+
+Data, before any transformations, can be viewed in @tbl-data-pre-ss, and standard scaled data in @tbl-data-post-ss.
 
 Before the completion of this research, clustering will also be performed on MCA-transformed data.
 
 ## Code
 
-The code to clean and prepare the data for clustering is located [here](../src/Clustering.ipynb) and written in Python.  The code will include MCA transformations in the future.  Additionally, this code leveraged an example from [Scikit-Learn](https://scikit-learn.org/stable/auto_examples/cluster/plot_kmeans_silhouette_analysis.html#sphx-glr-auto-examples-cluster-plot-kmeans-silhouette-analysis-py) to best identify the number of clusters to use in K-Means for the PCA-transformed data.
+The code to clean and prepare the data for clustering is located [here](https://github.com/pconnell/ML/blob/main/src/Clustering.ipynb) and written in Python.  The code will include MCA transformations in the future.  Additionally, this code leveraged an example from [Scikit-Learn](https://scikit-learn.org/stable/auto_examples/cluster/plot_kmeans_silhouette_analysis.html#sphx-glr-auto-examples-cluster-plot-kmeans-silhouette-analysis-py) to best identify the number of clusters to use in K-Means for the PCA-transformed data.
 
 ### K-Means Clustering
 
@@ -117,15 +105,15 @@ The silhouette method was leveraged to identify several cluster options for K-Me
 
 Using this method the best performing cluster counts included k=2, k=4 and k=5
 
-[!](./imgs/fig-kmeans-silhouette-k2.png)
+![K=2 K-Means](./imgs/fig-kmeans-silhouette-k2.png)
 
 K=2 K-Means Clustering had a silhouette score of 0.256.
 
-[!](./imgs/fig-kmeans-silhouette-k4.png)
+![K=4 K-Means](./imgs/fig-kmeans-silhouette-k4.png)
 
 K=4 K-Means Clustering had a silhouette score of 0.362.
 
-[!](./imgs/fig-kmeans-silhouette-k5.png)
+![K=5 K-Means](./imgs/fig-kmeans-silhouette-k5.png)
 
 K=5 K-Means Clustering had a silhouette score of 0.381.
 
@@ -135,7 +123,7 @@ Hierarchical clustering was performed on the 3d-transformed PCA data produced in
 
 However, as mentioned in @sec-PCA, the 3d transformation of numeric-only data resulted in an explained variance of only about 43%.  As such, the two produced clusters are unlikely to have any direct ties to the actual outcomes in the source data.
 
-[!](./imgs/dendrogram.png)
+![Dendrogram for Hierarchical Clustering](./imgs/dendrogram.png)
 
 The dendrogram is challenging to interpret in this case, as it's splitting the data on a roughly PCA-transformed dataset with limited explainability in the data's variance.  Furthermore, the base labels of the dendrogram are simply based upon the datapoints indices themselves, and as such the dendrogram doesn't add substantial information or interpretability in this context.  Performing a plot of the points and their classifications will likely be a more fruitful endeavor.
 
@@ -149,17 +137,28 @@ Points failing to meet the density criteria can only be added to a cluster, but 
 
 This methodology can produce different size clusters in different dimensions, and follow paths and patterns within the data based upon point densities.
 
-Performing density-based clustering using DBSCAN on the source data produced a silhouette score of approximately 0.41.
+Performing density-based clustering using DBSCAN on the source data produced a silhouette score of approximately 0.33.
 
-The density clustering also...
+```{python fig-db-scan}
+#| label: fig-db-scan
+#| fig-cap: DBSCAN Cluster Results
 
-<!-- GET VISUAL IN HERE FOR DBSCAN -->
+sns.scatterplot(
+    data=cluster_data,
+    x='PC0',
+    y='PC1',
+    hue='db_labels'
+)
+
+plt.show()
+```
 
 ## Results
 
+
 What is the difference in the outputs for the data, though?  And how do those compare to the actual underlying labels?
 
-To visualize, we'll take the K-Means clusters and apply the same subset of the data as used for Agglomerative and...?
+To visualize, one can take the K-Means clusters and apply the same subset of the data as used for Agglomerative and DBSCAN, and also visualize the source data's labels.  This is done in the below figure.
 
 ```{python fig-cluster-plots}
 #| label: fig-cluster-plots

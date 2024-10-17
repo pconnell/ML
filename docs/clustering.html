@@ -292,93 +292,106 @@ window.Quarto = {
 <h3 data-number="4.1.4" class="anchored" data-anchor-id="clustering-in-this-study"><span class="header-section-number">4.1.4</span> Clustering In This Study</h3>
 <p>Clustering is explored in this study to ascertain any connection between the source data variables and the outcomes of each mortgage application. If clusters could be produced that map data points to their outcomes (almost in a predictive manner), this could be of benefit, even if the cluster label is only sometimes correct. The cluster label could be used as a numeric factor in modeling to support improved predictive accuracy.</p>
 <p>Furthermore, the clustering will be used (when MCA analysis is complete) to evaluate the impact and influence of protected class variables when attempting to marry clustering results to loan outcomes. If protected classes are impactful and can effectively cluster a loan application to its outcome, this may warrant further investigation as to why.</p>
-<!-- * compare and contrast the methods for clustering:
-
-    * hierarchical vs. probabilistic vs overlapping vs. exclusive 
-
-    * KMEANS, DBSCAN, Hierarchy, Density, etc...
-
-* prepare the data
-
-    * choose a labeled dataset and remove the label
-
-        * **in my case - the label may be multiple items in the dataset, depending on prediction goals**
-
-    * perform standard scaling
-
-    * perform PCA on normalized data
-
-    * provide screen images of before and after data? -->
 </section>
 </section>
 <section id="data" class="level2" data-number="4.2">
 <h2 data-number="4.2" class="anchored" data-anchor-id="data"><span class="header-section-number">4.2</span> Data</h2>
 <p>The source data available for clustering in this research contains over 200k records. Hierarchical and density-based clustering methods both take an extensive amount of memory resources. In order to perform these clustering methods on the available data, a stratified sample (on outcome) will be taken from the data and these clustering methods will be performed on the samples. The label is temporarily added to the PCA-transformed data, a stratified sample of approximately 20% of the dataset is then taken, and clustering is performed upon this sample.</p>
 <p>The data used to perform clustering is based solely on the 3D PCA performed on numeric variables. The 3D PCA transformed dataset is located <a href="https://drive.google.com/file/d/1eReIyY7rT8Ve4Pc26Y8ZA2--tpWaQozZ/view?usp=drive_link">here</a>. The steps to produce this dataset are covered in <a href="pca.html" class="quarto-xref"><span>Chapter 3</span></a>. Below is the head of the dataframe of principal components used for clustering. This dataframe is the 20% sample that is leveraged for density-based and hierarchical clustering.</p>
-<div id="e1880a97" class="cell" data-execution_count="2">
+<div class="cell" data-execution_count="2">
+<div id="tbl-pca" class="cell quarto-float anchored" data-execution_count="2">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-pca-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;4.1: 3D PCA Data
+</figcaption>
+<div aria-describedby="tbl-pca-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output cell-output-display" data-execution_count="2">
 <style type="text/css">
 </style>
 
-<table id="T_9a9a7" data-quarto-postprocess="true" class="table table-sm table-striped small">
+<table id="T_c2655" class="do-not-create-environment cell table table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
-<th id="T_9a9a7_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">PC0</th>
-<th id="T_9a9a7_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">PC1</th>
-<th id="T_9a9a7_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">PC2</th>
+<th id="T_c2655_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">PC0</th>
+<th id="T_c2655_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">PC1</th>
+<th id="T_c2655_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">PC2</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td id="T_9a9a7_row0_col0" class="data row0 col0">-0.892240</td>
-<td id="T_9a9a7_row0_col1" class="data row0 col1">-0.448016</td>
-<td id="T_9a9a7_row0_col2" class="data row0 col2">-0.182751</td>
+<td id="T_c2655_row0_col0" class="data row0 col0">-0.892240</td>
+<td id="T_c2655_row0_col1" class="data row0 col1">-0.448016</td>
+<td id="T_c2655_row0_col2" class="data row0 col2">-0.182751</td>
 </tr>
 <tr class="even">
-<td id="T_9a9a7_row1_col0" class="data row1 col0">-0.931789</td>
-<td id="T_9a9a7_row1_col1" class="data row1 col1">-0.758654</td>
-<td id="T_9a9a7_row1_col2" class="data row1 col2">-1.987403</td>
+<td id="T_c2655_row1_col0" class="data row1 col0">-0.931789</td>
+<td id="T_c2655_row1_col1" class="data row1 col1">-0.758654</td>
+<td id="T_c2655_row1_col2" class="data row1 col2">-1.987403</td>
 </tr>
 <tr class="odd">
-<td id="T_9a9a7_row2_col0" class="data row2 col0">-0.790594</td>
-<td id="T_9a9a7_row2_col1" class="data row2 col1">-0.409078</td>
-<td id="T_9a9a7_row2_col2" class="data row2 col2">1.276530</td>
+<td id="T_c2655_row2_col0" class="data row2 col0">-0.790594</td>
+<td id="T_c2655_row2_col1" class="data row2 col1">-0.409078</td>
+<td id="T_c2655_row2_col2" class="data row2 col2">1.276530</td>
 </tr>
 <tr class="even">
-<td id="T_9a9a7_row3_col0" class="data row3 col0">-2.012753</td>
-<td id="T_9a9a7_row3_col1" class="data row3 col1">0.254438</td>
-<td id="T_9a9a7_row3_col2" class="data row3 col2">1.666342</td>
+<td id="T_c2655_row3_col0" class="data row3 col0">-2.012753</td>
+<td id="T_c2655_row3_col1" class="data row3 col1">0.254438</td>
+<td id="T_c2655_row3_col2" class="data row3 col2">1.666342</td>
 </tr>
 <tr class="odd">
-<td id="T_9a9a7_row4_col0" class="data row4 col0">0.755317</td>
-<td id="T_9a9a7_row4_col1" class="data row4 col1">2.409991</td>
-<td id="T_9a9a7_row4_col2" class="data row4 col2">1.879752</td>
+<td id="T_c2655_row4_col0" class="data row4 col0">0.755317</td>
+<td id="T_c2655_row4_col1" class="data row4 col1">2.409991</td>
+<td id="T_c2655_row4_col2" class="data row4 col2">1.879752</td>
 </tr>
 </tbody>
 </table>
 </div>
 </div>
+</figure>
+</div>
+</div>
+<p>Data, before any transformations, can be viewed in <a href="pca.html#tbl-data-pre-ss" class="quarto-xref">Table&nbsp;<span>3.4</span></a>, and standard scaled data in <a href="pca.html#tbl-data-post-ss" class="quarto-xref">Table&nbsp;<span>3.5</span></a>.</p>
 <p>Before the completion of this research, clustering will also be performed on MCA-transformed data.</p>
 </section>
 <section id="code" class="level2" data-number="4.3">
 <h2 data-number="4.3" class="anchored" data-anchor-id="code"><span class="header-section-number">4.3</span> Code</h2>
-<p>The code to clean and prepare the data for clustering is located <a href="../src/Clustering.ipynb">here</a> and written in Python. The code will include MCA transformations in the future. Additionally, this code leveraged an example from <a href="https://scikit-learn.org/stable/auto_examples/cluster/plot_kmeans_silhouette_analysis.html#sphx-glr-auto-examples-cluster-plot-kmeans-silhouette-analysis-py">Scikit-Learn</a> to best identify the number of clusters to use in K-Means for the PCA-transformed data.</p>
+<p>The code to clean and prepare the data for clustering is located <a href="https://github.com/pconnell/ML/blob/main/src/Clustering.ipynb">here</a> and written in Python. The code will include MCA transformations in the future. Additionally, this code leveraged an example from <a href="https://scikit-learn.org/stable/auto_examples/cluster/plot_kmeans_silhouette_analysis.html#sphx-glr-auto-examples-cluster-plot-kmeans-silhouette-analysis-py">Scikit-Learn</a> to best identify the number of clusters to use in K-Means for the PCA-transformed data.</p>
 <section id="k-means-clustering" class="level3" data-number="4.3.1">
 <h3 data-number="4.3.1" class="anchored" data-anchor-id="k-means-clustering"><span class="header-section-number">4.3.1</span> K-Means Clustering</h3>
 <p>The silhouette method was leveraged to identify several cluster options for K-Means using the 3D PCA dataset. This uses silhouette scores to determine how well datapoints are mapped to clusters and how well separated the clusters are within the data.</p>
 <p>Using this method the best performing cluster counts included k=2, k=4 and k=5</p>
-<p><a href="./imgs/fig-kmeans-silhouette-k2.png">!</a></p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./imgs/fig-kmeans-silhouette-k2.png" class="img-fluid figure-img"></p>
+<figcaption>K=2 K-Means</figcaption>
+</figure>
+</div>
 <p>K=2 K-Means Clustering had a silhouette score of 0.256.</p>
-<p><a href="./imgs/fig-kmeans-silhouette-k4.png">!</a></p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./imgs/fig-kmeans-silhouette-k4.png" class="img-fluid figure-img"></p>
+<figcaption>K=4 K-Means</figcaption>
+</figure>
+</div>
 <p>K=4 K-Means Clustering had a silhouette score of 0.362.</p>
-<p><a href="./imgs/fig-kmeans-silhouette-k5.png">!</a></p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./imgs/fig-kmeans-silhouette-k5.png" class="img-fluid figure-img"></p>
+<figcaption>K=5 K-Means</figcaption>
+</figure>
+</div>
 <p>K=5 K-Means Clustering had a silhouette score of 0.381.</p>
 </section>
 <section id="hierarchical-clustering-1" class="level3" data-number="4.3.2">
 <h3 data-number="4.3.2" class="anchored" data-anchor-id="hierarchical-clustering-1"><span class="header-section-number">4.3.2</span> Hierarchical Clustering</h3>
 <p>Hierarchical clustering was performed on the 3d-transformed PCA data produced in <a href="pca.html" class="quarto-xref"><span>Chapter 3</span></a>. The hierarchy produced 2 main clusters, which may be beneficial for a binary classification problem such as predicting loan approval or denial. If the clusters had some ties to the actual grouping of approvals or denials, then this could be of benefit.</p>
 <p>However, as mentioned in <a href="pca.html" class="quarto-xref"><span>Chapter 3</span></a>, the 3d transformation of numeric-only data resulted in an explained variance of only about 43%. As such, the two produced clusters are unlikely to have any direct ties to the actual outcomes in the source data.</p>
-<p><a href="./imgs/dendrogram.png">!</a></p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./imgs/dendrogram.png" class="img-fluid figure-img"></p>
+<figcaption>Dendrogram for Hierarchical Clustering</figcaption>
+</figure>
+</div>
 <p>The dendrogram is challenging to interpret in this case, as it’s splitting the data on a roughly PCA-transformed dataset with limited explainability in the data’s variance. Furthermore, the base labels of the dendrogram are simply based upon the datapoints indices themselves, and as such the dendrogram doesn’t add substantial information or interpretability in this context. Performing a plot of the points and their classifications will likely be a more fruitful endeavor.</p>
 <p>Furthermore, the silhouette score for the hierarchical clustering was 0.266, which is fairly low. Generally, a score closer to zero signifies indifference or poor matching and grouping of the data into potentially meaningful clusters. That being said, the performance of hierarchical clustering in comparison to K-Means pales in comparison. Even the worst performing K-means cluster of K=2 was approximately equivalent to hierarcical clustering (0.256 vs.&nbsp;0.266).</p>
 </section>
@@ -387,16 +400,28 @@ window.Quarto = {
 <p>Density-based clustering can support a researcher in identifying nested, non-uniformly sized or shaped clusters in multiple dimensions. Density can also be leveraged to cluster and group data together while isolating outliers that are in low-density regions. By examining points in the source data and measuring point density and distance, points continuously meeting the density criteria are added to the same cluster.</p>
 <p>Points failing to meet the density criteria can only be added to a cluster, but are not considered for the continuity criteria for extending the cluster. Some of these points are added to clusters, and others are considered outliers (e.g.&nbsp;when they are substantially distant from any cluster points).</p>
 <p>This methodology can produce different size clusters in different dimensions, and follow paths and patterns within the data based upon point densities.</p>
-<p>Performing density-based clustering using DBSCAN on the source data produced a silhouette score of approximately 0.41.</p>
-<p>The density clustering also…</p>
-<!-- GET VISUAL IN HERE FOR DBSCAN -->
+<p>Performing density-based clustering using DBSCAN on the source data produced a silhouette score of approximately 0.33.</p>
+<div id="cell-fig-db-scan" class="cell" data-execution_count="3">
+<div class="cell-output cell-output-display">
+<div id="fig-db-scan" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-db-scan-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="clustering_files/figure-html/fig-db-scan-output-1.png" width="608" height="429" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-db-scan-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4.1: DBSCAN Cluster Results
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
 </section>
 </section>
 <section id="results" class="level2" data-number="4.4">
 <h2 data-number="4.4" class="anchored" data-anchor-id="results"><span class="header-section-number">4.4</span> Results</h2>
 <p>What is the difference in the outputs for the data, though? And how do those compare to the actual underlying labels?</p>
-<p>To visualize, we’ll take the K-Means clusters and apply the same subset of the data as used for Agglomerative and…?</p>
-<div id="cell-fig-cluster-plots" class="cell" data-execution_count="3">
+<p>To visualize, one can take the K-Means clusters and apply the same subset of the data as used for Agglomerative and DBSCAN, and also visualize the source data’s labels. This is done in the below figure.</p>
+<div id="cell-fig-cluster-plots" class="cell" data-execution_count="4">
 <div class="cell-output cell-output-display">
 <div id="fig-cluster-plots" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -404,7 +429,7 @@ window.Quarto = {
 <img src="clustering_files/figure-html/fig-cluster-plots-output-1.png" width="950" height="569" class="figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-cluster-plots-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;4.1: Summarized Cluster Results, all methods, (20% of source data)
+Figure&nbsp;4.2: Summarized Cluster Results, all methods, (20% of source data)
 </figcaption>
 </figure>
 </div>
@@ -418,7 +443,7 @@ Figure&nbsp;4.1: Summarized Cluster Results, all methods, (20% of source data)
 <h2 data-number="4.5" class="anchored" data-anchor-id="conclusion"><span class="header-section-number">4.5</span> Conclusion</h2>
 <p>What do these technical results signify to the casual reader? The numeric data alone in HMDA records may not be sufficient to examine trends, interesting patterns, or predictions (such as clusters) within US mortgage applications. This could be due to data that is available, but not included in the attempts to cluster (such as categorical variables or the reduced dimensions), or data that is unavailable within HMDA records - outside influencers or causes that place a mortgage application into the “approve” or “deny” pile.</p>
 <p>The K-Means clustering results at multiple levels didn’t produce strong, distinct, or separated clusters. Hierarchical clustering performed better in terms of cluster distinctness, but fails to resemble the actual outcomes for those loan applications. Density clustering also failed to produce anything resembling the source outcomes.</p>
-<p>None of the clustering methods produced labels that resembled actual outcomes for each application. Additionally, examining the actual labels, there’s a fairly evident interspersing of the outcomes (rejection and approval) amongst one another in the source data, as is clear in <a href="#fig-cluster-plots" class="quarto-xref">Figure&nbsp;<span>4.1</span></a>. With data in this form and quality, it is unlikely that a clustering method could differentiate between interesting groups within such a homogenous space.</p>
+<p>None of the clustering methods produced labels that resembled actual outcomes for each application. Additionally, examining the actual labels, there’s a fairly evident interspersing of the outcomes (rejection and approval) amongst one another in the source data, as is clear in <a href="#fig-cluster-plots" class="quarto-xref">Figure&nbsp;<span>4.2</span></a>. With data in this form and quality, it is unlikely that a clustering method could differentiate between interesting groups within such a homogenous space.</p>
 <p>Producing MCA transformations of categorical variables in combination with these numeric variables is the best chance this research will have to seek out more meaningful clusters in comparison to the loan outcomes of approval and denial.</p>
 
 

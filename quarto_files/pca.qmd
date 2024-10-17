@@ -208,24 +208,31 @@ pd.DataFrame({'variable':['property_value',
 
 From the initial efforts in data collection, all of these columns hold numeric and non-null data points to support calculation.
 
-The data used to perform PCA is located [here]('../src/PCA + KMeans.ipynb').
+The data used to perform PCA is located [here](https://github.com/pconnell/ML/blob/main/src/PCA%20%2B%20KMeans.ipynb).
 
 Data before Standard Scaling is as follows:
 
-```{python data-pre-ss}
+```{python tbl-data-pre-ss}
+#| label: tbl-data-pre-ss
+#| tbl-cap: data, pre-standardization
+
 display(
-    fr2[num_cols].head().style.hide(axis='index'),
-    fr2[num_cols].shape
+    fr2[num_cols].head().style.hide(axis='index')
 )
 ```
 
-```{python data-post-ss}
-display(X,X.shape)
+```{python tbl-data-post-ss}
+#| label: tbl-data-post-ss
+#| tbl-cap: data, ,post-standardization
+
+display(
+    pd.DataFrame(X,columns=num_cols)
+)
 ```
 
 ## Code
 
-The code used to perform PCA is located [here]('../src/PCA + KMeans.ipynb').
+The code used to perform PCA is located [here](https://github.com/pconnell/ML/blob/main/src/PCA%20%2B%20KMeans.ipynb).
 
 ## Principal Component Analyses
 

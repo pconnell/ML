@@ -191,13 +191,7 @@ for i, row in fr2.iterrows():
 
     curr.append(row['derived_sex'])
 
-    curr.append(row['applicant_age'])
-
-    # #interest only payments & balloon payments, 
-
-    # co/applicant sex
-
-    # sex | race via observation?
+    curr.append("age_category:{}".format(row['applicant_age']))
 
     basket.append(curr)
 ```
