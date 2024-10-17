@@ -1,0 +1,455 @@
+# Association Rule Mining Code {#sec-ARMApp .appendix}
+
+## Module and Data Imports
+
+```{python importsBlock}
+#| eval: true
+#| echo: true
+
+import pandas as pd, numpy as np, seaborn as sns, matplotlib.pyplot as plt
+
+from sklearn.preprocessing import StandardScaler
+
+from sklearn.decomposition import PCA
+
+from sklearn.cluster import KMeans
+
+from mpl_toolkits.mplot3d import Axes3D
+
+from mlxtend.frequent_patterns import apriori
+
+from mlxtend.frequent_patterns import association_rules
+
+```
+
+## Transform to Basket Transactions
+
+```{python}
+#| eval: true
+#| echo: true
+
+mapper = {
+    'applicant_race':{
+        'American Indian/Alaska Native':0b0000000000000000001,
+        'Asian':0b0000000000000000010,
+        'Asian Indian':0b0000000000000000100,
+        'Chinese':0b0000000000000001000,
+        'Filipino':0b0000000000000010000,
+        'Japanese':0b0000000000000100000,
+        'Korean':0b0000000000001000000,
+        'Vietnamese':0b0000000000010000000,
+        'Other Asian':0b0000000000100000000,
+        'Black/African American':0b0000000001000000000,
+        'Native Hawaiian/Pacific Islander':0b0000000010000000000,
+        'Native Hawaiian':0b0000000100000000000,
+        'Guamanian/Chamorro':0b0000001000000000000,
+        'Samoan':0b0000010000000000000,
+        'Other Pacific Islander':0b0000100000000000000,
+        'White':0b0001000000000000000,
+        'Information not provided':0b0010000000000000000,
+        'Not Applicable':0b0100000000000000000,
+        'No Co-applicant':0b1000000000000000000
+    },
+    # 'co-applicant_race':{
+    #     'American Indian/Alaska Native':0b0000000000000000001,
+    #     'Asian':0b0000000000000000010,
+    #     'Asian Indian':0b0000000000000000100,
+    #     'Chinese':0b0000000000000001000,
+    #     'Filipino':0b0000000000000010000,
+    #     'Japanese':0b0000000000000100000,
+    #     'Korean':0b0000000000001000000,
+    #     'Vietnamese':0b0000000000010000000,
+    #     'Other Asian':0b0000000000100000000,
+    #     'Black/African American':0b0000000001000000000,
+    #     'Native Hawaiian/Pacific Islander':0b0000000010000000000,
+    #     'Native Hawaiian':0b0000000100000000000,
+    #     'Guamanian/Chamorro':0b0000001000000000000,
+    #     'Samoan':0b0000010000000000000,
+    #     'Other Pacific Islander':0b0000100000000000000,
+    #     'White':0b0001000000000000000,
+    #     'Information not provided':0b0010000000000000000,
+    #     'Not Applicable':0b0100000000000000000,
+    #     'No Co-applicant':0b1000000000000000000
+    # },
+    'applicant_ethnicity':{
+        'Hispanic/Latino':0b000000001,
+        'Mexican':0b000000010,
+        'Puerto Rican':0b000000100,
+        'Cuban':0b000001000,
+        'Other Hispanic/Latino':0b000010000,
+        'Not Hispanic/Latino':0b000100000,
+        'Information Not Provided':0b001000000,
+        'Not Applicable':0b010000000,
+        'No Co-applicant':0b100000000
+    },
+    # 'co-applicant_ethnicity':{
+    #     'Hispanic/Latino':0b000000001,
+    #     'Mexican':0b000000010,
+    #     'Puerto Rican':0b000000100,
+    #     'Cuban':0b000001000,
+    #     'Other Hispanic/Latino':0b000010000,
+    #     'Not Hispanic/Latino':0b000100000,
+    #     'Information Not Provided':0b001000000,
+    #     'Not Applicable':0b010000000,
+    #     'No Co-applicant':0b100000000
+    # },
+    'aus':{
+        'Desktop Underwriter':0b00000001,
+        'Loan Prospector/Product Advisor':0b00000010,
+        'TOTAL Scorecard':0b00000100,
+        'GUS':0b00001000,
+        'Other':0b00010000,
+        'Internal Proprietary':0b00100000,
+        'Not applicable':0b01000000,
+        'Exempt':0b10000000,
+    }, 
+    'denial_reason':{
+        'DTI':0b0000000001,
+        'Employment History':0b0000000010,
+        'Credit History':0b0000000100,
+        'Collateral':0b0000001000,
+        'Insufficient Cash':0b0000010000,
+        'Unverifiable Information':0b0000100000,
+        'Credit Application Incomplete':0b0001000000,
+        'Mortgage Insurance Denied':0b0010000000,
+        'Other':0b0100000000,
+        'Not Applicable':0b1000000000
+    }
+}
+
+new_mapper = {}
+for k,v in mapper.items():
+    new_mapper[k] = {}
+    #print(k)
+    for j,w in v.items():
+        #print(w,j)
+        new_mapper[k][w] = j
+```
+
+```{python}
+#| eval: true
+#| echo: true
+
+fr2 = pd.read_csv('../data/final_clean_r2.csv')#fr.copy()
+
+pct = [20,40,60,80]
+
+levels = ['0-20','21-40','41-60','61-80','>80']
+
+pct_cols = [
+    'income',
+    'debt_to_income_ratio',
+    'loan_to_value_ratio',
+    'tract_minority_population_percent',
+    'tract_to_msa_income_percentage',
+    'tract_median_age_of_housing_units',
+    'interest_rate'
+]
+
+for col in pct_cols:
+    p = list(map(lambda x: np.percentile(fr2[col],x),pct))
+    p = [-np.inf] + p + [np.inf]
+    fr2[col] = pd.cut(fr2[col],bins=p,labels=levels)
+```
+
+```{python}
+#| eval: true
+#| echo: true
+
+basket = []
+bc = [
+    'income','debt_to_income_ratio','loan_to_value_ratio',
+    'tract_minority_population_percent','tract_to_msa_income_percent',
+    'derived_sex'
+]
+b1c = ['interest_rate','company','applicant_race']
+b2c = ['interest_rate','company','outcome']
+b3c = ['interest_rate','applicant_race','outcome']
+
+b1,b2,b3 = [],[],[]
+
+for i, row in fr2.iterrows():
+    curr = []
+    for k,v in new_mapper.items():
+        for j,w in v.items():
+            #print(row[k],type(row[k]))
+            if row[k] & j > 0:
+                curr.append("{}:{}".format(k,w))
+
+    if row['balloon_payment'] == 1:
+        curr.append('balloon')
+    
+    if row['interest_only_payment'] == 1:
+        curr.append('interest only')
+    
+    curr.append("{} rooms".format(row['total_units']))
+
+    for col in pct_cols:
+        curr.append("{}:{}".format(col,row[col]))
+    
+    # curr.append(row['company'])
+
+    curr.append(row['derived_sex'])
+
+    curr.append(row['applicant_age'])
+
+    # #interest only payments & balloon payments, 
+
+    # co/applicant sex
+
+    # sex | race via observation?
+
+    basket.append(curr)
+```
+
+```{python}
+#| eval: true
+#| echo: true
+
+items = set()
+for trans in basket:
+    for item in trans:
+        items.add(item)
+
+result = []
+for record in basket:
+    rowset = set(record)
+    labels = {}
+    uncommons = list(items-rowset)
+    commons = list(items.intersection(rowset))
+    for uc in uncommons:
+        labels[uc] = False
+    for com in commons:
+        labels[com] = True
+    result.append(labels)
+
+ohe_df = pd.DataFrame(result)
+
+single_basket = ohe_df.replace(
+    [0],[np.nan]
+).reset_index()
+
+single_basket = single_basket.melt(
+    id_vars='index',
+    value_vars=single_basket.columns[1:]
+)
+
+single_basket.sort_values(by='index',inplace=True)
+single_basket.dropna(inplace=True)
+
+# display(
+#     ohe_df.head(),
+#     single_basket.head()
+# )
+
+single_basket.to_csv('../data/ARM_single_basket.csv',index=False)
+```
+
+
+### Construct Frequent Items
+
+```{python}
+#| eval: true
+#| echo: true
+freq_items=apriori(ohe_df,min_support=0.05,use_colnames=True,verbose=1)
+ars = association_rules(freq_items,metric='support',min_threshold=0.5)
+ars.sort_values(by='lift',ascending=False,inplace=True)
+```
+
+### Construct Association Rules (Python)
+
+### Save the Top 15 Association Rules by Category
+
+### Performing Rule Mining and Visualization in R
+
+Rule mining is performed on data that was already transformed in Python from previous steps
+
+```{r imports}
+#| eval: true
+#| echo: true
+library(tidyverse)
+library(arules)
+library(arulesViz)
+```
+
+First load the data into R for use in rule mining. 
+
+```{r dataload}
+#| eval: true
+#| echo: true
+dat <- read.transactions(
+    'C:/Users/pconn/OneDrive/Desktop/Machine Learning/ML/data/single_basket.csv',
+    sep=',',
+    rm.duplicates=TRUE,
+    format='single',
+    cols=c(1,2)
+)
+
+
+```
+
+Now that the data is loaded, R is leveraged to perform rule mining
+
+```{r ruleMining}
+#| eval: true
+#| echo: true
+set.seed = 9001
+
+a_rules <- arules::apriori(
+    dat,
+    control=list(verbose=F),
+    parameter=list(support=0.04,confidence=0.01,minlen=2)
+)
+```
+
+Using the mined rules, the rules can now be printed and/or visualized.
+
+
+```{r}
+#| eval: true
+#| echo: true
+
+sorted_arules <- sort(a_rules,by='support',decreasing = T)
+arules::inspect(sorted_arules[1:15])
+```
+
+```{r}
+#| eval: true
+#| echo: true
+
+sorted_arules <- sort(a_rules,by='confidence',decreasing = T)
+arules::inspect(sorted_arules[1:15])
+```
+
+```{r}
+#| eval: true
+#| echo: true
+
+sorted_arules <- sort(a_rules,by='lift',decreasing = T)
+arules::inspect(sorted_arules[1:15])
+```
+
+
+```{r}
+#| eval: true
+#| echo: true
+
+sub <- head(sort(a_rules,by='lift',decreasing = T),10)
+plot(sub,method="graph",engine="html")
+```
+
+### Examining Organization Specific Rules
+
+```{r}
+#| eval: true
+#| echo: true
+
+NFCU <- subset(dat, subset = items %in% "Navy Federal Credit Union")
+JPM <- subset(dat, subset = items %in% 'JP Morgan')
+BOA <- subset(dat, subset = items %in% 'Bank of America')
+WF <- subset(dat, subset = items %in% 'Wells Fargo')
+RM <- subset(dat, subset = items %in% 'Rocket Mortgage')
+
+get_rules <- function(trns,appear,sup,conf,len){
+    arules::apriori(
+        trns,parameter=list(support=sup,confidence=conf,minlen=len) ,
+        control=list(verbose=F),
+        appearance = appear
+    )
+}
+
+NFCU_app <- get_rules(trns=NFCU,appear=list(default='lhs',rhs='approve'),sup=0.04,conf=0.01,len=3)
+NFCU_den <- get_rules(trns=NFCU,appear=list(default='lhs',rhs='deny'),sup=0.04,conf=0.01,len=3)
+
+JPM_app <- get_rules(trns=JPM,appear=list(default='lhs',rhs='approve'),sup=0.04,conf=0.01,len=3)
+JPM_den <- get_rules(trns=JPM,appear=list(default='lhs',rhs='deny'),sup=0.04,conf=0.01,len=3)
+
+BOA_app <- get_rules(trns=BOA,appear=list(default='lhs',rhs='approve'),sup=0.04,conf=0.01,len=3)
+BOA_den <- get_rules(trns=BOA,appear=list(default='lhs',rhs='deny'),sup=0.04,conf=0.01,len=3)
+
+WF_app <- get_rules(trns=WF,appear=list(default='lhs',rhs='approve'),sup=0.04,conf=0.01,len=3)
+WF_den <- get_rules(trns=WF,appear=list(default='lhs',rhs='deny'),sup=0.04,conf=0.01,len=3)
+
+RM_app <- get_rules(trns=RM,appear=list(default='lhs',rhs='approve'),sup=0.04,conf=0.01,len=3)
+RM_den <- get_rules(trns=RM,appear=list(default='lhs',rhs='deny'),sup=0.04,conf=0.01,len=3)
+```
+
+```{r}
+#| eval: true
+#| echo: true
+
+plot(sort(NFCU_den,by='lift')[1:10],engine='html',method='graph')
+```
+
+```{r}
+#| eval: true
+#| echo: true
+
+plot(sort(JPM_den,by='lift')[1:10],engine='html',method='graph')
+```
+
+```{r}
+#| eval: true
+#| echo: true
+
+plot(sort(BOA_den,by='lift')[1:10],engine='html',method='graph')
+```
+
+```{r}
+#| eval: true
+#| echo: true
+
+plot(sort(WF_den,by='lift')[1:10],engine='html',method='graph')
+```
+
+```{r}
+#| eval: true
+#| echo: true
+
+plot(sort(RM_den,by='lift')[1:10],engine='html',method='graph')
+```
+
+
+```{r}
+#| eval: true
+#| echo: true
+
+a_rules_den <- arules::apriori(
+    dat,
+    control=list(verbose=F),
+    parameter=list(support=0.04,confidence=0.01,minlen=2),
+    appearance = list(default='lhs',rhs='deny')
+)
+
+a_rules_app <- arules::apriori(
+    dat,
+    control=list(verbose=F),
+    parameter=list(support=0.04,confidence=0.01,minlen=2),
+    appearance = list(default='lhs',rhs='approve')
+)
+inspect(sort(
+    subset(
+        a_rules_den,lhs %pin% 'race:'
+    ), by='lift'
+))
+inspect(sort(
+    subset(
+        a_rules_app,lhs %pin% 'race:'
+    ), by='lift'
+)[1:10])
+```
+
+```{r}
+#| eval: true
+#| echo: true
+
+
+```
+
+
+```{r}
+#| eval: true
+#| echo: true
+
+
+```

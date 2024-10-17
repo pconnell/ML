@@ -2,8 +2,343 @@
 
 ## Overview
 
+<!-- Describe arm -->
+
+Association Rule Mining, henceforth ARM in this section, is the process of identifying commonly occuring combinations within a dataset.  The method allows one to explore and uncover potentially unknown associations and groupings in data that are not necessarily immediately evident upon a direct human inspection.  
+
+A common application of these methods is that of assessing common purchases by customers in a store or e-commerce website (e.g. if a customer buys a portable music player, is it common or frequent for those customers to purchase a USB cable, or Bluetooth headphones, or potentially both?).  Manually inspecting or searching through the data with ad-hoc or independently built algorithms may not be effective or efficient to identify such patterns.  When considering an application such as customer purchases, or transactional data, the possibility of combinations of items in each purchase is conceptually unbounded, and using brute-force methods to seek out these combinations will exceed the available computational resources of a machine before identifying anything of use.
+
+So, to examine transactions for potentially insightful or useful metrics, one needs to go about said search wisely and efficiently.  This is where a handful of algorithms and methods come into play, including Frequent Pattern growth and Apriori.  
+
+*What is a frequent pattern?*
+
+A frequent pattern is defined as a collection of items that occur at or above a specified threshold within a dataset of transactions.   When measuring frequent patterns, each item in the collection is unique, and multiple instances of the same item within an individual transaction are ignored so as to bring focus on the occurence of unique items being grouped together within the dataset.  Since the threshold can be specified by the person conducting association rule mining, *frequent* is a relative and subjective term in this context, as it is based on the relative frequency of occurence of the group of items, and whether or not that relative frequency exceeds an arbitrary threshold.
+
+Common items that are connected, grouped, or bundled together are be referred to as *frequent patterns* within datasets.
+
+*How does apriori work?*
+
+The Apriori algorithm leverages bayesian probability and induction to...   To perform apriori ARM, one must set thresholds for the metric for which one is measuring the data.  This is key, because depending on the number of unique items or the number of transactions within the dataset in question, the 
+
+To search for these connections and associations, the method leverages Bayes rule for probability, metrics such as entropy or Gini indices within the Apriori algorithm.  The algorithm iteratively and inductively examines data for frequent patterns, generally, in the following manner - 
+
+1. Calculate or determine the relative frequency of item groups or sets of length 1 (based on input threshold).
+
+2. Prune items that do not meet the input threshold from further consideration.
+
+3. For patterns of length $n$, examine combinations of frequent patterns with length $n-1$ and length 1 (e.g. for length 2, combine frequent item sets of length 1 and 1), and calculate those combinations' relative frequencies.
+
+4. Retain only sets of items that meet the initially established threshold.
+
+5. Repeat steps 3 and 4 until no more sets of items of length $n$ meet the specified threshold.
+
+So one can see that as the apriori algorithm proceeds, it does have an eventual halting point, depending on the initially established thresholds.  The predominant metric and threshold is the relative frequency of occurence of an item (or combination of items).  This relative frequency is also known as the **support** of the combination of items within the dataset.  
+
+*What is an association rule?*
+
+An association rule goes beyond individual relative frequencies of items or combinations thereof, and begin telling more about how strongly connected certain item combinations are within the data.  ARM establishes a connection between an *antecedent* (or prior) and a *consequent* (or posterior) set of items within the dataset.  The combination of antecedents and consequents are what form assosciation rules.  It is similar to asking the question, *given* a customer has already placed items $A$ and $B$ in their shopping cart, what is the probability or likelihood that they will next place $C$ in their basket?  Knowing relative frequencies of individual items and combinations thereof across many transactions is necessary to answer this question, but does not necessarily answer how certain or strong those associations are.
+
+*How do we measure the strength of the rules?* 
+
+Support has already been discussed in this section as the relative frequency of occurance of a set of items wihtin source data.  Strength of association rules are measured with metrics including support, confidence, and lift.
+
+Confidence and lift tell us the most about the strength of a rule.  High confidence (ranging from 0 to 1, with 1 being the highest) tell us how often this collection of items occurs.
+
+* **Confidence** - How often the items **A** and **B** occur together given the number of times **A** occurs. Helps us in that if someone is just buying **A** and **B** together and not **C**, we can rule out **C** at that point in time.  $P(B|A) = \frac{P(A\cap B)}{P(A)}$
+
+* One can define a threshold for mininum support and confidence as initial parameters when beginning to build association rules.  Once set these values are set, they serve as a filter that adjusts the number of rules that are found, and helps determine how long or specific those rules can be.  Generally, since the algorithm is inductive, lengthy rules are rare (e.g. will have low support).  By setting lower initial thresholds for support, more rules can be mined.
+
+* **Lift** -  gives us the indepdendent occurence probability of item **A** and **B**. We observe that there is alot of between this random occurence and association. $\frac{P(A\cap B)}{P(A)\cdot P(B)}$
+
+    * The calculation of lift is based upon the assumption of statistical independence -  $A$ and $B$ are indpendent $\iff$ $P(A\cap B) = P(A)\cdot P(B)$.  So, with the fraction $\frac{P(A\cap B)}{P(A)\cdot P(B)}$, it transforms the calculation in such a way we can garner important insight.
+
+    * Lift values equal to 1 signify item occurences that are independent of one another.
+
+    * Lift values greater than 1 are akin to saying the sum is greater than its parts, and gives greater creedence to a calculated confidence value.  The higher lift is, the more assurance that we have that the confidence is meaningful and impactful.
+
+    * Lift values less than 1 signify that there is an inverse relationship between the items in question, and that having one actually reduces the chances of the other occuring.  The closer to zero this value approaches, the stronger the inverse relationship is.
+
+*How does one interpret association rules?*
+
+ARM does **not** establish causal relationships between antecedents and consequents.  It is a frequentist method to examine relative probabilities within transaction data.  When interpreting association rules, one can comment on the strength of identified rules using metrics like confidence and lift.  Lift values for association rules are tantamount to pearson R correlation values with some differences in the range of the potential result:
+
+* a lift value substantially higher than 1 is analogous to a high, positive Pearson R value close to +1
+
+* a small lift value, very close to 0, is analogous to a low, negative Pearson R value close to -1
+
+* a lift value of 1 is analogous to a Pearson R value of 0
+
+With this similarity to correlation, one can interpret mined rules with high lift and high confidence with statements such as "Customers who buy $A$ and $B$ almost always buy $C$."  And similarly, for a very low lift and high confidence, "Customers who buy $A$ rarely if ever also buy $B$."  One should *not* interpret mined rules in such manners as "Customers buy $B$ *because* they bought $A$" or that "Customers who have $A$ and $B$ *need* $C$."  The later statements are causal in nature, and such relationships are not established via ARM.
+
+## ARM within this Study
+
+ARM for the purpose of this study can help examine some of the findings from the CNN article, and help examine their findings as well as explore other research questions with respect to the top 5 lenders.  Examining associations in which the consequent is either a result of loan approval or loan denial is of interest here.  Furthermore, performing similar actions where antecedents include the specific financial institution, an individual or collection of protected class information, and other important features should be examined to pursue answers to the research questions established in @sec-intro.
+
 ## Data
+
+Applying ARM to the collected HMDA mortgage data is somewhat of a challenge.  The data itself is not necessarily organized in a way that is immediately conducive to searching for associations; it contains a mixture of quantitative and qualitative data.  To perform ARM, we need transactional data - a list of all things that effectively went into the "basket" of each mortgage application.  Additionally, numeric information is a detriment to identifying patterns, as any variable or feature that sits along an interval or continuous scale has countless possibile values which it can take on, and as such, identifying frequent patterns and results in the data may not be possible.
+
+Generally, to prepare this mortgage data for use in ARM, a few actions were necessary to establish features as available and usable:
+
+* perform discretization and binning of numeric variables into distinct categories
+
+    * numeric variables were divided on percentile boundaries of width 20, including 0-20, 21-40, 41-60, 61-80, and >80.
+
+    * which numeric vars?
+
+* add features of each mortgage application into a *basket*
+
+* transform the resulting baskets into a one-hot element frame of data
+
+* pivot data into single format (2 columns, transaction number and item)
+
+The code to perform these transformations and prepare the data was written in Python and can be reviewed in @sec-ARMApp.
+
+Prior to performing the transaction transformation, the data is the same state as it was after initial collection:
+
+```{r}
+path <- getwd()
+library(tidyverse)
+# d1 <- read.csv(str_c(path,'C:/Users/pconn/OneDrive/Desktop/Machine Learning/ML/data/final_clean_r2.csv'))
+d1 <- read.csv('C:/Users/pconn/OneDrive/Desktop/Machine Learning/ML/data/final_clean_r2.csv')
+d2 <- read.csv('C:/Users/pconn/OneDrive/Desktop/Machine Learning/ML//data/single_basket.csv')
+```
+
+```{r}
+head(d1[1:5])
+```
+
+Examples of the data, post transformation:
+
+```{r}
+head(d2)
+```
+
+The transformed data can be found [here](https://drive.google.com/file/d/1ajAHzTZZMSxuyumuX6bdjtg3w3W1jAEe/view?usp=drive_link)
 
 ## Code
 
+The code to prepare the data into single transaction format, execute the apriori algorithm, and measure metrics such as confidence, lift, and support, was written in R is located in @sec-ARMApp.  Furthermore, the code is embedded, but hidden, within the quarto source code of this webpage, written in R.  Examination of the source .qmd file will provide a view of the specific code used to generate the rules and visuals.
+
 ## Results
+
+The below tables and figures provide insight to mined association rules from the dataset.  The overall first three tables, @tbl-arm-by-spt, @tbl-arm-by-conf, and @tbl-arm-by-lift cover the top association rules when the totality of the dataset is mined via apriori.  
+
+However, some other tables and figures are necessary to examine the individual institutions, as what is frequent for one institution may be infrequent for another.  Being able to dive deeper on the individual institutions and the relative frequency of approvals and denials for their organizations is of interest to the intent of this research.
+
+```{r imports}
+library(arules)
+library(arulesViz)
+
+dat <- read.transactions(
+    'C:/Users/pconn/OneDrive/Desktop/Machine Learning/ML/data/single_basket.csv',
+    sep=',',
+    rm.duplicates=TRUE,
+    format='single',
+    cols=c(1,2)
+)
+
+set.seed = 9001
+
+a_rules <- arules::apriori(
+    dat,
+    control=list(verbose=F),
+    parameter=list(support=0.04,confidence=0.01,minlen=2) #,
+    #appearance = list(default='lhs',rhs='deny')
+)
+```
+
+```{r tbl-arm-by-spt}
+#| label: tbl-arm-by-spt
+#| tbl-cap: Top 15 Associations by Support
+
+sorted_arules <- sort(a_rules,by='support',decreasing = T)
+arules::inspect(sorted_arules[1:15])
+```
+
+@tbl-arm-by-spt outlines the overall top 15 mined rules by support, or relative frequency.  One can see some relatively frequently occurring occurences here, however, this doesn't mean they are useful or meaningful associations.
+
+For instance, examining rule #14 with an untrained eye would be immediately concerning, as it seems 53% of the time, White applicants are simply approved because they are White.  However, examining the lift of this rule being quite close to 1, this is actually a weak association within this data.  Recalling that a lift value equal to 1 means that A and B are independent.  While this value is greater than one, as are all values in @tbl-arm-by-spt, all of them are very close to 1.  As such, every rule in this table is a weak association and simply a result of frequency of presence in the data.
+
+```{r tbl-arm-by-conf}
+#| label: tbl-arm-by-conf
+#| tbl-cap: Top 15 Associations by Confidence
+
+sorted_arules <- sort(a_rules,by='confidence',decreasing = T)
+arules::inspect(sorted_arules[1:15])
+```
+
+In @tbl-arm-by-conf, we have a bit more of a mixed bag of results.  The strongest rule is actually the assocation that JP Morgan uses Loan Prospector/Product Advisor and Other Automated underwriting systems for their loan applications, moreseo than any other lender, for 2023 data.  This rule (rule #2) has a substantially high value for lift (close to 5) and a confidence of 1, whereas nearly all other rules in this top-15 list are much closer to 1 in terms of lift.  
+
+All of these rules have greater lift than the rules mined in @tbl-arm-by-spt, and thus have more utility.  However, most are still very close to 1 and not incredibly strong, less rule #2.  As such, many of these rules are frequent, but not necessarily meaningful beyond their relative frequency.
+
+```{r tbl-arm-by-lift}
+#| label: tbl-arm-by-lift
+#| tbl-cap: Top 15 Associations by Lift
+
+sorted_arules <- sort(a_rules,by='lift',decreasing = T)
+arules::inspect(sorted_arules[1:15])
+```
+
+
+```{r fig-arm-arules-vis}
+#| label: fig-arm-arules-vis
+#| fig-cap: Visualization of top 15 rules (by lift)
+
+sub <- head(sort(a_rules,by='lift',decreasing = T),15)
+plot(sub,method="graph",engine="html")
+```
+
+In @tbl-arm-by-lift and @fig-arm-arules-vis, one can begin to see some interesting patterns. The rules in this list are quite interesting. Of particular interest are rules #11 and #13, establishing assoications between approval and *the absence* of ethnic, racial, and gender information on a loan application.  While other features are include (e.g. 1 bedroom home, specific underwriting systems), the association of these things together within the overarching dataset could be used to tell a compelling story.  
+
+Namely, with 66-70% confidence, it's possible that you may boost your chances to have a loan approval if you omit your demographic information, as such omissions and exclusions are associated with loan approvals.  Similarly speaking, if the former is a true statement, it may also be true that one may reduce their chances for approval when *including* their personal demographic information on a loan application.  And by further examining these rules, both of these claims may best hold true if the loan has been processed by Rocket Mortgage.
+
+From here, it's of interest to examine association rules mined when the transactions are filtered to specific organizations.  The reason for this is that, for a set threshold of support and confidence, certain interesting rules for a given organization may not be available for mining simply due to a lower volume of transactions processed via that organization.  As such, by first filtering down transactions to a set organization and then exploring the rules mined for that organization at set common thresholds for support and confidence, more interesting information may arise.
+
+```{r transactBuild}
+NFCU <- subset(dat, subset = items %in% "Navy Federal Credit Union")
+JPM <- subset(dat, subset = items %in% 'JP Morgan')
+BOA <- subset(dat, subset = items %in% 'Bank of America')
+WF <- subset(dat, subset = items %in% 'Wells Fargo')
+RM <- subset(dat, subset = items %in% 'Rocket Mortgage')
+
+get_rules <- function(trns,appear,sup,conf,len){
+    arules::apriori(
+        trns,parameter=list(support=sup,confidence=conf,minlen=len) ,
+        control=list(verbose=F),
+        appearance = appear
+    )
+}
+
+NFCU_app <- get_rules(trns=NFCU,appear=list(default='lhs',rhs='approve'),sup=0.04,conf=0.01,len=3)
+NFCU_den <- get_rules(trns=NFCU,appear=list(default='lhs',rhs='deny'),sup=0.04,conf=0.01,len=3)
+
+JPM_app <- get_rules(trns=JPM,appear=list(default='lhs',rhs='approve'),sup=0.04,conf=0.01,len=3)
+JPM_den <- get_rules(trns=JPM,appear=list(default='lhs',rhs='deny'),sup=0.04,conf=0.01,len=3)
+
+BOA_app <- get_rules(trns=BOA,appear=list(default='lhs',rhs='approve'),sup=0.04,conf=0.01,len=3)
+BOA_den <- get_rules(trns=BOA,appear=list(default='lhs',rhs='deny'),sup=0.04,conf=0.01,len=3)
+
+WF_app <- get_rules(trns=WF,appear=list(default='lhs',rhs='approve'),sup=0.04,conf=0.01,len=3)
+WF_den <- get_rules(trns=WF,appear=list(default='lhs',rhs='deny'),sup=0.04,conf=0.01,len=3)
+
+RM_app <- get_rules(trns=RM,appear=list(default='lhs',rhs='approve'),sup=0.04,conf=0.01,len=3)
+RM_den <- get_rules(trns=RM,appear=list(default='lhs',rhs='deny'),sup=0.04,conf=0.01,len=3)
+```
+
+<!-- Navy Federal Credit Union is the only institution amongst the top 5 lenders to have an association rule for denial of African American applicants when using thresholds of 0.01 for miniumum support and confidence.  The strength of the rule, in relative terms, is moderate at best.  While the rule's lift is approximately 1.66 (thus potentially a useful rule), the confidence in this rule is only slightly above 50%.  Furthermore, we do see that the top rules for NFCU have lifts above 2.8, with much higher confidences.  Not only that, but the rules seem to be much more tightly bound to financial status of the applicant (which is highly relevant to a decision of whether or not to approve a loan).  This found rule appears to match that of CNNs findings (generally, that NFCU rejected over 50% of its Black/African American Applicants).
+
+However, the #1 mined association rule for NFCU denials is when one's debt to income ratio exceeds the 80th percentile, when the loan to value ratio exceeds the 80th percentile, and the interest rate of the loan is between the 41st and 60th percentile, that about 96% of the time, NFCU will deny that loan.  This description sounds like a riskly loan, and it would make sense to deny on these bases!  With regard to the spectrum of NFCU rule strength, the strength of this rule at approximately 2.89 lift is substantially higher than that of the mined rule for denial of Black/African Americans.
+
+Taking this further in context, however, suggests that, since NFCU was....
+
+BOA appears to have issues with denying loans to White people (when...) and to people who aren't hispanic/latino (when...)
+
+Rocket mortgage Not hispanic latino when... -->
+
+```{r fig-nfcu-deny-rules}
+#| label: fig-nfcu-deny-rules
+#| fig-cap: top 10 NFCU Denial Rules by Lift
+
+plot(sort(NFCU_den,by='lift')[1:10],engine='html',method='graph')
+# inspect(sort(NFCU_deny,by='lift')[1:10])
+```
+
+NFCU has rules including debt-to-income ratio being above 80th percentile and loan interest rate being between 41 and 60th percentile as common features for all of its top 10 rules by lift.  A total of 4 of the top ten rules include race or ethnicity (Non-hispanic/latino and black/African American applicants).
+
+```{r fig-jpm-deny-rules}
+#| label: fig-jpm-deny-rules
+#| fig-cap: top 10 JP Morgan Denial Rules by Lift
+
+plot(sort(JPM_den,by='lift')[1:10],engine='html',method='graph')
+# inspect(sort(JPM_deny,by='lift')[1:10])
+```
+
+JP Morgan has the same common features of debt-to-income ratio being above 80th percentile and loan interest rate being between 41 and 60th percentile for its top 10 rules.  JP Morgan has a single rule covering ethnicity for denial (non-hispanic/latino applicants with the other common criteria).
+
+```{r fig-boa-deny-rules}
+#| label: fig-boa-deny-rules
+#| fig-cap: top 10 Bank of America Denial Rules by Lift
+
+plot(sort(BOA_den,by='lift')[1:10],engine='html',method='graph')
+# inspect(sort(BOA_deny,by='lift')[1:10])
+```
+
+Bank of America appears as an oddity here.  The main common traits are a moderate interest rate (in the range of 21st to 40th percentile) and the lack of use of an underwriting system (e.g. they didn't use any underwriting).  
+
+Surprisingly, there are strong rules for BoA for denial of White and Non-hispanic/latino applicants.
+
+```{r fig-wf-deny-rules}
+#| label: fig-wf-deny-rules
+#| fig-cap: top 10 Wells Fargo Denial Rules by Lift
+
+plot(sort(WF_den,by='lift')[1:10],engine='html',method='graph')
+# inspect(sort(WF_deny,by='lift')[1:10])
+```
+
+Wells Fargo corporation has no presence of association rules tied to ethnic, racial, gender, or age in its top-10 rules.  Their denials seem to be predominantly mapped to lower proposed interest rates married with a high debt-to-income ratio.
+
+```{r fig-rm-deny-rules}
+#| label: fig-rm-deny-rules
+#| fig-cap: top 10 Rocket Mortgage Denial Rules by Lift
+
+plot(sort(RM_den,by='lift')[1:10],engine='html',method='graph')
+# inspect(sort(RM_deny,by='lift')[1:10])
+```
+
+Wells Fargo has 3 rules in its top 10 by lift tied to ethnicity (Denial of non-Hispanic/Latino applicants with moderate interest rates).
+
+## Conclusions
+<!-- * How is this relevant to the topic? -->
+These association rules support this research going a degree beyond basic statistical analyses of source variables.  In particular, cases of lift being over 1 are of interest, as it suggests that the antecedents contribute more probabilistically to the precedents.  Once again, not necessarily tending to causation, but instead establishing a probabilistic and associative connection between the variables.
+
+Examining the results for the top 15 rules  by lift, one sees an interesting occurence.  Namely, the following set of items is frequent and strongly associated (examining the 11th rule): 
+
+\{ 1 rooms, applicant_ethnicity:Information Not Provided, applicant_race:Information not provided approve,  aus:Desktop Underwriter\} => \{Sex Not Available\}
+
+Namely, that mortgage approval is strongly associated with not having protected class information (sex, ethnicity, race) available or listed on a mortgage application.  
+
+With lift values exceeding 7 and confidence of 66%.  Moreover, this 66% confidence corresponds to the concept that when all items in the antecedent are met, 66% of the time it is followed by the sex not being listed or available in the application.
+
+This suggests, then, that it is quite likely to see applications where no demographic protected class information is provided or available for the applicant, and the application is not denied.  This finding appears connected and linked to those of @fig-rc-app-lend, @fig-sex-inst, and @fig-age-lender.  What is further interesting is that the findings for each individual chart in initial exploration appear to merge together as rules within this association rule mining.  While ARM does not establish or produce causal relationsips, the further depth of the relationships between these protected class variables is intriguing.  
+
+However, some potentially concerning rules did arise for rocket mortgage (male or White or non-hispanic/latino), Wells Fargo (non-hispanic/latino ethnicity), Bank of America (White or non-hispanic/latino), and JP Morgan (non-Hispanic/Latino).  While these rules appear to include other relevant financial or risk-based lending information (high debt to income ratio and insufficient interest rate on the loan, and other similar financial indicators that the applicant's ability to repay may be at risk), these rules suggest that, at least on a frequentist basis, all lenders are more likely to deny loans to non-Hispanic/Latino applicants when they fall within these financial categories.
+
+The findings in denial for NFCU rules #7 and #8 in @fig-nfcu-deny-rules high confidence and lift are consistent with the findings of CNN's report from the end of 2023, when taking the organization by itself and when not comparing to other institutions.  To compare all institutions for such a rule of denial of black applicants, here, ARM is run once more, focused across the entirety of the dataset with minimum support = 0.04, confidence = 0.01, and setting loan denial as the consequent.
+
+```{r}
+a_rules_den <- arules::apriori(
+    dat,
+    control=list(verbose=F),
+    parameter=list(support=0.04,confidence=0.01,minlen=2),
+    appearance = list(default='lhs',rhs='deny')
+)
+
+a_rules_app <- arules::apriori(
+    dat,
+    control=list(verbose=F),
+    parameter=list(support=0.04,confidence=0.01,minlen=2),
+    appearance = list(default='lhs',rhs='approve')
+)
+
+```
+
+```{r}
+inspect(sort(
+    subset(
+        a_rules_den,lhs %pin% 'race:'
+    ), by='lift'
+))
+```
+
+In the above table, all rules from the totality of the dataset that include race are listed. Examining these rules, one can clearly see that at the selected minimum confidence and support levels, there are no stand-outs in terms of specific organizations having high-lift high-confidence associations between a particular protected class and denial of loan applications.  One can also see, however, that with limited confidence and moderate lift in rules #1 and #2, White applicants whose interest rates would be in the 41-60th percentile of 2023 interest rates tended to be denied.  The remainder of the rules are not useful as they have lift values less than 1 and thus have negative assoications with one another.
+
+```{r}
+inspect(sort(
+    subset(
+        a_rules_app,lhs %pin% 'race:'
+    ), by='lift'
+)[1:10])
+```
+
+Since metrics such as confidence and lift originate from somewhat Bayesian probability measurements, the performance of naive Bayes and Bernoulli Naive Bayes classification methods on the data could potentially be effective in terms of accuracy, recall, and precision for cases when age, gender, or race are not listed for an application.  What would still remain in question is the degree to which predictive strength for those models is impacted by the presence of specific protected classes (instead of their absence) for establishing a link to the outcome of approval or denial of the application.

@@ -1,2 +1,2 @@
-# Appendix 3 {#sec-App3 .appendix}
+# Clustering Code {#sec-App3 .appendix}
 

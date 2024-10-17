@@ -4,130 +4,374 @@
 import pandas as pd, numpy as np,seaborn as sns,matplotlib.pyplot as plt
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import MinMaxScaler, StandardScaler
-```
-
-```{python dataImport}
-fr = pd.read_csv('../data/final_clean2.csv')
-
-all_cols = [
-    'income', 'total_units',
-    'debt_to_income_ratio',
-    'loan_to_value_ratio',
-    'total_loan_costs',
-    'origination_charges',
-    'discount_points',
-    'lender_credits',
-    'property_value',
-    'tract_minority_population_percent',
-    'tract_median_age_of_housing_units'
-]
-
-fr['loan_to_value_ratio'] = np.select(
-    [fr['loan_to_value_ratio']>100],
-    [fr['loan_amount']/fr['property_value']],
-    fr['loan_to_value_ratio']
-)
-
-fr.loc[fr['income']>200000,'income'] = fr.loc[fr['income']>200000,'income'] / 1000
-
-cols = {
-    'log_norm':[
-        'property_value',
-        'lender_credits',
-        'discount_points',
-        'origination_charges',
-        'total_loan_costs',
-        'property_value',
-        'income'
-    ],
-    'norm':[],
-    'minmax':[
-        'total_units',
-        'tract_median_age_of_housing_units',
-        'tract_minority_population_percent',
-        'loan_to_value_ratio',
-        'debt_to_income_ratio'
-    ]
-}
-
-```
-
-```{python}
-# for col in all_cols:
-#     sns.kdeplot(data=fr,x=col)
-#     plt.show()
-
+from mpl_toolkits.mplot3d import Axes3D
+import statsmodels.api as sm
 ```
 
 ## Overview
+<!-- * Describe PCA in one paragraph -->
+Principal component analysis (or PCA) is the act of rotating in combination with stretching or squishing the axes of a multi-dimensional dataset to better align with its direcitonality in multidimensional space.  By realigning the axes, the variation within the data can be more directly tied to and explained by the axes (also called Principal Components).  In some cases, the transformation can be so profound such that a substantial amount of the data's variation can be explained using fewer dimensions.
+
+Consider the below graphic:
+
+```{python fig-2d-ex}
+#| label: fig-2d-ex
+#| fig-cap: A strongly correlated 2-dimensional dataset
+
+#make a graphic of a PCA in 2D space of a highly correlated X/Y plane
+np.random.seed(3003)
+x = np.random.normal(loc=5,scale=7,size=100)
+x.sort()
+y = np.random.normal(loc=12,scale=.125,size=100)
+y.sort()
+import seaborn as sns
+tmp = pd.DataFrame({'x':x,'y':y})
+sns.regplot(data=tmp,x='x',y='y')
+plt.show()
+```
+
+The X and Y values of this data appear to be connected, correlated even.  Note - PCA is NOT a correlation analysis, but leverages any existing correlation in the data between one or more variables to transform the basis of each datapoint and vector in the data.
+
+The goal of PCA is to remove strong corrlelations with high R values from the data by realigning axes of the data along the directions in the data which contain the greatest *variance* in the data.  The above plot appears to show that the x-coordinate is a good predictor for the y-coordinate, and a simple linear regression analysis reveals that this is the case.  
+
+```{python tbl-linreg-prepca}
+#| label: tbl-linreg-prepca
+#| tbl-cap: Least Squares Regression, before PCA
+
+x = sm.add_constant(x)
+result = sm.OLS(y,x).fit()
+result.summary()
+```
+
+Imagine instead if the axes, while retaining their perpendicularity (or orthogonality), streched in the general orientation of the regression line (we'll call it $X'$ or our new X axis) from @fig-2d-ex, with $Y'$ bisecting $X'$ at a $90^o$ angle.  Below is a depiction of the data after such a transformation.
+
+```{python fig-pca-2d-ex}
+#| label: fig-pca-2d-ex
+#| fig-cap: the 2D dataset, post PCA transformation
+
+from sklearn.decomposition import PCA 
+p = PCA(n_components=2)
+xform = p.fit_transform(tmp)
+
+sns.regplot(
+    x=xform[:,0],y=xform[:,1]
+)
+
+plt.xlabel("X' (PC1)")
+plt.ylabel("Y' (PC2)")
+plt.ylim(-1,1)
+plt.show()
+
+```
+
+@fig-pca-2d-ex shows us that after the transformation, the data has a correlation value closer to zero than having a strong positive value as it had within @fig-2d-ex.  One might also note that Y' is an directional inversion of Y in this case (e.g. values that were above the correlation plot line in @fig-2d-ex are below the correlation line in @fig-pca-2d-ex).  The act of applying PCA transformation is a linear combination that can result in the *rotation*, *expansion* and/or *contraction* of a vector as it is transposed into the new basis space.
+
+Performing regression analysis on this data once more reveals that the goal of PCA is reached, that the variables, when projected into this new basis, hold no correlation:
+
+```{python tbl-linreg-post-pca}
+#| label: tbl-linreg-post-pca
+#| tbl-cap: Least Squares Regression, after PCA
+
+xPCA = xform[:,0]
+xPCA = sm.add_constant(xPCA)
+yPCA = xform[:,1]
+result2 = sm.OLS(xform[:,1],xform[:,0]).fit()
+result2.summary()
+```
+
+Considering the tightness of all of the datapoints in @fig-pca-2d-ex to the $X'$ / PC1 axis, along with the total lack of correlation between the variables, one could potentially discard or disregard the $Y'$ / PCA2 axis for the purpose of modeling.  
+
+Absent the PCA transformation, one could discard the y-datapoints and retain solely the x datapoints and the linear regression line equation $y=mx+b$ between x and y such that one could re-calculate the y-value on-the-fly. 
+
+By performing PCA and transforming the variables in lieu of performing a recalculation of the y-value using the regression equation, the user can simply assume y to be zero in all cases and simply disregard the value.  This allows the user to completely eliminate the feature while simultaneously retaining a high degree of explainability of variance within the data.
+
+The **eigenvalues** of a PCA conveys the importance, and almost weight, of its corresponding **eigenvector** in explaining variation within the data.  The eigenvalues are calucated from the covariance matrix of the original data, and then sorted in descending order, and then the corresponding eigenvectors, or basis vectors, are calculated and stored in a matrix.  From here, eigenvalues and eigenvectors are pruned from the calculation based upon the needs of the user.
+
+The dot product of the remaining eigenvectors and the original data then produce the PCA-transformed data.
+
+The ratio of an individual eigenvalue over the sum total of all eigenvalues corresponds to an aforementioned weight or importance the corresponding eigenvector holds.  This ratio corresponds to the amount of variance that is explained by the eigenvector and eigenvalue within the source data. 
+
+In best-case scenarios, one may have a high volume of dimensions, and many of those dimensions may have connections, correlations, or generally trend together.  Due to the sheer volume thereof, it's near impossible to visually inspect, determine, and prune correlated features from data.  PCA, in the best case, allows a researcher to mathematically identify and trim all such correlations from the data, and capture all variation of the data within a fraction of the original dimensions.
+
+## PCA in this Study
+
+This study will explore PCA of select quantitative features of the cleaned dataset.  While this will be explored, it is not necessarily ideal for the purpose and intent of this study. 
+
+When leveraging principal components, one loses a degree of explainability for the data, and one arrives at a frame of reference that is not fully intuitive or easily digested.  Each of the newly aligned axes, or principal components, is a linear combination of the original axes, and each datapoint is a combination of multiple features (e.g. the sum of 0.8 times feature A, 3.7 times feature B, 2.6 times feature C, as an arbitrary example).  This makes the inputs and outputs less interpretable under direct observation.
+
+This study is exploring the impact of categorical and numeric features and the strength of their predictive power in determining results or sources, i.e. 
+
+* Can one better predict mortgage outcomes (e.g. interest rate, approval or denial) from HMDA data when protected classes are included as predictors?
+
+* Can one predict ones protected classes when using other available data about properties of the loan and the property it would purchase? 
+
+* How strongly do these features lend themselves to such predictions?
+
+With research questions like these in mind, performing PCA is less beneficial to explaining the outcomes.
+
+If the HMDA data were to be used in conjunction with additional numerical information on the potential borrower, however, leveraging PCA could be of benefit.  For instance, if additional features about the borrower such as total liquid savings, total invested dollars, credit score, age of credit history, and a substantial volume of other numeric variables, leveraging PCA could be beneficial in supporting assessment and analysis.  
+
+If a PCA of all of those numerics reduced the volume or dimension of the original data from, perhaps 20 to 5 features, it would simplify the process of training machine learning models.  Whether building a multi-layer perceptron, performing a grid search with cross-validation of multiple model hyperparameters for models like logistic regression, support vector machines, ridge classifiers, or others - the reduction in dimensions reduces the computational time and complexity required to attain a more optimally-performing model.
+
+<!-- * Choose some subset of columns in the dataset that are *quantitative* -->
+
+<!-- * Normalize data using sklearn.standard_scalar -->
+
+<!-- * Perform PCA at least twice (n=2, n=3) -->
+
+<!-- * How much explained variance remains in the dataset for 2d and 3d?  -->
+
+<!-- * How many dims are needed to capture 95% of the data? -->
+
+<!-- * What are the top 3 eigenvalues for the data? -->
+
+<!-- * Provide a visual. -->
 
 ```{python tbl-pca-exp-var}
 #| label: tbl-pca-exp-var
 #| tbl-cap: PCA, explained and cumulative variance
 
-fr2 = fr.copy()
-for col in fr2[cols['log_norm']]:
-    fr2[col] = np.select([fr2[col]==0],[0],np.log(fr[col]))
+# fr2 = fr.copy()
+# for col in fr2[cols['log_norm']]:
+#     fr2[col] = np.select([fr2[col]==0],[0],np.log(fr[col]))
 
-fr2.dropna(inplace=True)
+# fr2.dropna(inplace=True)
 
-X1 = StandardScaler().fit_transform(fr2[cols['log_norm']])
-X2 = MinMaxScaler().fit_transform(fr2[cols['minmax']])
-X = np.concatenate((X1,X2),axis=1)
+fr2 = pd.read_csv('../data/final_clean_r2.csv')
+
+num_cols = [
+    #'loan_amount',
+    #'property_value',
+    'income',
+    'interest_rate',
+    'total_loan_costs',
+    'loan_to_value_ratio',
+    #'origination_costs',
+    #'discount_points',
+    #'lender_credits',
+    'loan_term',
+    'intro_rate_period',
+    'total_units',
+    'tract_minority_population_percent',
+    'tract_population',
+    'tract_to_msa_income_percentage',
+    'tract_owner_occupied_units',
+    'tract_one_to_four_family_homes',
+    'tract_median_age_of_housing_units',
+    #'debt_to_income_ratio'
+]
+X_pre = fr2[num_cols]
+X=StandardScaler().fit_transform(fr2[num_cols])
+# X = StandardScaler().fit_transform(fr2[cols['log_norm']+cols['minmax']])
+# X2 = MinMaxScaler().fit_transform(fr2[cols['minmax']])
+# X = np.concatenate((X1,X2),axis=1)
 y=fr2['outcome']
-```
-
-
-
-```{python fig-pca-vis}
-#| label: fig-pca-vis
-#| fig-cap: PCA Calc
-
-pca = PCA()
-w = pca.fit_transform(X,y)
-pca.explained_variance_
-
-```
-
-
-```{python}
-# from sklearn.linear_model import LogisticRegression
-# from sklearn.model_selection import train_test_split
-# lr = LogisticRegression()
-
-# X_train,X_test,y_train,y_test=train_test_split(
-#     X,
-#     y,
-#     test_size=0.2,
-#     stratify=y,
-#     random_state=9999
-# )
-
-# lr.fit(X_train,y_train)
-
-# y_pred = lr.predict(X_test)
-
-# from sklearn.metrics import (
-#     accuracy_score,f1_score,
-#     precision_score,recall_score, roc_auc_score,
-#     confusion_matrix, ConfusionMatrixDisplay
-# )
-# display(
-# pd.DataFrame({
-#     'Accuracy':accuracy_score(y_test,y_pred),
-#     'Precision':precision_score(y_test,y_pred),
-#     'Recall':recall_score(y_test,y_pred),
-#     'F1':f1_score(y_test,y_pred)
-# },index=[0])
-# )
-# ConfusionMatrixDisplay(
-#     confusion_matrix(y_test,y_pred)
-# ).plot()
 ```
 
 ## Data
 
+To perform PCA, there are a few requirements to ensure that the outcomes are relevant, valid, and (potentially) useful:
+
+* The data must not contain any labels (e.g. the dependent or response variable)
+
+* The data must include solely numeric data
+
+    * The data must be standard scaled by the formula $\frac{x-\mu}{\sigma}$ where $x$ is the variable in question, $\mu$ is the mean of $x$, and $\sigma$ is the standard deviation of $x$
+
+        * Failure to perform this standard scaling will allow features with larger magnitudes to have a stronger impact on the outcome.  To compare variances and the degree of explained variance, all features need to be on the same *scale* for comparison during PCA.
+
+    * There are variables that may be represented as numbers in a source dataset, but the numbers leveraged in PCA must truly be numbers
+
+    * Remapping of categorical data to numbers cannot be performed
+
+* When reducing dimensions in the transformed data, seek to retain a high degree of cumulative explained variance with the minimum number of dimensions required to achieve it
+
+With these things in mind, only a small subset of the columns from the cleaned and consolidated HMDA dataset meet the numeric requirement for PCA.  These columns include:
+
+```{python tbl-numeric-cols}
+#| label: tbl-numeric-cols
+#| tbl-cap: Numeric Columns Leveraged for PCA
+
+pd.DataFrame({'variable':['property_value',
+'lender_credits',
+'discount_points',
+'origination_charges',
+'total_loan_costs',
+'property_value',
+'income',
+'total_units',
+'tract_median_age_of_housing_units',
+'tract_minority_population_percent',
+'loan_to_value_ratio',
+'debt_to_income_ratio']}).style.hide(axis='index')
+```
+
+From the initial efforts in data collection, all of these columns hold numeric and non-null data points to support calculation.
+
+The data used to perform PCA is located [here]('../src/PCA + KMeans.ipynb').
+
+Data before Standard Scaling is as follows:
+
+```{python data-pre-ss}
+display(
+    fr2[num_cols].head().style.hide(axis='index'),
+    fr2[num_cols].shape
+)
+```
+
+```{python data-post-ss}
+display(X,X.shape)
+```
+
 ## Code
+
+The code used to perform PCA is located [here]('../src/PCA + KMeans.ipynb').
+
+## Principal Component Analyses
+
+### 2D PCA
+
+```{python tbl-pca-2d}
+#| label: tbl-pca-2d
+#| tbl-cap: 2D PCA Calculation
+
+pca = PCA()
+
+w = pca.fit_transform(X,y)
+
+fr = pd.DataFrame({
+    'PC':['PC{}'.format(i) for i in range(1,1+len(pca.explained_variance_ratio_))],
+    'Eigenvalues':pca.explained_variance_,
+    'Cumulative Variance':pca.explained_variance_ratio_.cumsum()
+})  #.style.hide(axis='index')
+
+fr.head(2).style.hide(axis='index')
+# pca2D.explained_variance_ratio_.cumsum()[-1]
+```
+
+The 2D PCA achieves an explanation of approximately 32.6% of the variance in the source data.
+
+```{python fig-pca-2d}
+#| label: fig-pca-2d
+#| fig-cap: 2D PCA Visualization Plot
+
+sns.scatterplot(
+    x=w[:,0],y=w[:,1],hue=y
+)
+plt.xlabel('PC1')
+plt.ylabel('PC2')
+plt.show()
+```
+
+### 3D PCA
+
+```{python tbl-pca-3d}
+#| label: tbl-pca-3d
+#| tbl-cap: 3D PCA Calculation
+
+fr.head(3).style.hide(axis='index')
+```
+
+The 3D PCA achieves an explanation of approximately 42.1% of the variance in the source data.
+
+```{python fig-pca-3d}
+#| label: fig-pca-3d
+#| fig-cap: 3D PCA Visualization
+
+fig = plt.figure(figsize=(12,12))
+ax = Axes3D(fig,rect=[0,0,.9,1],elev=25,azim=255)
+
+fig.add_axes(ax)
+
+ax.scatter(
+    w[:,0],w[:,1],w[:,2],
+    cmap="RdYlGn", 
+    edgecolor='k', 
+    s=40, 
+    c=fr2['outcome'].astype(int)
+)
+ax.set_xlabel('PC1')
+ax.set_ylabel('PC2')
+ax.set_zlabel('PC3')
+ax.set_title("3D PCA Transformation - Numeric Data")
+plt.show()
+
+```
+
+### Multi-Dimensional PCA
+
+```{python tbl-pca-md}
+#| label: tbl-pca-md
+#| tbl-cap: Eigenvalues and Variance, all dimensions
+
+pd.DataFrame({
+    'PC':['PC{}'.format(i) for i in range(1,1+len(pca.explained_variance_ratio_))],
+    'Eigenvalues':pca.explained_variance_,
+    'Cumulative Variance':pca.explained_variance_ratio_.cumsum()
+}).style.hide(axis='index')
+
+```
+
+The top three eigenvalues / eigenvectors are highlighted in each of @tbl-pca-2d, @tbl-pca-3d, and @tbl-pca-md, of 2.77, 1.477, and 1.225.
+
+To retain a minimum of 95% of the information in the dataset, the minimum required principal components are 11, allowing for dimensionality reduction of 2 dimensions from the original 13 while retaining the required amount information.  The lowest value greater than 0.95 in the cumulative variance column is on the 11th row for Principal Component 11 at 0.974, thus one would have to include all components 1-11 to achieve at least 95% explained variance.
+
+This finding suggests that the source data do not have strong correlations with one another, and thus do not provide much assistance in reducing dimensionality.
+
+## Multiple Correspondence Analysis
+
+Many of the research questions within this effort are inherently linked to categorical factors in lieu of numeric factors.  Principal component analysis is only executable upon *numeric* data and not upon categorical data - even in the case of ordinal data.  As a simple example, consider a ordinal variable "size" with categories small, medium, large, and extra-large.  One could apply a simple encoding and assign small=1, medium=2, large=3, and extra-large=4.  This encoding, while apparently holding a degree of validity in terms of increasing size, does not match up mathematically to reality.  Consider getting a fountain drink at a fast-food restaurant and ask the question - is a large the same as 3 smalls?  Is an extra large the same as 1 medium and two smalls?  Rarely are either of these answers "yes".  One might have to add decimal places to the categories, and at that point, one may as well get the exact size measurements in terms of fluid ounces or liters, which may or may not be possible.  
+
+The additive and multiplicative challenges between these categories when assigning them a value produces challenges for ordinal variables.  These challenges are further confounded when pivoting away from an ordinal variables.  One runs the risk of making mathematical claims such as red is 4 times blue, or that sad is 3 less than happy.  Such statements are nonsensical, have no foundation in mathematics, and while they may produce results in a model post-transformation, do not hold validity, explainability, or generalizability.
+
+Enter Multiple Correspondence Analysis (or MCA).  MCA performs an analogous action on *categorical* variables as PCA performs upon *numeric* variables.  To perform an MCA, one must construct a Complete Disjunctive Table, which is effectively a one-hot encoded matrix.  One takes the source categorical columns and transforms them to a column per category, and for the new column, the value is set to 1 if the current row is a member of the category, and zero otherwise.  This is repeated for all columns and categories until the dataset is fully expanded.
+
+```{python}
+from sklearn.preprocessing import OneHotEncoder
+df = pd.DataFrame({
+    'a':['s','m','s','s','m','m','l','l','l','m'],
+    'b':['f','w','s','f','f','f','w','s','f','w']
+})
+display(df.style.hide(axis='index'))
+```
+
+Taking the above example table, one can transform it to a one-hot encoded table:
+
+```{python}
+df['a'] = df['a'].astype('category')
+df['b'] = df['b'].astype('category')
+
+ohe = OneHotEncoder()
+x = ohe.fit_transform(df)
+
+x = pd.DataFrame(x.toarray(),columns=ohe.get_feature_names_out().tolist())
+for col in x.columns:
+    x[col] = x[col].astype(int)
+
+x.style.hide(axis='index')
+
+```
+
+Notice that there are now have 6 columns from the original 2 columns.  This is because column 'a' had 3 categories - s/m/l, as did column 'b' - s/w/f.  A column is created for each combination of individual columns and their respective categories, hence 6 columns in this case.
+
+After performing this transformation, the following mathematical operations are applied:
+
+* Calculate the sum of all values (0s and 1s) from the CDT as value $N$
+
+* Calculate matrix $Z = \frac{CDT}{N}$ 
+
+* Calculate the column-wise sum as matrix $c$.  Transform to a diagonal matrix $D_c$
+
+* Calculate the row-wise sum as matrix $r$.  Transform to a diagonal matrix $D_r$
+
+* Calculate matrix $M = D_r^{-\frac{1}{2}}(Z-rc^T)D_c^{-\frac{1}{2}}$
+
+Due to some unforeseen challenges during this research, performance of MCA will be delayed until a later date.  This type of analysis will be useful for future modeling purposes and further analysis.
 
 ## Results
 
+Principal component analysis on the source data for this research is not an ideal endeavor, as this effort seeks to further establish the strength and connection of certain numeric and categorical variables to the outcome of whether or not an applicant will attain a mortgage.  
+
+Furthermore, the need of the data to retain 11 of the 13 principal components to explain most of the data variation means that applying PCA to this data will not meet any dimensionality reduction goals for this research.  There is little direct correlation between the variables in the source data, so it takes almost the same number of dimensions as we had in the source data to retain a high degree of explainability.  As such, principal component analysis, solely performed on the identified numeric variables, may be insufficient for the purposes of clustering and modeling.
+
+The multiple correspondence analysis, however, seems to lend itself well to the purposes and intent of this research.  A limited degree of exploration into MCA was pursued, but not sufficiently enough to generate or communicate results at this time.  In the next iteration of this research, MCA will be included in the analyses.  MCA, used within clustering and potentially within modeling, could be more relevatory than basic numeric measures provided by PCA.

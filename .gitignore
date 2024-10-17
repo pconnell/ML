@@ -57,3 +57,18 @@ data/Rocket Mortgage_2023_clean.csv
 src/exp.ipynb
 data/sepher2.0_cleaned.csv
 data/sepher2.0_cleaned_dataDictionary_20211123.xlsx
+data/cluster_mem
+data/mcaNd.csv
+data/mca3d.csv
+data/mca2d.csv
+data/3dmca.csv
+data/single_basket.csv
+data/clustered_data.csv
+data/ARM_by_confidence.csv
+data/ARM_by_lift.csv
+data/ARM_by_support.csv
+data/ARM_single_basket.csv
+data/2dpca.csv
+data/3dpca.csv
+data/final_clean_r2.csv
+quarto_files/Other Notes.md

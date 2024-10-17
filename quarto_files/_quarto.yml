@@ -4,7 +4,7 @@ project:
 
 ## Overall settings
 book:
-  title: "Exploring Predictive Power of Protected Classes in Mortgage Approvals"
+  title: "Exploring Protected Classes as Predictors in Mortgage Approval"
   author:
     - "Patrick Connelly"
   chapters:
@@ -13,16 +13,21 @@ book:
     - pca.qmd
     - clustering.qmd
     - arm.qmd
-    - dt.qmd
-    - nb.qmd
-    - reg.qmd
-    - svm.qmd
-    - conclusion.qmd
+#    - dt.qmd
+#    - nb.qmd
+#    - reg.qmd
+#    - svm.qmd
+#    - conclusion.qmd
     - references.qmd
   appendices:
     - app1.qmd
     - app2.qmd
-    - app3.qmd
+#    - app3.qmd
+    - app4.qmd
+#    - app5.qmd
+#    - app6.qmd
+#    - app7.qmd
+
   downloads: [pdf]
   #references: refs.bib # Unsure if needed
   output-file: ML Final Report # PDF filename

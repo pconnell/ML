@@ -299,9 +299,10 @@ for org in orgs:
         [
             #counting preapprovals, originations, and loan purchases as approvals
             #in addition to general approvals
-            data['action_taken'].isin([1,2,6,8]),
+            ###don't include anything but originations, approvals, and disapprovals
+            data['action_taken'].isin([1,2]),#.isin([1,2,6,8]),
             #denials are preapproval denials as well as regular denials
-            data['action_taken'].isin([3,7])
+            data['action_taken'].isin([3])#,7])
         ],
         [True,False],
         #when the value is 4 or 5, we exclude them
@@ -535,4 +536,4 @@ fr.drop(
     inplace=True
 )
 
-fr.to_csv('../data/final_clean.csv',index=False)
+fr.to_csv('../data/final_clean_r2.csv',index=False)

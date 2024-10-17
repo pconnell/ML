@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Exploring Predictive Power of Protected Classes in Mortgage Approvals - 3&nbsp; Principal Component Analysis</title>
+<title>Exploring Protected Classes as Predictors in Mortgage Approval - 3&nbsp; Principal Component Analysis</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -23,7 +23,7 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="site_libs/quarto-nav/headroom.min.js"></script>
 <script src="site_libs/clipboard/clipboard.min.js"></script>
 <script src="site_libs/quarto-search/autocomplete.umd.js"></script>
@@ -69,7 +69,39 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 <style>html{ scroll-behavior: smooth; }</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
 
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -97,7 +129,7 @@ ul.task-list li input[type="checkbox"] {
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="./">Exploring Predictive Power of Protected Classes in Mortgage Approvals</a> 
+      <a href="./">Exploring Protected Classes as Predictors in Mortgage Approval</a> 
         <div class="sidebar-tools-main">
     <a href="https://github.com/pconnell/ML" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
     <a href="./ML-Final-Report.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
@@ -143,36 +175,6 @@ ul.task-list li input[type="checkbox"] {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./dt.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Decision Tree Modeling</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./nb.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Naive Bayes</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./reg.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Regression Modeling</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./svm.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Support Vector Machine Modeling</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./conclusion.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Conclusion</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
   <a href="./references.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">References</span></a>
   </div>
@@ -189,19 +191,19 @@ ul.task-list li input[type="checkbox"] {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./app1.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Appendix 1</span></span></a>
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Data Gathering/Cleaning Code</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./app2.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Appendix 2</span></span></a>
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Component Analysis Code (PCA and MCA)</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./app3.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Appendix 3</span></span></a>
+  <a href="./app4.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Association Rule Mining Code</span></span></a>
   </div>
 </li>
       </ul>
@@ -217,9 +219,17 @@ ul.task-list li input[type="checkbox"] {
    
   <ul>
   <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview"><span class="header-section-number">3.1</span> Overview</a></li>
-  <li><a href="#data" id="toc-data" class="nav-link" data-scroll-target="#data"><span class="header-section-number">3.2</span> Data</a></li>
-  <li><a href="#code" id="toc-code" class="nav-link" data-scroll-target="#code"><span class="header-section-number">3.3</span> Code</a></li>
-  <li><a href="#results" id="toc-results" class="nav-link" data-scroll-target="#results"><span class="header-section-number">3.4</span> Results</a></li>
+  <li><a href="#pca-in-this-study" id="toc-pca-in-this-study" class="nav-link" data-scroll-target="#pca-in-this-study"><span class="header-section-number">3.2</span> PCA in this Study</a></li>
+  <li><a href="#data" id="toc-data" class="nav-link" data-scroll-target="#data"><span class="header-section-number">3.3</span> Data</a></li>
+  <li><a href="#code" id="toc-code" class="nav-link" data-scroll-target="#code"><span class="header-section-number">3.4</span> Code</a></li>
+  <li><a href="#principal-component-analyses" id="toc-principal-component-analyses" class="nav-link" data-scroll-target="#principal-component-analyses"><span class="header-section-number">3.5</span> Principal Component Analyses</a>
+  <ul class="collapse">
+  <li><a href="#d-pca" id="toc-d-pca" class="nav-link" data-scroll-target="#d-pca"><span class="header-section-number">3.5.1</span> 2D PCA</a></li>
+  <li><a href="#d-pca-1" id="toc-d-pca-1" class="nav-link" data-scroll-target="#d-pca-1"><span class="header-section-number">3.5.2</span> 3D PCA</a></li>
+  <li><a href="#multi-dimensional-pca" id="toc-multi-dimensional-pca" class="nav-link" data-scroll-target="#multi-dimensional-pca"><span class="header-section-number">3.5.3</span> Multi-Dimensional PCA</a></li>
+  </ul></li>
+  <li><a href="#multiple-correspondence-analysis" id="toc-multiple-correspondence-analysis" class="nav-link" data-scroll-target="#multiple-correspondence-analysis"><span class="header-section-number">3.6</span> Multiple Correspondence Analysis</a></li>
+  <li><a href="#results" id="toc-results" class="nav-link" data-scroll-target="#results"><span class="header-section-number">3.7</span> Results</a></li>
   </ul>
 </nav>
     </div>
@@ -247,29 +257,934 @@ ul.task-list li input[type="checkbox"] {
 
 <section id="overview" class="level2" data-number="3.1">
 <h2 data-number="3.1" class="anchored" data-anchor-id="overview"><span class="header-section-number">3.1</span> Overview</h2>
-<div id="cell-fig-pca-vis" class="cell" data-execution_count="5">
-<div id="fig-pca-vis" class="cell-output cell-output-display quarto-figure quarto-figure-center quarto-float anchored" data-execution_count="5">
+<!-- * Describe PCA in one paragraph -->
+<p>Principal component analysis (or PCA) is the act of rotating in combination with stretching or squishing the axes of a multi-dimensional dataset to better align with its direcitonality in multidimensional space. By realigning the axes, the variation within the data can be more directly tied to and explained by the axes (also called Principal Components). In some cases, the transformation can be so profound such that a substantial amount of the data’s variation can be explained using fewer dimensions.</p>
+<p>Consider the below graphic:</p>
+<div id="cell-fig-2d-ex" class="cell" data-execution_count="2">
+<div class="cell-output cell-output-display">
+<div id="fig-2d-ex" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-pca-vis-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<pre id="fig-pca-vis" class="cell-output cell-output-display" data-execution_count="5"><code>array([2.52950398e+00, 1.78082662e+00, 9.56079269e-01, 8.70800814e-01,
-       5.69628535e-01, 3.11896840e-01, 1.03456815e-01, 6.56749179e-02,
-       5.87546698e-02, 3.11636167e-02, 3.07880388e-03, 3.28044050e-27])</code></pre>
+<div aria-describedby="fig-2d-ex-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="pca_files/figure-html/fig-2d-ex-output-1.png" width="598" height="429" class="figure-img">
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-pca-vis-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;3.1: PCA Calc
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-2d-ex-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3.1: A strongly correlated 2-dimensional dataset
 </figcaption>
 </figure>
 </div>
 </div>
+</div>
+<p>The X and Y values of this data appear to be connected, correlated even. Note - PCA is NOT a correlation analysis, but leverages any existing correlation in the data between one or more variables to transform the basis of each datapoint and vector in the data.</p>
+<p>The goal of PCA is to remove strong corrlelations with high R values from the data by realigning axes of the data along the directions in the data which contain the greatest <em>variance</em> in the data. The above plot appears to show that the x-coordinate is a good predictor for the y-coordinate, and a simple linear regression analysis reveals that this is the case.</p>
+<div class="cell" data-execution_count="3">
+<div id="tbl-linreg-prepca" class="cell quarto-float anchored" data-execution_count="3">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-linreg-prepca-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;3.1: Least Squares Regression, before PCA
+</figcaption>
+<div aria-describedby="tbl-linreg-prepca-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display" data-execution_count="3">
+<table class="simpletable do-not-create-environment cell table table-sm table-striped small" data-quarto-postprocess="true">
+<caption>OLS Regression Results</caption>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Dep. Variable:</td>
+<td>y</td>
+<td data-quarto-table-cell-role="th">R-squared:</td>
+<td>0.985</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">Model:</td>
+<td>OLS</td>
+<td data-quarto-table-cell-role="th">Adj. R-squared:</td>
+<td>0.985</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Method:</td>
+<td>Least Squares</td>
+<td data-quarto-table-cell-role="th">F-statistic:</td>
+<td>6400.</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">Date:</td>
+<td>Wed, 16 Oct 2024</td>
+<td data-quarto-table-cell-role="th">Prob (F-statistic):</td>
+<td>4.49e-91</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Time:</td>
+<td>19:39:52</td>
+<td data-quarto-table-cell-role="th">Log-Likelihood:</td>
+<td>274.70</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">No. Observations:</td>
+<td>100</td>
+<td data-quarto-table-cell-role="th">AIC:</td>
+<td>-545.4</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Df Residuals:</td>
+<td>98</td>
+<td data-quarto-table-cell-role="th">BIC:</td>
+<td>-540.2</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">Df Model:</td>
+<td>1</td>
+<td data-quarto-table-cell-role="th"></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Covariance Type:</td>
+<td>nonrobust</td>
+<td data-quarto-table-cell-role="th"></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<table class="simpletable do-not-create-environment cell table table-sm table-striped small" data-quarto-postprocess="true">
+<tbody>
+<tr class="odd">
+<td></td>
+<td data-quarto-table-cell-role="th">coef</td>
+<td data-quarto-table-cell-role="th">std err</td>
+<td data-quarto-table-cell-role="th">t</td>
+<td data-quarto-table-cell-role="th">P&gt;|t|</td>
+<td data-quarto-table-cell-role="th">[0.025</td>
+<td data-quarto-table-cell-role="th">0.975]</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">const</td>
+<td>11.9091</td>
+<td>0.002</td>
+<td>6468.253</td>
+<td>0.000</td>
+<td>11.905</td>
+<td>11.913</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">x1</td>
+<td>0.0168</td>
+<td>0.000</td>
+<td>80.000</td>
+<td>0.000</td>
+<td>0.016</td>
+<td>0.017</td>
+</tr>
+</tbody>
+</table>
+<table class="simpletable do-not-create-environment cell table table-sm table-striped small" data-quarto-postprocess="true">
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Omnibus:</td>
+<td>41.522</td>
+<td data-quarto-table-cell-role="th">Durbin-Watson:</td>
+<td>0.564</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">Prob(Omnibus):</td>
+<td>0.000</td>
+<td data-quarto-table-cell-role="th">Jarque-Bera (JB):</td>
+<td>139.401</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Skew:</td>
+<td>-1.374</td>
+<td data-quarto-table-cell-role="th">Prob(JB):</td>
+<td>5.36e-31</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">Kurtosis:</td>
+<td>8.089</td>
+<td data-quarto-table-cell-role="th">Cond. No.</td>
+<td>10.4</td>
+</tr>
+</tbody>
+</table>
+<br><br>Notes:<br>[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>Imagine instead if the axes, while retaining their perpendicularity (or orthogonality), streched in the general orientation of the regression line (we’ll call it <span class="math inline">\(X'\)</span> or our new X axis) from <a href="#fig-2d-ex" class="quarto-xref">Figure&nbsp;<span>3.1</span></a>, with <span class="math inline">\(Y'\)</span> bisecting <span class="math inline">\(X'\)</span> at a <span class="math inline">\(90^o\)</span> angle. Below is a depiction of the data after such a transformation.</p>
+<div id="cell-fig-pca-2d-ex" class="cell" data-execution_count="4">
+<div class="cell-output cell-output-display">
+<div id="fig-pca-2d-ex" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-pca-2d-ex-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="pca_files/figure-html/fig-pca-2d-ex-output-1.png" width="608" height="434" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-pca-2d-ex-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3.2: the 2D dataset, post PCA transformation
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p><a href="#fig-pca-2d-ex" class="quarto-xref">Figure&nbsp;<span>3.2</span></a> shows us that after the transformation, the data has a correlation value closer to zero than having a strong positive value as it had within <a href="#fig-2d-ex" class="quarto-xref">Figure&nbsp;<span>3.1</span></a>. One might also note that Y’ is an directional inversion of Y in this case (e.g.&nbsp;values that were above the correlation plot line in <a href="#fig-2d-ex" class="quarto-xref">Figure&nbsp;<span>3.1</span></a> are below the correlation line in <a href="#fig-pca-2d-ex" class="quarto-xref">Figure&nbsp;<span>3.2</span></a>). The act of applying PCA transformation is a linear combination that can result in the <em>rotation</em>, <em>expansion</em> and/or <em>contraction</em> of a vector as it is transposed into the new basis space.</p>
+<p>Performing regression analysis on this data once more reveals that the goal of PCA is reached, that the variables, when projected into this new basis, hold no correlation:</p>
+<div class="cell" data-execution_count="5">
+<div id="tbl-linreg-post-pca" class="cell quarto-float anchored" data-execution_count="5">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-linreg-post-pca-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;3.2: Least Squares Regression, after PCA
+</figcaption>
+<div aria-describedby="tbl-linreg-post-pca-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display" data-execution_count="5">
+<table class="simpletable do-not-create-environment cell table table-sm table-striped small" data-quarto-postprocess="true">
+<caption>OLS Regression Results</caption>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Dep. Variable:</td>
+<td>y</td>
+<td data-quarto-table-cell-role="th">R-squared (uncentered):</td>
+<td>0.000</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">Model:</td>
+<td>OLS</td>
+<td data-quarto-table-cell-role="th">Adj. R-squared (uncentered):</td>
+<td>-0.010</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Method:</td>
+<td>Least Squares</td>
+<td data-quarto-table-cell-role="th">F-statistic:</td>
+<td>0.000</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">Date:</td>
+<td>Wed, 16 Oct 2024</td>
+<td data-quarto-table-cell-role="th">Prob (F-statistic):</td>
+<td>1.00</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Time:</td>
+<td>19:39:53</td>
+<td data-quarto-table-cell-role="th">Log-Likelihood:</td>
+<td>274.71</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">No. Observations:</td>
+<td>100</td>
+<td data-quarto-table-cell-role="th">AIC:</td>
+<td>-547.4</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Df Residuals:</td>
+<td>99</td>
+<td data-quarto-table-cell-role="th">BIC:</td>
+<td>-544.8</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">Df Model:</td>
+<td>1</td>
+<td data-quarto-table-cell-role="th"></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Covariance Type:</td>
+<td>nonrobust</td>
+<td data-quarto-table-cell-role="th"></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<table class="simpletable do-not-create-environment cell table table-sm table-striped small" data-quarto-postprocess="true">
+<tbody>
+<tr class="odd">
+<td></td>
+<td data-quarto-table-cell-role="th">coef</td>
+<td data-quarto-table-cell-role="th">std err</td>
+<td data-quarto-table-cell-role="th">t</td>
+<td data-quarto-table-cell-role="th">P&gt;|t|</td>
+<td data-quarto-table-cell-role="th">[0.025</td>
+<td data-quarto-table-cell-role="th">0.975]</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">x1</td>
+<td>2.168e-19</td>
+<td>0.000</td>
+<td>1.04e-15</td>
+<td>1.000</td>
+<td>-0.000</td>
+<td>0.000</td>
+</tr>
+</tbody>
+</table>
+<table class="simpletable do-not-create-environment cell table table-sm table-striped small" data-quarto-postprocess="true">
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Omnibus:</td>
+<td>41.519</td>
+<td data-quarto-table-cell-role="th">Durbin-Watson:</td>
+<td>0.564</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">Prob(Omnibus):</td>
+<td>0.000</td>
+<td data-quarto-table-cell-role="th">Jarque-Bera (JB):</td>
+<td>139.378</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Skew:</td>
+<td>1.374</td>
+<td data-quarto-table-cell-role="th">Prob(JB):</td>
+<td>5.43e-31</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">Kurtosis:</td>
+<td>8.089</td>
+<td data-quarto-table-cell-role="th">Cond. No.</td>
+<td>1.00</td>
+</tr>
+</tbody>
+</table>
+<br><br>Notes:<br>[1] R² is computed without centering (uncentered) since the model does not contain a constant.<br>[2] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>Considering the tightness of all of the datapoints in <a href="#fig-pca-2d-ex" class="quarto-xref">Figure&nbsp;<span>3.2</span></a> to the <span class="math inline">\(X'\)</span> / PC1 axis, along with the total lack of correlation between the variables, one could potentially discard or disregard the <span class="math inline">\(Y'\)</span> / PCA2 axis for the purpose of modeling.</p>
+<p>Absent the PCA transformation, one could discard the y-datapoints and retain solely the x datapoints and the linear regression line equation <span class="math inline">\(y=mx+b\)</span> between x and y such that one could re-calculate the y-value on-the-fly.</p>
+<p>By performing PCA and transforming the variables in lieu of performing a recalculation of the y-value using the regression equation, the user can simply assume y to be zero in all cases and simply disregard the value. This allows the user to completely eliminate the feature while simultaneously retaining a high degree of explainability of variance within the data.</p>
+<p>The <strong>eigenvalues</strong> of a PCA conveys the importance, and almost weight, of its corresponding <strong>eigenvector</strong> in explaining variation within the data. The eigenvalues are calucated from the covariance matrix of the original data, and then sorted in descending order, and then the corresponding eigenvectors, or basis vectors, are calculated and stored in a matrix. From here, eigenvalues and eigenvectors are pruned from the calculation based upon the needs of the user.</p>
+<p>The dot product of the remaining eigenvectors and the original data then produce the PCA-transformed data.</p>
+<p>The ratio of an individual eigenvalue over the sum total of all eigenvalues corresponds to an aforementioned weight or importance the corresponding eigenvector holds. This ratio corresponds to the amount of variance that is explained by the eigenvector and eigenvalue within the source data.</p>
+<p>In best-case scenarios, one may have a high volume of dimensions, and many of those dimensions may have connections, correlations, or generally trend together. Due to the sheer volume thereof, it’s near impossible to visually inspect, determine, and prune correlated features from data. PCA, in the best case, allows a researcher to mathematically identify and trim all such correlations from the data, and capture all variation of the data within a fraction of the original dimensions.</p>
 </section>
-<section id="data" class="level2" data-number="3.2">
-<h2 data-number="3.2" class="anchored" data-anchor-id="data"><span class="header-section-number">3.2</span> Data</h2>
+<section id="pca-in-this-study" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="pca-in-this-study"><span class="header-section-number">3.2</span> PCA in this Study</h2>
+<p>This study will explore PCA of select quantitative features of the cleaned dataset. While this will be explored, it is not necessarily ideal for the purpose and intent of this study.</p>
+<p>When leveraging principal components, one loses a degree of explainability for the data, and one arrives at a frame of reference that is not fully intuitive or easily digested. Each of the newly aligned axes, or principal components, is a linear combination of the original axes, and each datapoint is a combination of multiple features (e.g.&nbsp;the sum of 0.8 times feature A, 3.7 times feature B, 2.6 times feature C, as an arbitrary example). This makes the inputs and outputs less interpretable under direct observation.</p>
+<p>This study is exploring the impact of categorical and numeric features and the strength of their predictive power in determining results or sources, i.e.&nbsp;</p>
+<ul>
+<li><p>Can one better predict mortgage outcomes (e.g.&nbsp;interest rate, approval or denial) from HMDA data when protected classes are included as predictors?</p></li>
+<li><p>Can one predict ones protected classes when using other available data about properties of the loan and the property it would purchase?</p></li>
+<li><p>How strongly do these features lend themselves to such predictions?</p></li>
+</ul>
+<p>With research questions like these in mind, performing PCA is less beneficial to explaining the outcomes.</p>
+<p>If the HMDA data were to be used in conjunction with additional numerical information on the potential borrower, however, leveraging PCA could be of benefit. For instance, if additional features about the borrower such as total liquid savings, total invested dollars, credit score, age of credit history, and a substantial volume of other numeric variables, leveraging PCA could be beneficial in supporting assessment and analysis.</p>
+<p>If a PCA of all of those numerics reduced the volume or dimension of the original data from, perhaps 20 to 5 features, it would simplify the process of training machine learning models. Whether building a multi-layer perceptron, performing a grid search with cross-validation of multiple model hyperparameters for models like logistic regression, support vector machines, ridge classifiers, or others - the reduction in dimensions reduces the computational time and complexity required to attain a more optimally-performing model.</p>
+<!-- * Choose some subset of columns in the dataset that are *quantitative* -->
+<!-- * Normalize data using sklearn.standard_scalar -->
+<!-- * Perform PCA at least twice (n=2, n=3) -->
+<!-- * How much explained variance remains in the dataset for 2d and 3d?  -->
+<!-- * How many dims are needed to capture 95% of the data? -->
+<!-- * What are the top 3 eigenvalues for the data? -->
+<!-- * Provide a visual. -->
 </section>
-<section id="code" class="level2" data-number="3.3">
-<h2 data-number="3.3" class="anchored" data-anchor-id="code"><span class="header-section-number">3.3</span> Code</h2>
+<section id="data" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="data"><span class="header-section-number">3.3</span> Data</h2>
+<p>To perform PCA, there are a few requirements to ensure that the outcomes are relevant, valid, and (potentially) useful:</p>
+<ul>
+<li><p>The data must not contain any labels (e.g.&nbsp;the dependent or response variable)</p></li>
+<li><p>The data must include solely numeric data</p>
+<ul>
+<li><p>The data must be standard scaled by the formula <span class="math inline">\(\frac{x-\mu}{\sigma}\)</span> where <span class="math inline">\(x\)</span> is the variable in question, <span class="math inline">\(\mu\)</span> is the mean of <span class="math inline">\(x\)</span>, and <span class="math inline">\(\sigma\)</span> is the standard deviation of <span class="math inline">\(x\)</span></p>
+<ul>
+<li>Failure to perform this standard scaling will allow features with larger magnitudes to have a stronger impact on the outcome. To compare variances and the degree of explained variance, all features need to be on the same <em>scale</em> for comparison during PCA.</li>
+</ul></li>
+<li><p>There are variables that may be represented as numbers in a source dataset, but the numbers leveraged in PCA must truly be numbers</p></li>
+<li><p>Remapping of categorical data to numbers cannot be performed</p></li>
+</ul></li>
+<li><p>When reducing dimensions in the transformed data, seek to retain a high degree of cumulative explained variance with the minimum number of dimensions required to achieve it</p></li>
+</ul>
+<p>With these things in mind, only a small subset of the columns from the cleaned and consolidated HMDA dataset meet the numeric requirement for PCA. These columns include:</p>
+<div class="cell" data-execution_count="7">
+<div id="tbl-numeric-cols" class="cell quarto-float anchored" data-execution_count="7">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-numeric-cols-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;3.3: Numeric Columns Leveraged for PCA
+</figcaption>
+<div aria-describedby="tbl-numeric-cols-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display" data-execution_count="7">
+<style type="text/css">
+</style>
+
+<table id="T_3b8ae" class="do-not-create-environment cell table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th id="T_3b8ae_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">variable</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td id="T_3b8ae_row0_col0" class="data row0 col0">property_value</td>
+</tr>
+<tr class="even">
+<td id="T_3b8ae_row1_col0" class="data row1 col0">lender_credits</td>
+</tr>
+<tr class="odd">
+<td id="T_3b8ae_row2_col0" class="data row2 col0">discount_points</td>
+</tr>
+<tr class="even">
+<td id="T_3b8ae_row3_col0" class="data row3 col0">origination_charges</td>
+</tr>
+<tr class="odd">
+<td id="T_3b8ae_row4_col0" class="data row4 col0">total_loan_costs</td>
+</tr>
+<tr class="even">
+<td id="T_3b8ae_row5_col0" class="data row5 col0">property_value</td>
+</tr>
+<tr class="odd">
+<td id="T_3b8ae_row6_col0" class="data row6 col0">income</td>
+</tr>
+<tr class="even">
+<td id="T_3b8ae_row7_col0" class="data row7 col0">total_units</td>
+</tr>
+<tr class="odd">
+<td id="T_3b8ae_row8_col0" class="data row8 col0">tract_median_age_of_housing_units</td>
+</tr>
+<tr class="even">
+<td id="T_3b8ae_row9_col0" class="data row9 col0">tract_minority_population_percent</td>
+</tr>
+<tr class="odd">
+<td id="T_3b8ae_row10_col0" class="data row10 col0">loan_to_value_ratio</td>
+</tr>
+<tr class="even">
+<td id="T_3b8ae_row11_col0" class="data row11 col0">debt_to_income_ratio</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>From the initial efforts in data collection, all of these columns hold numeric and non-null data points to support calculation.</p>
+<p>The data used to perform PCA is located <a href="'../src/PCA + KMeans.ipynb'">here</a>.</p>
+<p>Data before Standard Scaling is as follows:</p>
+<div id="a3ce0e03" class="cell" data-execution_count="8">
+<div class="cell-output cell-output-display">
+<style type="text/css">
+</style>
+
+<table id="T_8c25c" data-quarto-postprocess="true" class="table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th id="T_8c25c_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">income</th>
+<th id="T_8c25c_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">interest_rate</th>
+<th id="T_8c25c_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">total_loan_costs</th>
+<th id="T_8c25c_level0_col3" class="col_heading level0 col3" data-quarto-table-cell-role="th">loan_to_value_ratio</th>
+<th id="T_8c25c_level0_col4" class="col_heading level0 col4" data-quarto-table-cell-role="th">loan_term</th>
+<th id="T_8c25c_level0_col5" class="col_heading level0 col5" data-quarto-table-cell-role="th">intro_rate_period</th>
+<th id="T_8c25c_level0_col6" class="col_heading level0 col6" data-quarto-table-cell-role="th">total_units</th>
+<th id="T_8c25c_level0_col7" class="col_heading level0 col7" data-quarto-table-cell-role="th">tract_minority_population_percent</th>
+<th id="T_8c25c_level0_col8" class="col_heading level0 col8" data-quarto-table-cell-role="th">tract_population</th>
+<th id="T_8c25c_level0_col9" class="col_heading level0 col9" data-quarto-table-cell-role="th">tract_to_msa_income_percentage</th>
+<th id="T_8c25c_level0_col10" class="col_heading level0 col10" data-quarto-table-cell-role="th">tract_owner_occupied_units</th>
+<th id="T_8c25c_level0_col11" class="col_heading level0 col11" data-quarto-table-cell-role="th">tract_one_to_four_family_homes</th>
+<th id="T_8c25c_level0_col12" class="col_heading level0 col12" data-quarto-table-cell-role="th">tract_median_age_of_housing_units</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td id="T_8c25c_row0_col0" class="data row0 col0">95.500000</td>
+<td id="T_8c25c_row0_col1" class="data row0 col1">4.250000</td>
+<td id="T_8c25c_row0_col2" class="data row0 col2">18615.000000</td>
+<td id="T_8c25c_row0_col3" class="data row0 col3">85.000000</td>
+<td id="T_8c25c_row0_col4" class="data row0 col4">360.000000</td>
+<td id="T_8c25c_row0_col5" class="data row0 col5">120.000000</td>
+<td id="T_8c25c_row0_col6" class="data row0 col6">1</td>
+<td id="T_8c25c_row0_col7" class="data row0 col7">17.150000</td>
+<td id="T_8c25c_row0_col8" class="data row0 col8">5599</td>
+<td id="T_8c25c_row0_col9" class="data row0 col9">130.240000</td>
+<td id="T_8c25c_row0_col10" class="data row0 col10">2248</td>
+<td id="T_8c25c_row0_col11" class="data row0 col11">2492</td>
+<td id="T_8c25c_row0_col12" class="data row0 col12">36</td>
+</tr>
+<tr class="even">
+<td id="T_8c25c_row1_col0" class="data row1 col0">0.000000</td>
+<td id="T_8c25c_row1_col1" class="data row1 col1">4.250000</td>
+<td id="T_8c25c_row1_col2" class="data row1 col2">5907.500000</td>
+<td id="T_8c25c_row1_col3" class="data row1 col3">21.429000</td>
+<td id="T_8c25c_row1_col4" class="data row1 col4">360.000000</td>
+<td id="T_8c25c_row1_col5" class="data row1 col5">120.000000</td>
+<td id="T_8c25c_row1_col6" class="data row1 col6">1</td>
+<td id="T_8c25c_row1_col7" class="data row1 col7">13.370000</td>
+<td id="T_8c25c_row1_col8" class="data row1 col8">3911</td>
+<td id="T_8c25c_row1_col9" class="data row1 col9">292.450000</td>
+<td id="T_8c25c_row1_col10" class="data row1 col10">1239</td>
+<td id="T_8c25c_row1_col11" class="data row1 col11">142</td>
+<td id="T_8c25c_row1_col12" class="data row1 col12">0</td>
+</tr>
+<tr class="odd">
+<td id="T_8c25c_row2_col0" class="data row2 col0">607.000000</td>
+<td id="T_8c25c_row2_col1" class="data row2 col1">5.250000</td>
+<td id="T_8c25c_row2_col2" class="data row2 col2">3055.000000</td>
+<td id="T_8c25c_row2_col3" class="data row2 col3">80.000000</td>
+<td id="T_8c25c_row2_col4" class="data row2 col4">360.000000</td>
+<td id="T_8c25c_row2_col5" class="data row2 col5">84.000000</td>
+<td id="T_8c25c_row2_col6" class="data row2 col6">1</td>
+<td id="T_8c25c_row2_col7" class="data row2 col7">35.670000</td>
+<td id="T_8c25c_row2_col8" class="data row2 col8">10542</td>
+<td id="T_8c25c_row2_col9" class="data row2 col9">292.450000</td>
+<td id="T_8c25c_row2_col10" class="data row2 col10">753</td>
+<td id="T_8c25c_row2_col11" class="data row2 col11">48</td>
+<td id="T_8c25c_row2_col12" class="data row2 col12">0</td>
+</tr>
+<tr class="even">
+<td id="T_8c25c_row3_col0" class="data row3 col0">202.000000</td>
+<td id="T_8c25c_row3_col1" class="data row3 col1">5.125000</td>
+<td id="T_8c25c_row3_col2" class="data row3 col2">7322.120000</td>
+<td id="T_8c25c_row3_col3" class="data row3 col3">92.175000</td>
+<td id="T_8c25c_row3_col4" class="data row3 col4">360.000000</td>
+<td id="T_8c25c_row3_col5" class="data row3 col5">60.000000</td>
+<td id="T_8c25c_row3_col6" class="data row3 col6">1</td>
+<td id="T_8c25c_row3_col7" class="data row3 col7">40.330000</td>
+<td id="T_8c25c_row3_col8" class="data row3 col8">22780</td>
+<td id="T_8c25c_row3_col9" class="data row3 col9">276.610000</td>
+<td id="T_8c25c_row3_col10" class="data row3 col10">5430</td>
+<td id="T_8c25c_row3_col11" class="data row3 col11">6341</td>
+<td id="T_8c25c_row3_col12" class="data row3 col12">12</td>
+</tr>
+<tr class="odd">
+<td id="T_8c25c_row4_col0" class="data row4 col0">298.000000</td>
+<td id="T_8c25c_row4_col1" class="data row4 col1">5.625000</td>
+<td id="T_8c25c_row4_col2" class="data row4 col2">5325.000000</td>
+<td id="T_8c25c_row4_col3" class="data row4 col3">65.574000</td>
+<td id="T_8c25c_row4_col4" class="data row4 col4">360.000000</td>
+<td id="T_8c25c_row4_col5" class="data row4 col5">84.000000</td>
+<td id="T_8c25c_row4_col6" class="data row4 col6">1</td>
+<td id="T_8c25c_row4_col7" class="data row4 col7">19.470000</td>
+<td id="T_8c25c_row4_col8" class="data row4 col8">3344</td>
+<td id="T_8c25c_row4_col9" class="data row4 col9">193.660000</td>
+<td id="T_8c25c_row4_col10" class="data row4 col10">1061</td>
+<td id="T_8c25c_row4_col11" class="data row4 col11">1128</td>
+<td id="T_8c25c_row4_col12" class="data row4 col12">69</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="cell-output cell-output-display">
+<pre><code>(203321, 13)</code></pre>
+</div>
+</div>
+<div id="bd4acea6" class="cell" data-execution_count="9">
+<div class="cell-output cell-output-display">
+<pre><code>array([[-0.09470815, -3.22780156,  3.05686922, ...,  1.74589773,
+         1.28680469, -0.02822475],
+       [-0.292129  , -3.22780156, -0.05490293, ...,  0.0306856 ,
+        -2.06048815, -1.92834658],
+       [ 0.96268207, -1.80965799, -0.75341405, ..., -0.79547207,
+        -2.19437986, -1.92834658],
+       ...,
+       [ 0.1089144 , -0.03697853,  0.2657449 , ...,  0.98773657,
+         0.78399857, -1.40053496],
+       [-0.19703623,  0.14028942,  0.32635803, ..., -0.53028566,
+        -0.50933841,  0.55236803],
+       [-0.04612815,  0.14028942, -0.03244405, ...,  0.25167428,
+         0.03335035,  0.44680571]])</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<pre><code>(203321, 13)</code></pre>
+</div>
+</div>
 </section>
-<section id="results" class="level2" data-number="3.4">
-<h2 data-number="3.4" class="anchored" data-anchor-id="results"><span class="header-section-number">3.4</span> Results</h2>
+<section id="code" class="level2" data-number="3.4">
+<h2 data-number="3.4" class="anchored" data-anchor-id="code"><span class="header-section-number">3.4</span> Code</h2>
+<p>The code used to perform PCA is located <a href="'../src/PCA + KMeans.ipynb'">here</a>.</p>
+</section>
+<section id="principal-component-analyses" class="level2" data-number="3.5">
+<h2 data-number="3.5" class="anchored" data-anchor-id="principal-component-analyses"><span class="header-section-number">3.5</span> Principal Component Analyses</h2>
+<section id="d-pca" class="level3" data-number="3.5.1">
+<h3 data-number="3.5.1" class="anchored" data-anchor-id="d-pca"><span class="header-section-number">3.5.1</span> 2D PCA</h3>
+<div class="cell" data-execution_count="10">
+<div id="tbl-pca-2d" class="cell quarto-float anchored" data-execution_count="10">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-pca-2d-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;3.4: 2D PCA Calculation
+</figcaption>
+<div aria-describedby="tbl-pca-2d-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display" data-execution_count="10">
+<style type="text/css">
+</style>
+
+<table id="T_37390" class="do-not-create-environment cell table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th id="T_37390_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">PC</th>
+<th id="T_37390_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">Eigenvalues</th>
+<th id="T_37390_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">Cumulative Variance</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td id="T_37390_row0_col0" class="data row0 col0">PC1</td>
+<td id="T_37390_row0_col1" class="data row0 col1">2.772669</td>
+<td id="T_37390_row0_col2" class="data row0 col2">0.213281</td>
+</tr>
+<tr class="even">
+<td id="T_37390_row1_col0" class="data row1 col0">PC2</td>
+<td id="T_37390_row1_col1" class="data row1 col1">1.477353</td>
+<td id="T_37390_row1_col2" class="data row1 col2">0.326923</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>The 2D PCA achieves an explanation of approximately 32.6% of the variance in the source data.</p>
+<div id="cell-fig-pca-2d" class="cell" data-execution_count="11">
+<div class="cell-output cell-output-display">
+<div id="fig-pca-2d" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-pca-2d-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="pca_files/figure-html/fig-pca-2d-output-1.png" width="596" height="429" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-pca-2d-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3.3: 2D PCA Visualization Plot
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="d-pca-1" class="level3" data-number="3.5.2">
+<h3 data-number="3.5.2" class="anchored" data-anchor-id="d-pca-1"><span class="header-section-number">3.5.2</span> 3D PCA</h3>
+<div class="cell" data-execution_count="12">
+<div id="tbl-pca-3d" class="cell quarto-float anchored" data-execution_count="12">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-pca-3d-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;3.5: 3D PCA Calculation
+</figcaption>
+<div aria-describedby="tbl-pca-3d-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display" data-execution_count="12">
+<style type="text/css">
+</style>
+
+<table id="T_78c07" class="do-not-create-environment cell table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th id="T_78c07_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">PC</th>
+<th id="T_78c07_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">Eigenvalues</th>
+<th id="T_78c07_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">Cumulative Variance</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td id="T_78c07_row0_col0" class="data row0 col0">PC1</td>
+<td id="T_78c07_row0_col1" class="data row0 col1">2.772669</td>
+<td id="T_78c07_row0_col2" class="data row0 col2">0.213281</td>
+</tr>
+<tr class="even">
+<td id="T_78c07_row1_col0" class="data row1 col0">PC2</td>
+<td id="T_78c07_row1_col1" class="data row1 col1">1.477353</td>
+<td id="T_78c07_row1_col2" class="data row1 col2">0.326923</td>
+</tr>
+<tr class="odd">
+<td id="T_78c07_row2_col0" class="data row2 col0">PC3</td>
+<td id="T_78c07_row2_col1" class="data row2 col1">1.225321</td>
+<td id="T_78c07_row2_col2" class="data row2 col2">0.421178</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>The 3D PCA achieves an explanation of approximately 42.1% of the variance in the source data.</p>
+<div id="cell-fig-pca-3d" class="cell" data-execution_count="13">
+<div class="cell-output cell-output-display">
+<div id="fig-pca-3d" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-pca-3d-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="pca_files/figure-html/fig-pca-3d-output-1.png" width="1056" height="1076" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-pca-3d-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3.4: 3D PCA Visualization
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="multi-dimensional-pca" class="level3" data-number="3.5.3">
+<h3 data-number="3.5.3" class="anchored" data-anchor-id="multi-dimensional-pca"><span class="header-section-number">3.5.3</span> Multi-Dimensional PCA</h3>
+<div class="cell" data-execution_count="14">
+<div id="tbl-pca-md" class="cell quarto-float anchored" data-execution_count="14">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-pca-md-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;3.6: Eigenvalues and Variance, all dimensions
+</figcaption>
+<div aria-describedby="tbl-pca-md-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display" data-execution_count="14">
+<style type="text/css">
+</style>
+
+<table id="T_5e450" class="do-not-create-environment cell table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th id="T_5e450_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">PC</th>
+<th id="T_5e450_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">Eigenvalues</th>
+<th id="T_5e450_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">Cumulative Variance</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td id="T_5e450_row0_col0" class="data row0 col0">PC1</td>
+<td id="T_5e450_row0_col1" class="data row0 col1">2.772669</td>
+<td id="T_5e450_row0_col2" class="data row0 col2">0.213281</td>
+</tr>
+<tr class="even">
+<td id="T_5e450_row1_col0" class="data row1 col0">PC2</td>
+<td id="T_5e450_row1_col1" class="data row1 col1">1.477353</td>
+<td id="T_5e450_row1_col2" class="data row1 col2">0.326923</td>
+</tr>
+<tr class="odd">
+<td id="T_5e450_row2_col0" class="data row2 col0">PC3</td>
+<td id="T_5e450_row2_col1" class="data row2 col1">1.225321</td>
+<td id="T_5e450_row2_col2" class="data row2 col2">0.421178</td>
+</tr>
+<tr class="even">
+<td id="T_5e450_row3_col0" class="data row3 col0">PC4</td>
+<td id="T_5e450_row3_col1" class="data row3 col1">1.123168</td>
+<td id="T_5e450_row3_col2" class="data row3 col2">0.507575</td>
+</tr>
+<tr class="odd">
+<td id="T_5e450_row4_col0" class="data row4 col0">PC5</td>
+<td id="T_5e450_row4_col1" class="data row4 col1">1.047675</td>
+<td id="T_5e450_row4_col2" class="data row4 col2">0.588165</td>
+</tr>
+<tr class="even">
+<td id="T_5e450_row5_col0" class="data row5 col0">PC6</td>
+<td id="T_5e450_row5_col1" class="data row5 col1">0.976401</td>
+<td id="T_5e450_row5_col2" class="data row5 col2">0.663273</td>
+</tr>
+<tr class="odd">
+<td id="T_5e450_row6_col0" class="data row6 col0">PC7</td>
+<td id="T_5e450_row6_col1" class="data row6 col1">0.967920</td>
+<td id="T_5e450_row6_col2" class="data row6 col2">0.737728</td>
+</tr>
+<tr class="even">
+<td id="T_5e450_row7_col0" class="data row7 col0">PC8</td>
+<td id="T_5e450_row7_col1" class="data row7 col1">0.931685</td>
+<td id="T_5e450_row7_col2" class="data row7 col2">0.809395</td>
+</tr>
+<tr class="odd">
+<td id="T_5e450_row8_col0" class="data row8 col0">PC9</td>
+<td id="T_5e450_row8_col1" class="data row8 col1">0.810819</td>
+<td id="T_5e450_row8_col2" class="data row8 col2">0.871766</td>
+</tr>
+<tr class="even">
+<td id="T_5e450_row9_col0" class="data row9 col0">PC10</td>
+<td id="T_5e450_row9_col1" class="data row9 col1">0.700385</td>
+<td id="T_5e450_row9_col2" class="data row9 col2">0.925641</td>
+</tr>
+<tr class="odd">
+<td id="T_5e450_row10_col0" class="data row10 col0">PC11</td>
+<td id="T_5e450_row10_col1" class="data row10 col1">0.633995</td>
+<td id="T_5e450_row10_col2" class="data row10 col2">0.974410</td>
+</tr>
+<tr class="even">
+<td id="T_5e450_row11_col0" class="data row11 col0">PC12</td>
+<td id="T_5e450_row11_col1" class="data row11 col1">0.218066</td>
+<td id="T_5e450_row11_col2" class="data row11 col2">0.991184</td>
+</tr>
+<tr class="odd">
+<td id="T_5e450_row12_col0" class="data row12 col0">PC13</td>
+<td id="T_5e450_row12_col1" class="data row12 col1">0.114606</td>
+<td id="T_5e450_row12_col2" class="data row12 col2">1.000000</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>The top three eigenvalues / eigenvectors are highlighted in each of <a href="#tbl-pca-2d" class="quarto-xref">Table&nbsp;<span>3.4</span></a>, <a href="#tbl-pca-3d" class="quarto-xref">Table&nbsp;<span>3.5</span></a>, and <a href="#tbl-pca-md" class="quarto-xref">Table&nbsp;<span>3.6</span></a>, of 2.77, 1.477, and 1.225.</p>
+<p>To retain a minimum of 95% of the information in the dataset, the minimum required principal components are 11, allowing for dimensionality reduction of 2 dimensions from the original 13 while retaining the required amount information. The lowest value greater than 0.95 in the cumulative variance column is on the 11th row for Principal Component 11 at 0.974, thus one would have to include all components 1-11 to achieve at least 95% explained variance.</p>
+<p>This finding suggests that the source data do not have strong correlations with one another, and thus do not provide much assistance in reducing dimensionality.</p>
+</section>
+</section>
+<section id="multiple-correspondence-analysis" class="level2" data-number="3.6">
+<h2 data-number="3.6" class="anchored" data-anchor-id="multiple-correspondence-analysis"><span class="header-section-number">3.6</span> Multiple Correspondence Analysis</h2>
+<p>Many of the research questions within this effort are inherently linked to categorical factors in lieu of numeric factors. Principal component analysis is only executable upon <em>numeric</em> data and not upon categorical data - even in the case of ordinal data. As a simple example, consider a ordinal variable “size” with categories small, medium, large, and extra-large. One could apply a simple encoding and assign small=1, medium=2, large=3, and extra-large=4. This encoding, while apparently holding a degree of validity in terms of increasing size, does not match up mathematically to reality. Consider getting a fountain drink at a fast-food restaurant and ask the question - is a large the same as 3 smalls? Is an extra large the same as 1 medium and two smalls? Rarely are either of these answers “yes”. One might have to add decimal places to the categories, and at that point, one may as well get the exact size measurements in terms of fluid ounces or liters, which may or may not be possible.</p>
+<p>The additive and multiplicative challenges between these categories when assigning them a value produces challenges for ordinal variables. These challenges are further confounded when pivoting away from an ordinal variables. One runs the risk of making mathematical claims such as red is 4 times blue, or that sad is 3 less than happy. Such statements are nonsensical, have no foundation in mathematics, and while they may produce results in a model post-transformation, do not hold validity, explainability, or generalizability.</p>
+<p>Enter Multiple Correspondence Analysis (or MCA). MCA performs an analogous action on <em>categorical</em> variables as PCA performs upon <em>numeric</em> variables. To perform an MCA, one must construct a Complete Disjunctive Table, which is effectively a one-hot encoded matrix. One takes the source categorical columns and transforms them to a column per category, and for the new column, the value is set to 1 if the current row is a member of the category, and zero otherwise. This is repeated for all columns and categories until the dataset is fully expanded.</p>
+<div id="c4ec0e70" class="cell" data-execution_count="15">
+<div class="cell-output cell-output-display">
+<style type="text/css">
+</style>
+
+<table id="T_b6473" data-quarto-postprocess="true" class="table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th id="T_b6473_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">a</th>
+<th id="T_b6473_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">b</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td id="T_b6473_row0_col0" class="data row0 col0">s</td>
+<td id="T_b6473_row0_col1" class="data row0 col1">f</td>
+</tr>
+<tr class="even">
+<td id="T_b6473_row1_col0" class="data row1 col0">m</td>
+<td id="T_b6473_row1_col1" class="data row1 col1">w</td>
+</tr>
+<tr class="odd">
+<td id="T_b6473_row2_col0" class="data row2 col0">s</td>
+<td id="T_b6473_row2_col1" class="data row2 col1">s</td>
+</tr>
+<tr class="even">
+<td id="T_b6473_row3_col0" class="data row3 col0">s</td>
+<td id="T_b6473_row3_col1" class="data row3 col1">f</td>
+</tr>
+<tr class="odd">
+<td id="T_b6473_row4_col0" class="data row4 col0">m</td>
+<td id="T_b6473_row4_col1" class="data row4 col1">f</td>
+</tr>
+<tr class="even">
+<td id="T_b6473_row5_col0" class="data row5 col0">m</td>
+<td id="T_b6473_row5_col1" class="data row5 col1">f</td>
+</tr>
+<tr class="odd">
+<td id="T_b6473_row6_col0" class="data row6 col0">l</td>
+<td id="T_b6473_row6_col1" class="data row6 col1">w</td>
+</tr>
+<tr class="even">
+<td id="T_b6473_row7_col0" class="data row7 col0">l</td>
+<td id="T_b6473_row7_col1" class="data row7 col1">s</td>
+</tr>
+<tr class="odd">
+<td id="T_b6473_row8_col0" class="data row8 col0">l</td>
+<td id="T_b6473_row8_col1" class="data row8 col1">f</td>
+</tr>
+<tr class="even">
+<td id="T_b6473_row9_col0" class="data row9 col0">m</td>
+<td id="T_b6473_row9_col1" class="data row9 col1">w</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Taking the above example table, one can transform it to a one-hot encoded table:</p>
+<div id="5347ab05" class="cell" data-execution_count="16">
+<div class="cell-output cell-output-display" data-execution_count="16">
+<style type="text/css">
+</style>
+
+<table id="T_4f665" data-quarto-postprocess="true" class="table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th id="T_4f665_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">a_l</th>
+<th id="T_4f665_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">a_m</th>
+<th id="T_4f665_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">a_s</th>
+<th id="T_4f665_level0_col3" class="col_heading level0 col3" data-quarto-table-cell-role="th">b_f</th>
+<th id="T_4f665_level0_col4" class="col_heading level0 col4" data-quarto-table-cell-role="th">b_s</th>
+<th id="T_4f665_level0_col5" class="col_heading level0 col5" data-quarto-table-cell-role="th">b_w</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td id="T_4f665_row0_col0" class="data row0 col0">0</td>
+<td id="T_4f665_row0_col1" class="data row0 col1">0</td>
+<td id="T_4f665_row0_col2" class="data row0 col2">1</td>
+<td id="T_4f665_row0_col3" class="data row0 col3">1</td>
+<td id="T_4f665_row0_col4" class="data row0 col4">0</td>
+<td id="T_4f665_row0_col5" class="data row0 col5">0</td>
+</tr>
+<tr class="even">
+<td id="T_4f665_row1_col0" class="data row1 col0">0</td>
+<td id="T_4f665_row1_col1" class="data row1 col1">1</td>
+<td id="T_4f665_row1_col2" class="data row1 col2">0</td>
+<td id="T_4f665_row1_col3" class="data row1 col3">0</td>
+<td id="T_4f665_row1_col4" class="data row1 col4">0</td>
+<td id="T_4f665_row1_col5" class="data row1 col5">1</td>
+</tr>
+<tr class="odd">
+<td id="T_4f665_row2_col0" class="data row2 col0">0</td>
+<td id="T_4f665_row2_col1" class="data row2 col1">0</td>
+<td id="T_4f665_row2_col2" class="data row2 col2">1</td>
+<td id="T_4f665_row2_col3" class="data row2 col3">0</td>
+<td id="T_4f665_row2_col4" class="data row2 col4">1</td>
+<td id="T_4f665_row2_col5" class="data row2 col5">0</td>
+</tr>
+<tr class="even">
+<td id="T_4f665_row3_col0" class="data row3 col0">0</td>
+<td id="T_4f665_row3_col1" class="data row3 col1">0</td>
+<td id="T_4f665_row3_col2" class="data row3 col2">1</td>
+<td id="T_4f665_row3_col3" class="data row3 col3">1</td>
+<td id="T_4f665_row3_col4" class="data row3 col4">0</td>
+<td id="T_4f665_row3_col5" class="data row3 col5">0</td>
+</tr>
+<tr class="odd">
+<td id="T_4f665_row4_col0" class="data row4 col0">0</td>
+<td id="T_4f665_row4_col1" class="data row4 col1">1</td>
+<td id="T_4f665_row4_col2" class="data row4 col2">0</td>
+<td id="T_4f665_row4_col3" class="data row4 col3">1</td>
+<td id="T_4f665_row4_col4" class="data row4 col4">0</td>
+<td id="T_4f665_row4_col5" class="data row4 col5">0</td>
+</tr>
+<tr class="even">
+<td id="T_4f665_row5_col0" class="data row5 col0">0</td>
+<td id="T_4f665_row5_col1" class="data row5 col1">1</td>
+<td id="T_4f665_row5_col2" class="data row5 col2">0</td>
+<td id="T_4f665_row5_col3" class="data row5 col3">1</td>
+<td id="T_4f665_row5_col4" class="data row5 col4">0</td>
+<td id="T_4f665_row5_col5" class="data row5 col5">0</td>
+</tr>
+<tr class="odd">
+<td id="T_4f665_row6_col0" class="data row6 col0">1</td>
+<td id="T_4f665_row6_col1" class="data row6 col1">0</td>
+<td id="T_4f665_row6_col2" class="data row6 col2">0</td>
+<td id="T_4f665_row6_col3" class="data row6 col3">0</td>
+<td id="T_4f665_row6_col4" class="data row6 col4">0</td>
+<td id="T_4f665_row6_col5" class="data row6 col5">1</td>
+</tr>
+<tr class="even">
+<td id="T_4f665_row7_col0" class="data row7 col0">1</td>
+<td id="T_4f665_row7_col1" class="data row7 col1">0</td>
+<td id="T_4f665_row7_col2" class="data row7 col2">0</td>
+<td id="T_4f665_row7_col3" class="data row7 col3">0</td>
+<td id="T_4f665_row7_col4" class="data row7 col4">1</td>
+<td id="T_4f665_row7_col5" class="data row7 col5">0</td>
+</tr>
+<tr class="odd">
+<td id="T_4f665_row8_col0" class="data row8 col0">1</td>
+<td id="T_4f665_row8_col1" class="data row8 col1">0</td>
+<td id="T_4f665_row8_col2" class="data row8 col2">0</td>
+<td id="T_4f665_row8_col3" class="data row8 col3">1</td>
+<td id="T_4f665_row8_col4" class="data row8 col4">0</td>
+<td id="T_4f665_row8_col5" class="data row8 col5">0</td>
+</tr>
+<tr class="even">
+<td id="T_4f665_row9_col0" class="data row9 col0">0</td>
+<td id="T_4f665_row9_col1" class="data row9 col1">1</td>
+<td id="T_4f665_row9_col2" class="data row9 col2">0</td>
+<td id="T_4f665_row9_col3" class="data row9 col3">0</td>
+<td id="T_4f665_row9_col4" class="data row9 col4">0</td>
+<td id="T_4f665_row9_col5" class="data row9 col5">1</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Notice that there are now have 6 columns from the original 2 columns. This is because column ‘a’ had 3 categories - s/m/l, as did column ‘b’ - s/w/f.&nbsp;A column is created for each combination of individual columns and their respective categories, hence 6 columns in this case.</p>
+<p>After performing this transformation, the following mathematical operations are applied:</p>
+<ul>
+<li><p>Calculate the sum of all values (0s and 1s) from the CDT as value <span class="math inline">\(N\)</span></p></li>
+<li><p>Calculate matrix <span class="math inline">\(Z = \frac{CDT}{N}\)</span></p></li>
+<li><p>Calculate the column-wise sum as matrix <span class="math inline">\(c\)</span>. Transform to a diagonal matrix <span class="math inline">\(D_c\)</span></p></li>
+<li><p>Calculate the row-wise sum as matrix <span class="math inline">\(r\)</span>. Transform to a diagonal matrix <span class="math inline">\(D_r\)</span></p></li>
+<li><p>Calculate matrix <span class="math inline">\(M = D_r^{-\frac{1}{2}}(Z-rc^T)D_c^{-\frac{1}{2}}\)</span></p></li>
+</ul>
+<p>Due to some unforeseen challenges during this research, performance of MCA will be delayed until a later date. This type of analysis will be useful for future modeling purposes and further analysis.</p>
+</section>
+<section id="results" class="level2" data-number="3.7">
+<h2 data-number="3.7" class="anchored" data-anchor-id="results"><span class="header-section-number">3.7</span> Results</h2>
+<p>Principal component analysis on the source data for this research is not an ideal endeavor, as this effort seeks to further establish the strength and connection of certain numeric and categorical variables to the outcome of whether or not an applicant will attain a mortgage.</p>
+<p>Furthermore, the need of the data to retain 11 of the 13 principal components to explain most of the data variation means that applying PCA to this data will not meet any dimensionality reduction goals for this research. There is little direct correlation between the variables in the source data, so it takes almost the same number of dimensions as we had in the source data to retain a high degree of explainability. As such, principal component analysis, solely performed on the identified numeric variables, may be insufficient for the purposes of clustering and modeling.</p>
+<p>The multiple correspondence analysis, however, seems to lend itself well to the purposes and intent of this research. A limited degree of exploration into MCA was pursued, but not sufficiently enough to generate or communicate results at this time. In the next iteration of this research, MCA will be included in the analyses. MCA, used within clustering and potentially within modeling, could be more relevatory than basic numeric measures provided by PCA.</p>
 
 
 </section>

@@ -7,9 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Patrick Connelly">
-<meta name="dcterms.date" content="2024-09-16">
+<meta name="dcterms.date" content="2024-10-16">
 
-<title>Exploring Predictive Power of Protected Classes in Mortgage Approvals</title>
+<title>Exploring Protected Classes as Predictors in Mortgage Approval</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -98,7 +98,7 @@ ul.task-list li input[type="checkbox"] {
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="./">Exploring Predictive Power of Protected Classes in Mortgage Approvals</a> 
+      <a href="./">Exploring Protected Classes as Predictors in Mortgage Approval</a> 
         <div class="sidebar-tools-main">
     <a href="https://github.com/pconnell/ML" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
     <a href="./ML-Final-Report.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
@@ -144,36 +144,6 @@ ul.task-list li input[type="checkbox"] {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./dt.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Decision Tree Modeling</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./nb.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Naive Bayes</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./reg.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Regression Modeling</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./svm.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Support Vector Machine Modeling</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./conclusion.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Conclusion</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
   <a href="./references.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">References</span></a>
   </div>
@@ -190,19 +160,19 @@ ul.task-list li input[type="checkbox"] {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./app1.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Appendix 1</span></span></a>
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Data Gathering/Cleaning Code</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./app2.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Appendix 2</span></span></a>
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Component Analysis Code (PCA and MCA)</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./app3.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Appendix 3</span></span></a>
+  <a href="./app4.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Association Rule Mining Code</span></span></a>
   </div>
 </li>
       </ul>
@@ -226,7 +196,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Exploring Predictive Power of Protected Classes in Mortgage Approvals</h1>
+<h1 class="title">Exploring Protected Classes as Predictors in Mortgage Approval</h1>
 </div>
 
 
@@ -243,7 +213,7 @@ ul.task-list li input[type="checkbox"] {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">September 16, 2024</p>
+      <p class="date">October 16, 2024</p>
     </div>
   </div>
   
@@ -257,7 +227,7 @@ ul.task-list li input[type="checkbox"] {
 
 
 <section id="sec-intro" class="level1" data-number="1">
-<h1 data-number="1"><span class="header-section-number">1</span> Introduction</h1><p><img src="images/cover.png" title="Exploring Predictive Power of Protected Classes in Mortgage Approvals" class="quarto-cover-image img-fluid"></p>
+<h1 data-number="1"><span class="header-section-number">1</span> Introduction</h1><p><img src="images/cover.png" title="Exploring Protected Classes as Predictors in Mortgage Approval" class="quarto-cover-image img-fluid"></p>
 <p>How strong is the connection between your age, gender, or race and ability to attain a mortgage?</p>
 <p>In early 2024, <a href="https://www.banking.senate.gov/newsroom/majority/brown-colleagues-call-for-a-review-of-navy-federal-after-reported-racial-disparities-in-mortgage-lending">US Senator Sherrod Brown</a>, along with colleagues, called for a review of lending practices by Navy Federal Credit Union (NFCU) as a result of a <a href="https://www.cnn.com/2023/12/14/business/navy-federal-credit-union-black-applicants-invs/index.html">late 2023 CNN report</a> that oulined disparate impact to persons of color seeking to acquire conventional loans for home purchases. The disparity in results between groups appears damning to the organization’s reputation. CNN’s analysis predominantly explored the mathematical differences between racial groups and various lenders, but did not necessarily outline a direct cause-and-effect relationship (e.g.&nbsp;being a person of color seeking a loan at NFCU is guaranteed to decrease your approval chances). Their analysis instead covered the rates of approval for the different groups, and compared those approval rates between groups and against other financial organizations’ approval rates.</p>
 <div class="quarto-figure quarto-figure-center">

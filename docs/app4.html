@@ -1,0 +1,1224 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.549">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Exploring Protected Classes as Predictors in Mortgage Approval - Appendix C — Association Rule Mining Code</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./app2.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<style>html{ scroll-behavior: smooth; }</style>
+<script src="site_libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+<link href="site_libs/vis-9.1.0/vis-network.min.css" rel="stylesheet">
+<script src="site_libs/vis-9.1.0/vis-network.min.js"></script>
+<script src="site_libs/visNetwork-binding-2.1.2/visNetwork.js"></script>
+
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./app1.html">Appendices</a></li><li class="breadcrumb-item"><a href="./app4.html"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Association Rule Mining Code</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Exploring Protected Classes as Predictors in Mortgage Approval</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/pconnell/ML" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+    <a href="./ML-Final-Report.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Data Gathering and Exploratory Analysis</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./pca.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Principal Component Analysis</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./clustering.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Data Clustering</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./arm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Association Rule Mining</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./app1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Data Gathering/Cleaning Code</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./app2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Component Analysis Code (PCA and MCA)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./app4.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Association Rule Mining Code</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#module-and-data-imports" id="toc-module-and-data-imports" class="nav-link active" data-scroll-target="#module-and-data-imports"><span class="header-section-number">C.1</span> Module and Data Imports</a></li>
+  <li><a href="#transform-to-basket-transactions" id="toc-transform-to-basket-transactions" class="nav-link" data-scroll-target="#transform-to-basket-transactions"><span class="header-section-number">C.2</span> Transform to Basket Transactions</a>
+  <ul class="collapse">
+  <li><a href="#construct-frequent-items" id="toc-construct-frequent-items" class="nav-link" data-scroll-target="#construct-frequent-items"><span class="header-section-number">C.2.1</span> Construct Frequent Items</a></li>
+  <li><a href="#construct-association-rules-python" id="toc-construct-association-rules-python" class="nav-link" data-scroll-target="#construct-association-rules-python"><span class="header-section-number">C.2.2</span> Construct Association Rules (Python)</a></li>
+  <li><a href="#save-the-top-15-association-rules-by-category" id="toc-save-the-top-15-association-rules-by-category" class="nav-link" data-scroll-target="#save-the-top-15-association-rules-by-category"><span class="header-section-number">C.2.3</span> Save the Top 15 Association Rules by Category</a></li>
+  <li><a href="#performing-rule-mining-and-visualization-in-r" id="toc-performing-rule-mining-and-visualization-in-r" class="nav-link" data-scroll-target="#performing-rule-mining-and-visualization-in-r"><span class="header-section-number">C.2.4</span> Performing Rule Mining and Visualization in R</a></li>
+  <li><a href="#examining-organization-specific-rules" id="toc-examining-organization-specific-rules" class="nav-link" data-scroll-target="#examining-organization-specific-rules"><span class="header-section-number">C.2.5</span> Examining Organization Specific Rules</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content column-body" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./app1.html">Appendices</a></li><li class="breadcrumb-item"><a href="./app4.html"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Association Rule Mining Code</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span id="sec-ARMApp" class="quarto-section-identifier">Appendix C — Association Rule Mining Code</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta column-body">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="module-and-data-imports" class="level2" data-number="C.1">
+<h2 data-number="C.1" class="anchored" data-anchor-id="module-and-data-imports"><span class="header-section-number">C.1</span> Module and Data Imports</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd, numpy <span class="im">as</span> np, seaborn <span class="im">as</span> sns, matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> StandardScaler</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.decomposition <span class="im">import</span> PCA</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.cluster <span class="im">import</span> KMeans</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> mpl_toolkits.mplot3d <span class="im">import</span> Axes3D</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> mlxtend.frequent_patterns <span class="im">import</span> apriori</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> mlxtend.frequent_patterns <span class="im">import</span> association_rules</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="transform-to-basket-transactions" class="level2" data-number="C.2">
+<h2 data-number="C.2" class="anchored" data-anchor-id="transform-to-basket-transactions"><span class="header-section-number">C.2</span> Transform to Basket Transactions</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>mapper <span class="op">=</span> {</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">'applicant_race'</span>:{</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>        <span class="st">'American Indian/Alaska Native'</span>:<span class="bn">0b0000000000000000001</span>,</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Asian'</span>:<span class="bn">0b0000000000000000010</span>,</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Asian Indian'</span>:<span class="bn">0b0000000000000000100</span>,</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Chinese'</span>:<span class="bn">0b0000000000000001000</span>,</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Filipino'</span>:<span class="bn">0b0000000000000010000</span>,</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Japanese'</span>:<span class="bn">0b0000000000000100000</span>,</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Korean'</span>:<span class="bn">0b0000000000001000000</span>,</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Vietnamese'</span>:<span class="bn">0b0000000000010000000</span>,</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Other Asian'</span>:<span class="bn">0b0000000000100000000</span>,</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Black/African American'</span>:<span class="bn">0b0000000001000000000</span>,</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Native Hawaiian/Pacific Islander'</span>:<span class="bn">0b0000000010000000000</span>,</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Native Hawaiian'</span>:<span class="bn">0b0000000100000000000</span>,</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Guamanian/Chamorro'</span>:<span class="bn">0b0000001000000000000</span>,</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Samoan'</span>:<span class="bn">0b0000010000000000000</span>,</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Other Pacific Islander'</span>:<span class="bn">0b0000100000000000000</span>,</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>        <span class="st">'White'</span>:<span class="bn">0b0001000000000000000</span>,</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Information not provided'</span>:<span class="bn">0b0010000000000000000</span>,</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Not Applicable'</span>:<span class="bn">0b0100000000000000000</span>,</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>        <span class="st">'No Co-applicant'</span>:<span class="bn">0b1000000000000000000</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>    },</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 'co-applicant_race':{</span></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>    <span class="co">#     'American Indian/Alaska Native':0b0000000000000000001,</span></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>    <span class="co">#     'Asian':0b0000000000000000010,</span></span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>    <span class="co">#     'Asian Indian':0b0000000000000000100,</span></span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>    <span class="co">#     'Chinese':0b0000000000000001000,</span></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>    <span class="co">#     'Filipino':0b0000000000000010000,</span></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>    <span class="co">#     'Japanese':0b0000000000000100000,</span></span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>    <span class="co">#     'Korean':0b0000000000001000000,</span></span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>    <span class="co">#     'Vietnamese':0b0000000000010000000,</span></span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>    <span class="co">#     'Other Asian':0b0000000000100000000,</span></span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>    <span class="co">#     'Black/African American':0b0000000001000000000,</span></span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>    <span class="co">#     'Native Hawaiian/Pacific Islander':0b0000000010000000000,</span></span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>    <span class="co">#     'Native Hawaiian':0b0000000100000000000,</span></span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>    <span class="co">#     'Guamanian/Chamorro':0b0000001000000000000,</span></span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>    <span class="co">#     'Samoan':0b0000010000000000000,</span></span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>    <span class="co">#     'Other Pacific Islander':0b0000100000000000000,</span></span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>    <span class="co">#     'White':0b0001000000000000000,</span></span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>    <span class="co">#     'Information not provided':0b0010000000000000000,</span></span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>    <span class="co">#     'Not Applicable':0b0100000000000000000,</span></span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>    <span class="co">#     'No Co-applicant':0b1000000000000000000</span></span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>    <span class="co"># },</span></span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>    <span class="st">'applicant_ethnicity'</span>:{</span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Hispanic/Latino'</span>:<span class="bn">0b000000001</span>,</span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Mexican'</span>:<span class="bn">0b000000010</span>,</span>
+<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Puerto Rican'</span>:<span class="bn">0b000000100</span>,</span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Cuban'</span>:<span class="bn">0b000001000</span>,</span>
+<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Other Hispanic/Latino'</span>:<span class="bn">0b000010000</span>,</span>
+<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Not Hispanic/Latino'</span>:<span class="bn">0b000100000</span>,</span>
+<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Information Not Provided'</span>:<span class="bn">0b001000000</span>,</span>
+<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Not Applicable'</span>:<span class="bn">0b010000000</span>,</span>
+<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a>        <span class="st">'No Co-applicant'</span>:<span class="bn">0b100000000</span></span>
+<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a>    },</span>
+<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 'co-applicant_ethnicity':{</span></span>
+<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a>    <span class="co">#     'Hispanic/Latino':0b000000001,</span></span>
+<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a>    <span class="co">#     'Mexican':0b000000010,</span></span>
+<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a>    <span class="co">#     'Puerto Rican':0b000000100,</span></span>
+<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a>    <span class="co">#     'Cuban':0b000001000,</span></span>
+<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a>    <span class="co">#     'Other Hispanic/Latino':0b000010000,</span></span>
+<span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a>    <span class="co">#     'Not Hispanic/Latino':0b000100000,</span></span>
+<span id="cb2-62"><a href="#cb2-62" aria-hidden="true" tabindex="-1"></a>    <span class="co">#     'Information Not Provided':0b001000000,</span></span>
+<span id="cb2-63"><a href="#cb2-63" aria-hidden="true" tabindex="-1"></a>    <span class="co">#     'Not Applicable':0b010000000,</span></span>
+<span id="cb2-64"><a href="#cb2-64" aria-hidden="true" tabindex="-1"></a>    <span class="co">#     'No Co-applicant':0b100000000</span></span>
+<span id="cb2-65"><a href="#cb2-65" aria-hidden="true" tabindex="-1"></a>    <span class="co"># },</span></span>
+<span id="cb2-66"><a href="#cb2-66" aria-hidden="true" tabindex="-1"></a>    <span class="st">'aus'</span>:{</span>
+<span id="cb2-67"><a href="#cb2-67" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Desktop Underwriter'</span>:<span class="bn">0b00000001</span>,</span>
+<span id="cb2-68"><a href="#cb2-68" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Loan Prospector/Product Advisor'</span>:<span class="bn">0b00000010</span>,</span>
+<span id="cb2-69"><a href="#cb2-69" aria-hidden="true" tabindex="-1"></a>        <span class="st">'TOTAL Scorecard'</span>:<span class="bn">0b00000100</span>,</span>
+<span id="cb2-70"><a href="#cb2-70" aria-hidden="true" tabindex="-1"></a>        <span class="st">'GUS'</span>:<span class="bn">0b00001000</span>,</span>
+<span id="cb2-71"><a href="#cb2-71" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Other'</span>:<span class="bn">0b00010000</span>,</span>
+<span id="cb2-72"><a href="#cb2-72" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Internal Proprietary'</span>:<span class="bn">0b00100000</span>,</span>
+<span id="cb2-73"><a href="#cb2-73" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Not applicable'</span>:<span class="bn">0b01000000</span>,</span>
+<span id="cb2-74"><a href="#cb2-74" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Exempt'</span>:<span class="bn">0b10000000</span>,</span>
+<span id="cb2-75"><a href="#cb2-75" aria-hidden="true" tabindex="-1"></a>    }, </span>
+<span id="cb2-76"><a href="#cb2-76" aria-hidden="true" tabindex="-1"></a>    <span class="st">'denial_reason'</span>:{</span>
+<span id="cb2-77"><a href="#cb2-77" aria-hidden="true" tabindex="-1"></a>        <span class="st">'DTI'</span>:<span class="bn">0b0000000001</span>,</span>
+<span id="cb2-78"><a href="#cb2-78" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Employment History'</span>:<span class="bn">0b0000000010</span>,</span>
+<span id="cb2-79"><a href="#cb2-79" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Credit History'</span>:<span class="bn">0b0000000100</span>,</span>
+<span id="cb2-80"><a href="#cb2-80" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Collateral'</span>:<span class="bn">0b0000001000</span>,</span>
+<span id="cb2-81"><a href="#cb2-81" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Insufficient Cash'</span>:<span class="bn">0b0000010000</span>,</span>
+<span id="cb2-82"><a href="#cb2-82" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Unverifiable Information'</span>:<span class="bn">0b0000100000</span>,</span>
+<span id="cb2-83"><a href="#cb2-83" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Credit Application Incomplete'</span>:<span class="bn">0b0001000000</span>,</span>
+<span id="cb2-84"><a href="#cb2-84" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Mortgage Insurance Denied'</span>:<span class="bn">0b0010000000</span>,</span>
+<span id="cb2-85"><a href="#cb2-85" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Other'</span>:<span class="bn">0b0100000000</span>,</span>
+<span id="cb2-86"><a href="#cb2-86" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Not Applicable'</span>:<span class="bn">0b1000000000</span></span>
+<span id="cb2-87"><a href="#cb2-87" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb2-88"><a href="#cb2-88" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-89"><a href="#cb2-89" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-90"><a href="#cb2-90" aria-hidden="true" tabindex="-1"></a>new_mapper <span class="op">=</span> {}</span>
+<span id="cb2-91"><a href="#cb2-91" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> k,v <span class="kw">in</span> mapper.items():</span>
+<span id="cb2-92"><a href="#cb2-92" aria-hidden="true" tabindex="-1"></a>    new_mapper[k] <span class="op">=</span> {}</span>
+<span id="cb2-93"><a href="#cb2-93" aria-hidden="true" tabindex="-1"></a>    <span class="co">#print(k)</span></span>
+<span id="cb2-94"><a href="#cb2-94" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> j,w <span class="kw">in</span> v.items():</span>
+<span id="cb2-95"><a href="#cb2-95" aria-hidden="true" tabindex="-1"></a>        <span class="co">#print(w,j)</span></span>
+<span id="cb2-96"><a href="#cb2-96" aria-hidden="true" tabindex="-1"></a>        new_mapper[k][w] <span class="op">=</span> j</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>fr2 <span class="op">=</span> pd.read_csv(<span class="st">'../data/final_clean_r2.csv'</span>)<span class="co">#fr.copy()</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>pct <span class="op">=</span> [<span class="dv">20</span>,<span class="dv">40</span>,<span class="dv">60</span>,<span class="dv">80</span>]</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>levels <span class="op">=</span> [<span class="st">'0-20'</span>,<span class="st">'21-40'</span>,<span class="st">'41-60'</span>,<span class="st">'61-80'</span>,<span class="st">'&gt;80'</span>]</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>pct_cols <span class="op">=</span> [</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">'income'</span>,</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">'debt_to_income_ratio'</span>,</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">'loan_to_value_ratio'</span>,</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">'tract_minority_population_percent'</span>,</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">'tract_to_msa_income_percentage'</span>,</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    <span class="st">'tract_median_age_of_housing_units'</span>,</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    <span class="st">'interest_rate'</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> col <span class="kw">in</span> pct_cols:</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>    p <span class="op">=</span> <span class="bu">list</span>(<span class="bu">map</span>(<span class="kw">lambda</span> x: np.percentile(fr2[col],x),pct))</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>    p <span class="op">=</span> [<span class="op">-</span>np.inf] <span class="op">+</span> p <span class="op">+</span> [np.inf]</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>    fr2[col] <span class="op">=</span> pd.cut(fr2[col],bins<span class="op">=</span>p,labels<span class="op">=</span>levels)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>basket <span class="op">=</span> []</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>bc <span class="op">=</span> [</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">'income'</span>,<span class="st">'debt_to_income_ratio'</span>,<span class="st">'loan_to_value_ratio'</span>,</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">'tract_minority_population_percent'</span>,<span class="st">'tract_to_msa_income_percent'</span>,</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">'derived_sex'</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>b1c <span class="op">=</span> [<span class="st">'interest_rate'</span>,<span class="st">'company'</span>,<span class="st">'applicant_race'</span>]</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>b2c <span class="op">=</span> [<span class="st">'interest_rate'</span>,<span class="st">'company'</span>,<span class="st">'outcome'</span>]</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>b3c <span class="op">=</span> [<span class="st">'interest_rate'</span>,<span class="st">'applicant_race'</span>,<span class="st">'outcome'</span>]</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>b1,b2,b3 <span class="op">=</span> [],[],[]</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, row <span class="kw">in</span> fr2.iterrows():</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    curr <span class="op">=</span> []</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> k,v <span class="kw">in</span> new_mapper.items():</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> j,w <span class="kw">in</span> v.items():</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>            <span class="co">#print(row[k],type(row[k]))</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> row[k] <span class="op">&amp;</span> j <span class="op">&gt;</span> <span class="dv">0</span>:</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>                curr.append(<span class="st">"</span><span class="sc">{}</span><span class="st">:</span><span class="sc">{}</span><span class="st">"</span>.<span class="bu">format</span>(k,w))</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> row[<span class="st">'balloon_payment'</span>] <span class="op">==</span> <span class="dv">1</span>:</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>        curr.append(<span class="st">'balloon'</span>)</span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> row[<span class="st">'interest_only_payment'</span>] <span class="op">==</span> <span class="dv">1</span>:</span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>        curr.append(<span class="st">'interest only'</span>)</span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>    curr.append(<span class="st">"</span><span class="sc">{}</span><span class="st"> rooms"</span>.<span class="bu">format</span>(row[<span class="st">'total_units'</span>]))</span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> col <span class="kw">in</span> pct_cols:</span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>        curr.append(<span class="st">"</span><span class="sc">{}</span><span class="st">:</span><span class="sc">{}</span><span class="st">"</span>.<span class="bu">format</span>(col,row[col]))</span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>    <span class="co"># curr.append(row['company'])</span></span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a>    curr.append(row[<span class="st">'derived_sex'</span>])</span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a>    curr.append(row[<span class="st">'applicant_age'</span>])</span>
+<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a>    <span class="co"># #interest only payments &amp; balloon payments, </span></span>
+<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a>    <span class="co"># co/applicant sex</span></span>
+<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a>    <span class="co"># sex | race via observation?</span></span>
+<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a>    basket.append(curr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>items <span class="op">=</span> <span class="bu">set</span>()</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> trans <span class="kw">in</span> basket:</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> item <span class="kw">in</span> trans:</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>        items.add(item)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> []</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> record <span class="kw">in</span> basket:</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    rowset <span class="op">=</span> <span class="bu">set</span>(record)</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    labels <span class="op">=</span> {}</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    uncommons <span class="op">=</span> <span class="bu">list</span>(items<span class="op">-</span>rowset)</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    commons <span class="op">=</span> <span class="bu">list</span>(items.intersection(rowset))</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> uc <span class="kw">in</span> uncommons:</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>        labels[uc] <span class="op">=</span> <span class="va">False</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> com <span class="kw">in</span> commons:</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>        labels[com] <span class="op">=</span> <span class="va">True</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>    result.append(labels)</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>ohe_df <span class="op">=</span> pd.DataFrame(result)</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>single_basket <span class="op">=</span> ohe_df.replace(</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>    [<span class="dv">0</span>],[np.nan]</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>).reset_index()</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>single_basket <span class="op">=</span> single_basket.melt(</span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>    id_vars<span class="op">=</span><span class="st">'index'</span>,</span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>    value_vars<span class="op">=</span>single_basket.columns[<span class="dv">1</span>:]</span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>single_basket.sort_values(by<span class="op">=</span><span class="st">'index'</span>,inplace<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>single_basket.dropna(inplace<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a><span class="co"># display(</span></span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a><span class="co">#     ohe_df.head(),</span></span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a><span class="co">#     single_basket.head()</span></span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a><span class="co"># )</span></span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>single_basket.to_csv(<span class="st">'../data/ARM_single_basket.csv'</span>,index<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="construct-frequent-items" class="level3" data-number="C.2.1">
+<h3 data-number="C.2.1" class="anchored" data-anchor-id="construct-frequent-items"><span class="header-section-number">C.2.1</span> Construct Frequent Items</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>freq_items<span class="op">=</span>apriori(ohe_df,min_support<span class="op">=</span><span class="fl">0.05</span>,use_colnames<span class="op">=</span><span class="va">True</span>,verbose<span class="op">=</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Processing 3306 combinations | Sampling itemset size 2
+Processing 25791 combinations | Sampling itemset size 3
+Processing 25556 combinations | Sampling itemset size 4
+Processing 13570 combinations | Sampling itemset size 5
+Processing 3312 combinations | Sampling itemset size 6
+Processing 343 combinations | Sampling itemset size 7</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>ars <span class="op">=</span> association_rules(freq_items,metric<span class="op">=</span><span class="st">'support'</span>,min_threshold<span class="op">=</span><span class="fl">0.5</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>ars.sort_values(by<span class="op">=</span><span class="st">'lift'</span>,ascending<span class="op">=</span><span class="va">False</span>,inplace<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="construct-association-rules-python" class="level3" data-number="C.2.2">
+<h3 data-number="C.2.2" class="anchored" data-anchor-id="construct-association-rules-python"><span class="header-section-number">C.2.2</span> Construct Association Rules (Python)</h3>
+</section>
+<section id="save-the-top-15-association-rules-by-category" class="level3" data-number="C.2.3">
+<h3 data-number="C.2.3" class="anchored" data-anchor-id="save-the-top-15-association-rules-by-category"><span class="header-section-number">C.2.3</span> Save the Top 15 Association Rules by Category</h3>
+</section>
+<section id="performing-rule-mining-and-visualization-in-r" class="level3" data-number="C.2.4">
+<h3 data-number="C.2.4" class="anchored" data-anchor-id="performing-rule-mining-and-visualization-in-r"><span class="header-section-number">C.2.4</span> Performing Rule Mining and Visualization in R</h3>
+<p>Rule mining is performed on data that was already transformed in Python from previous steps</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(arules)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(arulesViz)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>First load the data into R for use in rule mining.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">read.transactions</span>(</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">'C:/Users/pconn/OneDrive/Desktop/Machine Learning/ML/data/single_basket.csv'</span>,</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">sep=</span><span class="st">','</span>,</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">rm.duplicates=</span><span class="cn">TRUE</span>,</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">format=</span><span class="st">'single'</span>,</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>)</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now that the data is loaded, R is leveraged to perform rule mining</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>set.seed <span class="ot">=</span> <span class="dv">9001</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>a_rules <span class="ot">&lt;-</span> arules<span class="sc">::</span><span class="fu">apriori</span>(</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    dat,</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">control=</span><span class="fu">list</span>(<span class="at">verbose=</span>F),</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">parameter=</span><span class="fu">list</span>(<span class="at">support=</span><span class="fl">0.04</span>,<span class="at">confidence=</span><span class="fl">0.01</span>,<span class="at">minlen=</span><span class="dv">2</span>)</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Using the mined rules, the rules can now be printed and/or visualized.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>sorted_arules <span class="ot">&lt;-</span> <span class="fu">sort</span>(a_rules,<span class="at">by=</span><span class="st">'support'</span>,<span class="at">decreasing =</span> T)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>arules<span class="sc">::</span><span class="fu">inspect</span>(sorted_arules[<span class="dv">1</span><span class="sc">:</span><span class="dv">15</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     lhs                                           rhs                                         support confidence  coverage     lift  count
+[1]  {approve}                                  =&gt; {1 rooms}                                 0.8465587  0.9897986 0.8552837 1.001607 172124
+[2]  {1 rooms}                                  =&gt; {approve}                                 0.8465587  0.8566580 0.9882108 1.001607 172124
+[3]  {applicant_ethnicity:Not Hispanic/Latino}  =&gt; {1 rooms}                                 0.7152005  0.9893591 0.7228928 1.001162 145416
+[4]  {1 rooms}                                  =&gt; {applicant_ethnicity:Not Hispanic/Latino} 0.7152005  0.7237327 0.9882108 1.001162 145416
+[5]  {applicant_ethnicity:Not Hispanic/Latino}  =&gt; {approve}                                 0.6253676  0.8650905 0.7228928 1.011466 127151
+[6]  {approve}                                  =&gt; {applicant_ethnicity:Not Hispanic/Latino} 0.6253676  0.7311815 0.8552837 1.011466 127151
+[7]  {applicant_ethnicity:Not Hispanic/Latino,                                                                                             
+      approve}                                  =&gt; {1 rooms}                                 0.6195837  0.9907512 0.6253676 1.002571 125975
+[8]  {1 rooms,                                                                                                                             
+      applicant_ethnicity:Not Hispanic/Latino}  =&gt; {approve}                                 0.6195837  0.8663077 0.7152005 1.012889 125975
+[9]  {1 rooms,                                                                                                                             
+      approve}                                  =&gt; {applicant_ethnicity:Not Hispanic/Latino} 0.6195837  0.7318852 0.8465587 1.012439 125975
+[10] {applicant_race:White}                     =&gt; {1 rooms}                                 0.6052911  0.9917401 0.6103324 1.003571 123069
+[11] {1 rooms}                                  =&gt; {applicant_race:White}                    0.6052911  0.6125121 0.9882108 1.003571 123069
+[12] {aus:Desktop Underwriter}                  =&gt; {1 rooms}                                 0.5645626  0.9910383 0.5696678 1.002861 114788
+[13] {1 rooms}                                  =&gt; {aus:Desktop Underwriter}                 0.5645626  0.5712977 0.9882108 1.002861 114788
+[14] {applicant_race:White}                     =&gt; {approve}                                 0.5349397  0.8764727 0.6103324 1.024774 108765
+[15] {approve}                                  =&gt; {applicant_race:White}                    0.5349397  0.6254529 0.8552837 1.024774 108765</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>sorted_arules <span class="ot">&lt;-</span> <span class="fu">sort</span>(a_rules,<span class="at">by=</span><span class="st">'confidence'</span>,<span class="at">decreasing =</span> T)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>arules<span class="sc">::</span><span class="fu">inspect</span>(sorted_arules[<span class="dv">1</span><span class="sc">:</span><span class="dv">15</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     lhs                                         rhs            support confidence   coverage     lift count
+[1]  {interest_rate:&gt;80}                      =&gt; {approve}   0.18578904          1 0.18578904 1.169203 37775
+[2]  {aus:Loan Prospector/Product Advisor,                                                                  
+      aus:Other}                              =&gt; {JP Morgan} 0.15580213          1 0.15580213 4.971320 31678
+[3]  {interest_rate:&gt;80,                                                                                    
+      loan_to_value_ratio:61-80}              =&gt; {approve}   0.04241056          1 0.04241056 1.169203  8623
+[4]  {interest_rate:&gt;80,                                                                                    
+      tract_minority_population_percent:0-20} =&gt; {approve}   0.04197283          1 0.04197283 1.169203  8534
+[5]  {debt_to_income_ratio:61-80,                                                                           
+      interest_rate:&gt;80}                      =&gt; {approve}   0.04571074          1 0.04571074 1.169203  9294
+[6]  {interest_rate:&gt;80,                                                                                    
+      tract_to_msa_income_percentage:21-40}   =&gt; {approve}   0.04036454          1 0.04036454 1.169203  8207
+[7]  {debt_to_income_ratio:21-40,                                                                           
+      interest_rate:&gt;80}                      =&gt; {approve}   0.04220891          1 0.04220891 1.169203  8582
+[8]  {Female,                                                                                               
+      interest_rate:&gt;80}                      =&gt; {approve}   0.04209579          1 0.04209579 1.169203  8559
+[9]  {2.0,                                                                                                  
+      interest_rate:&gt;80}                      =&gt; {approve}   0.04509104          1 0.04509104 1.169203  9168
+[10] {1.0,                                                                                                  
+      interest_rate:&gt;80}                      =&gt; {approve}   0.05827702          1 0.05827702 1.169203 11849
+[11] {interest_rate:&gt;80,                                                                                    
+      loan_to_value_ratio:21-40}              =&gt; {approve}   0.05279802          1 0.05279802 1.169203 10735
+[12] {interest_rate:&gt;80,                                                                                    
+      Joint}                                  =&gt; {approve}   0.06351993          1 0.06351993 1.169203 12915
+[13] {interest_rate:&gt;80,                                                                                    
+      Male}                                   =&gt; {approve}   0.06214773          1 0.06214773 1.169203 12636
+[14] {aus:Loan Prospector/Product Advisor,                                                                  
+      interest_rate:&gt;80}                      =&gt; {approve}   0.08140290          1 0.08140290 1.169203 16551
+[15] {interest_rate:&gt;80,                                                                                    
+      Rocket Mortgage}                        =&gt; {approve}   0.10214832          1 0.10214832 1.169203 20769</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>sorted_arules <span class="ot">&lt;-</span> <span class="fu">sort</span>(a_rules,<span class="at">by=</span><span class="st">'lift'</span>,<span class="at">decreasing =</span> T)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>arules<span class="sc">::</span><span class="fu">inspect</span>(sorted_arules[<span class="dv">1</span><span class="sc">:</span><span class="dv">15</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     lhs                                                rhs                                      support confidence   coverage     lift count
+[1]  {applicant_ethnicity:Mexican}                   =&gt; {applicant_ethnicity:Hispanic/Latino} 0.04056128  0.9169446 0.04423525 8.207934  8247
+[2]  {applicant_ethnicity:Hispanic/Latino}           =&gt; {applicant_ethnicity:Mexican}         0.04056128  0.3630800 0.11171442 8.207934  8247
+[3]  {1 rooms,                                                                                                                               
+      applicant_ethnicity:Information Not Provided,                                                                                          
+      applicant_race:Information not provided,                                                                                               
+      Rocket Mortgage}                               =&gt; {Sex Not Available}                   0.07532387  0.7362273 0.10231062 7.834365 15315
+[4]  {applicant_ethnicity:Information Not Provided,                                                                                          
+      applicant_race:Information not provided,                                                                                               
+      Rocket Mortgage}                               =&gt; {Sex Not Available}                   0.07603703  0.7353151 0.10340740 7.824658 15460
+[5]  {1 rooms,                                                                                                                               
+      applicant_ethnicity:Information Not Provided,                                                                                          
+      applicant_race:Information not provided,                                                                                               
+      approve,                                                                                                                               
+      Rocket Mortgage}                               =&gt; {Sex Not Available}                   0.06595941  0.7333224 0.08994600 7.803453 13411
+[6]  {applicant_ethnicity:Information Not Provided,                                                                                          
+      applicant_race:Information not provided,                                                                                               
+      approve,                                                                                                                               
+      Rocket Mortgage}                               =&gt; {Sex Not Available}                   0.06651026  0.7322395 0.09083129 7.791930 13523
+[7]  {1 rooms,                                                                                                                               
+      applicant_ethnicity:Information Not Provided,                                                                                          
+      applicant_race:Information not provided,                                                                                               
+      aus:Desktop Underwriter,                                                                                                               
+      Rocket Mortgage}                               =&gt; {Sex Not Available}                   0.05100776  0.7264131 0.07021867 7.729930 10371
+[8]  {applicant_ethnicity:Information Not Provided,                                                                                          
+      applicant_race:Information not provided,                                                                                               
+      aus:Desktop Underwriter,                                                                                                               
+      Rocket Mortgage}                               =&gt; {Sex Not Available}                   0.05134712  0.7252518 0.07079903 7.717572 10440
+[9]  {1 rooms,                                                                                                                               
+      applicant_ethnicity:Information Not Provided,                                                                                          
+      applicant_race:Information not provided,                                                                                               
+      approve,                                                                                                                               
+      aus:Desktop Underwriter,                                                                                                               
+      Rocket Mortgage}                               =&gt; {Sex Not Available}                   0.04512547  0.7246663 0.06227068 7.711341  9175
+[10] {applicant_ethnicity:Information Not Provided,                                                                                          
+      applicant_race:Information not provided,                                                                                               
+      approve,                                                                                                                               
+      aus:Desktop Underwriter,                                                                                                               
+      Rocket Mortgage}                               =&gt; {Sex Not Available}                   0.04538122  0.7233459 0.06273792 7.697291  9227
+[11] {1 rooms,                                                                                                                               
+      applicant_ethnicity:Information Not Provided,                                                                                          
+      applicant_race:Information not provided,                                                                                               
+      approve,                                                                                                                               
+      aus:Desktop Underwriter}                       =&gt; {Sex Not Available}                   0.04939456  0.6718625 0.07351885 7.149444 10043
+[12] {1 rooms,                                                                                                                               
+      applicant_ethnicity:Information Not Provided,                                                                                          
+      Rocket Mortgage}                               =&gt; {Sex Not Available}                   0.07602227  0.6709350 0.11330795 7.139574 15457
+[13] {applicant_ethnicity:Information Not Provided,                                                                                          
+      applicant_race:Information not provided,                                                                                               
+      approve,                                                                                                                               
+      aus:Desktop Underwriter}                       =&gt; {Sex Not Available}                   0.04969457  0.6703377 0.07413364 7.133218 10104
+[14] {applicant_ethnicity:Information Not Provided,                                                                                          
+      Rocket Mortgage}                               =&gt; {Sex Not Available}                   0.07674034  0.6700880 0.11452278 7.130562 15603
+[15] {1 rooms,                                                                                                                               
+      applicant_ethnicity:Information Not Provided,                                                                                          
+      approve,                                                                                                                               
+      Rocket Mortgage}                               =&gt; {Sex Not Available}                   0.06656437  0.6685768 0.09956129 7.114480 13534</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>sub <span class="ot">&lt;-</span> <span class="fu">head</span>(<span class="fu">sort</span>(a_rules,<span class="at">by=</span><span class="st">'lift'</span>,<span class="at">decreasing =</span> T),<span class="dv">10</span>)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(sub,<span class="at">method=</span><span class="st">"graph"</span>,<span class="at">engine=</span><span class="st">"html"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="visNetwork html-widget html-fill-item" id="htmlwidget-cdc4a1af7cca1eb557f3" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-cdc4a1af7cca1eb557f3">{"x":{"nodes":{"id":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19],"label":["1 rooms","applicant_ethnicity:Hispanic/Latino","applicant_ethnicity:Information Not Provided","applicant_ethnicity:Mexican","applicant_race:Information not provided","approve","aus:Desktop Underwriter","Rocket Mortgage","Sex Not Available","rule 1","rule 2","rule 3","rule 4","rule 5","rule 6","rule 7","rule 8","rule 9","rule 10"],"group":[1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2],"value":[1,1,1,1,1,1,1,1,1,1,1,98.00984333841679,100,71.8770275890753,73.4142520449189,30.15236378760572,31.09940385415223,13.73700263413281,14.45071398863164],"color":["#CBD2FC","#CBD2FC","#CBD2FC","#CBD2FC","#CBD2FC","#CBD2FC","#CBD2FC","#CBD2FC","#CBD2FC","#EE1B1B","#EE1B1B","#EEB7B7","#EEBABA","#EEBFBF","#EEC3C3","#EED4D4","#EED5D5","#EED7D7","#EEDCDC"],"title":["1 rooms","applicant_ethnicity:Hispanic/Latino","applicant_ethnicity:Information Not Provided","applicant_ethnicity:Mexican","applicant_race:Information not provided","approve","aus:Desktop Underwriter","Rocket Mortgage","Sex Not Available","<B>[1]<\/B><BR><B>{applicant_ethnicity:Mexican}<\/B><BR>&nbsp;&nbsp; => <B>{applicant_ethnicity:Hispanic/Latino}<\/B><BR><BR>support = 0.0406<BR>confidence = 0.917<BR>coverage = 0.0442<BR>lift = 8.21<BR>count = 8250<BR>order = 2<BR>id = 1","<B>[2]<\/B><BR><B>{applicant_ethnicity:Hispanic/Latino}<\/B><BR>&nbsp;&nbsp; => <B>{applicant_ethnicity:Mexican}<\/B><BR><BR>support = 0.0406<BR>confidence = 0.363<BR>coverage = 0.112<BR>lift = 8.21<BR>count = 8250<BR>order = 2<BR>id = 2","<B>[3]<\/B><BR><B>{1 rooms,<BR>&nbsp;&nbsp;applicant_ethnicity:Information Not Provided,<BR>&nbsp;&nbsp;applicant_race:Information not provided,<BR>&nbsp;&nbsp;Rocket Mortgage}<\/B><BR>&nbsp;&nbsp; => <B>{Sex Not Available}<\/B><BR><BR>support = 0.0753<BR>confidence = 0.736<BR>coverage = 0.102<BR>lift = 7.83<BR>count = 15300<BR>order = 5<BR>id = 3","<B>[4]<\/B><BR><B>{applicant_ethnicity:Information Not Provided,<BR>&nbsp;&nbsp;applicant_race:Information not provided,<BR>&nbsp;&nbsp;Rocket Mortgage}<\/B><BR>&nbsp;&nbsp; => <B>{Sex Not Available}<\/B><BR><BR>support = 0.076<BR>confidence = 0.735<BR>coverage = 0.103<BR>lift = 7.82<BR>count = 15500<BR>order = 4<BR>id = 4","<B>[5]<\/B><BR><B>{1 rooms,<BR>&nbsp;&nbsp;applicant_ethnicity:Information Not Provided,<BR>&nbsp;&nbsp;applicant_race:Information not provided,<BR>&nbsp;&nbsp;approve,<BR>&nbsp;&nbsp;Rocket Mortgage}<\/B><BR>&nbsp;&nbsp; => <B>{Sex Not Available}<\/B><BR><BR>support = 0.066<BR>confidence = 0.733<BR>coverage = 0.0899<BR>lift = 7.8<BR>count = 13400<BR>order = 6<BR>id = 5","<B>[6]<\/B><BR><B>{applicant_ethnicity:Information Not Provided,<BR>&nbsp;&nbsp;applicant_race:Information not provided,<BR>&nbsp;&nbsp;approve,<BR>&nbsp;&nbsp;Rocket Mortgage}<\/B><BR>&nbsp;&nbsp; => <B>{Sex Not Available}<\/B><BR><BR>support = 0.0665<BR>confidence = 0.732<BR>coverage = 0.0908<BR>lift = 7.79<BR>count = 13500<BR>order = 5<BR>id = 6","<B>[7]<\/B><BR><B>{1 rooms,<BR>&nbsp;&nbsp;applicant_ethnicity:Information Not Provided,<BR>&nbsp;&nbsp;applicant_race:Information not provided,<BR>&nbsp;&nbsp;aus:Desktop Underwriter,<BR>&nbsp;&nbsp;Rocket Mortgage}<\/B><BR>&nbsp;&nbsp; => <B>{Sex Not Available}<\/B><BR><BR>support = 0.051<BR>confidence = 0.726<BR>coverage = 0.0702<BR>lift = 7.73<BR>count = 10400<BR>order = 6<BR>id = 7","<B>[8]<\/B><BR><B>{applicant_ethnicity:Information Not Provided,<BR>&nbsp;&nbsp;applicant_race:Information not provided,<BR>&nbsp;&nbsp;aus:Desktop Underwriter,<BR>&nbsp;&nbsp;Rocket Mortgage}<\/B><BR>&nbsp;&nbsp; => <B>{Sex Not Available}<\/B><BR><BR>support = 0.0513<BR>confidence = 0.725<BR>coverage = 0.0708<BR>lift = 7.72<BR>count = 10400<BR>order = 5<BR>id = 8","<B>[9]<\/B><BR><B>{1 rooms,<BR>&nbsp;&nbsp;applicant_ethnicity:Information Not Provided,<BR>&nbsp;&nbsp;applicant_race:Information not provided,<BR>&nbsp;&nbsp;approve,<BR>&nbsp;&nbsp;aus:Desktop Underwriter,<BR>&nbsp;&nbsp;Rocket Mortgage}<\/B><BR>&nbsp;&nbsp; => <B>{Sex Not Available}<\/B><BR><BR>support = 0.0451<BR>confidence = 0.725<BR>coverage = 0.0623<BR>lift = 7.71<BR>count = 9180<BR>order = 7<BR>id = 9","<B>[10]<\/B><BR><B>{applicant_ethnicity:Information Not Provided,<BR>&nbsp;&nbsp;applicant_race:Information not provided,<BR>&nbsp;&nbsp;approve,<BR>&nbsp;&nbsp;aus:Desktop Underwriter,<BR>&nbsp;&nbsp;Rocket Mortgage}<\/B><BR>&nbsp;&nbsp; => <B>{Sex Not Available}<\/B><BR><BR>support = 0.0454<BR>confidence = 0.723<BR>coverage = 0.0627<BR>lift = 7.7<BR>count = 9230<BR>order = 6<BR>id = 10"],"shape":["box","box","box","box","box","box","box","box","box","circle","circle","circle","circle","circle","circle","circle","circle","circle","circle"],"x":[0.01358058582111088,-0.8969451669345816,0.636411310736672,-0.6009775368491098,0.5613350888830333,0.1944374279745797,1,0.4419714654027795,0.3688459048527462,-1,-0.4721911471690801,0.03170248900685335,0.8361402821893604,0.01616639962119959,0.4688479069063416,0.6959389837186551,0.617475072133856,0.3638071335168587,0.893712660773526],"y":[-0.02908129444856145,0.8134300563142098,-0.4599468206798428,0.6383772115531861,-0.6264132370641345,-0.900597334037808,0.0461956340417129,-0.4419812590045299,-0.5969825681554579,0.4218881788038669,1,-0.3656043904692142,-0.8828331397403469,-0.6142143041377668,-1,-0.1643408179521779,-0.01493026646132423,-0.2110949566729939,-0.54702768727296]},"edges":{"from":[4,2,1,3,5,8,3,5,8,1,3,5,6,8,3,5,6,8,1,3,5,7,8,3,5,7,8,1,3,5,6,7,8,3,5,6,7,8,10,11,12,13,14,15,16,17,18,19],"to":[10,11,12,12,12,12,13,13,13,14,14,14,14,14,15,15,15,15,16,16,16,16,16,17,17,17,17,18,18,18,18,18,18,19,19,19,19,19,2,4,9,9,9,9,9,9,9,9],"arrows":["to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to"]},"nodesToDataframe":true,"edgesToDataframe":true,"options":{"width":"100%","height":"100%","nodes":{"shape":"dot","physics":false},"manipulation":{"enabled":false},"edges":{"smooth":false},"physics":{"stabilization":false},"interaction":{"hover":true,"zoomSpeed":1}},"groups":["1","2"],"width":null,"height":null,"idselection":{"enabled":true,"style":"width: 150px; height: 26px","useLabels":true,"main":"Select by id"},"byselection":{"enabled":false,"style":"width: 150px; height: 26px","multiple":false,"hideColor":"rgba(200,200,200,0.5)","highlight":false},"main":null,"submain":null,"footer":null,"background":"rgba(0, 0, 0, 0)","igraphlayout":{"type":"square"},"tooltipStay":300,"tooltipStyle":"position: fixed;visibility:hidden;padding: 5px;white-space: nowrap;font-family: verdana;font-size:14px;font-color:#000000;background-color: #f5f4ed;-moz-border-radius: 3px;-webkit-border-radius: 3px;border-radius: 3px;border: 1px solid #808074;box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);","highlight":{"enabled":true,"hoverNearest":true,"degree":1,"algorithm":"all","hideColor":"rgba(200,200,200,0.5)","labelOnly":true},"collapse":{"enabled":false,"fit":false,"resetHighlight":true,"clusterOptions":null,"keepCoord":true,"labelSuffix":"(cluster)"}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+</section>
+<section id="examining-organization-specific-rules" class="level3" data-number="C.2.5">
+<h3 data-number="C.2.5" class="anchored" data-anchor-id="examining-organization-specific-rules"><span class="header-section-number">C.2.5</span> Examining Organization Specific Rules</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>NFCU <span class="ot">&lt;-</span> <span class="fu">subset</span>(dat, <span class="at">subset =</span> items <span class="sc">%in%</span> <span class="st">"Navy Federal Credit Union"</span>)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>JPM <span class="ot">&lt;-</span> <span class="fu">subset</span>(dat, <span class="at">subset =</span> items <span class="sc">%in%</span> <span class="st">'JP Morgan'</span>)</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>BOA <span class="ot">&lt;-</span> <span class="fu">subset</span>(dat, <span class="at">subset =</span> items <span class="sc">%in%</span> <span class="st">'Bank of America'</span>)</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>WF <span class="ot">&lt;-</span> <span class="fu">subset</span>(dat, <span class="at">subset =</span> items <span class="sc">%in%</span> <span class="st">'Wells Fargo'</span>)</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>RM <span class="ot">&lt;-</span> <span class="fu">subset</span>(dat, <span class="at">subset =</span> items <span class="sc">%in%</span> <span class="st">'Rocket Mortgage'</span>)</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>get_rules <span class="ot">&lt;-</span> <span class="cf">function</span>(trns,appear,sup,conf,len){</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>    arules<span class="sc">::</span><span class="fu">apriori</span>(</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>        trns,<span class="at">parameter=</span><span class="fu">list</span>(<span class="at">support=</span>sup,<span class="at">confidence=</span>conf,<span class="at">minlen=</span>len) ,</span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>        <span class="at">control=</span><span class="fu">list</span>(<span class="at">verbose=</span>F),</span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>        <span class="at">appearance =</span> appear</span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>NFCU_app <span class="ot">&lt;-</span> <span class="fu">get_rules</span>(<span class="at">trns=</span>NFCU,<span class="at">appear=</span><span class="fu">list</span>(<span class="at">default=</span><span class="st">'lhs'</span>,<span class="at">rhs=</span><span class="st">'approve'</span>),<span class="at">sup=</span><span class="fl">0.04</span>,<span class="at">conf=</span><span class="fl">0.01</span>,<span class="at">len=</span><span class="dv">3</span>)</span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>NFCU_den <span class="ot">&lt;-</span> <span class="fu">get_rules</span>(<span class="at">trns=</span>NFCU,<span class="at">appear=</span><span class="fu">list</span>(<span class="at">default=</span><span class="st">'lhs'</span>,<span class="at">rhs=</span><span class="st">'deny'</span>),<span class="at">sup=</span><span class="fl">0.04</span>,<span class="at">conf=</span><span class="fl">0.01</span>,<span class="at">len=</span><span class="dv">3</span>)</span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a>JPM_app <span class="ot">&lt;-</span> <span class="fu">get_rules</span>(<span class="at">trns=</span>JPM,<span class="at">appear=</span><span class="fu">list</span>(<span class="at">default=</span><span class="st">'lhs'</span>,<span class="at">rhs=</span><span class="st">'approve'</span>),<span class="at">sup=</span><span class="fl">0.04</span>,<span class="at">conf=</span><span class="fl">0.01</span>,<span class="at">len=</span><span class="dv">3</span>)</span>
+<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a>JPM_den <span class="ot">&lt;-</span> <span class="fu">get_rules</span>(<span class="at">trns=</span>JPM,<span class="at">appear=</span><span class="fu">list</span>(<span class="at">default=</span><span class="st">'lhs'</span>,<span class="at">rhs=</span><span class="st">'deny'</span>),<span class="at">sup=</span><span class="fl">0.04</span>,<span class="at">conf=</span><span class="fl">0.01</span>,<span class="at">len=</span><span class="dv">3</span>)</span>
+<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-21"><a href="#cb19-21" aria-hidden="true" tabindex="-1"></a>BOA_app <span class="ot">&lt;-</span> <span class="fu">get_rules</span>(<span class="at">trns=</span>BOA,<span class="at">appear=</span><span class="fu">list</span>(<span class="at">default=</span><span class="st">'lhs'</span>,<span class="at">rhs=</span><span class="st">'approve'</span>),<span class="at">sup=</span><span class="fl">0.04</span>,<span class="at">conf=</span><span class="fl">0.01</span>,<span class="at">len=</span><span class="dv">3</span>)</span>
+<span id="cb19-22"><a href="#cb19-22" aria-hidden="true" tabindex="-1"></a>BOA_den <span class="ot">&lt;-</span> <span class="fu">get_rules</span>(<span class="at">trns=</span>BOA,<span class="at">appear=</span><span class="fu">list</span>(<span class="at">default=</span><span class="st">'lhs'</span>,<span class="at">rhs=</span><span class="st">'deny'</span>),<span class="at">sup=</span><span class="fl">0.04</span>,<span class="at">conf=</span><span class="fl">0.01</span>,<span class="at">len=</span><span class="dv">3</span>)</span>
+<span id="cb19-23"><a href="#cb19-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-24"><a href="#cb19-24" aria-hidden="true" tabindex="-1"></a>WF_app <span class="ot">&lt;-</span> <span class="fu">get_rules</span>(<span class="at">trns=</span>WF,<span class="at">appear=</span><span class="fu">list</span>(<span class="at">default=</span><span class="st">'lhs'</span>,<span class="at">rhs=</span><span class="st">'approve'</span>),<span class="at">sup=</span><span class="fl">0.04</span>,<span class="at">conf=</span><span class="fl">0.01</span>,<span class="at">len=</span><span class="dv">3</span>)</span>
+<span id="cb19-25"><a href="#cb19-25" aria-hidden="true" tabindex="-1"></a>WF_den <span class="ot">&lt;-</span> <span class="fu">get_rules</span>(<span class="at">trns=</span>WF,<span class="at">appear=</span><span class="fu">list</span>(<span class="at">default=</span><span class="st">'lhs'</span>,<span class="at">rhs=</span><span class="st">'deny'</span>),<span class="at">sup=</span><span class="fl">0.04</span>,<span class="at">conf=</span><span class="fl">0.01</span>,<span class="at">len=</span><span class="dv">3</span>)</span>
+<span id="cb19-26"><a href="#cb19-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-27"><a href="#cb19-27" aria-hidden="true" tabindex="-1"></a>RM_app <span class="ot">&lt;-</span> <span class="fu">get_rules</span>(<span class="at">trns=</span>RM,<span class="at">appear=</span><span class="fu">list</span>(<span class="at">default=</span><span class="st">'lhs'</span>,<span class="at">rhs=</span><span class="st">'approve'</span>),<span class="at">sup=</span><span class="fl">0.04</span>,<span class="at">conf=</span><span class="fl">0.01</span>,<span class="at">len=</span><span class="dv">3</span>)</span>
+<span id="cb19-28"><a href="#cb19-28" aria-hidden="true" tabindex="-1"></a>RM_den <span class="ot">&lt;-</span> <span class="fu">get_rules</span>(<span class="at">trns=</span>RM,<span class="at">appear=</span><span class="fu">list</span>(<span class="at">default=</span><span class="st">'lhs'</span>,<span class="at">rhs=</span><span class="st">'deny'</span>),<span class="at">sup=</span><span class="fl">0.04</span>,<span class="at">conf=</span><span class="fl">0.01</span>,<span class="at">len=</span><span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">sort</span>(NFCU_den,<span class="at">by=</span><span class="st">'lift'</span>)[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>],<span class="at">engine=</span><span class="st">'html'</span>,<span class="at">method=</span><span class="st">'graph'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="visNetwork html-widget html-fill-item" id="htmlwidget-dce90a287b402c689af3" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-dce90a287b402c689af3">{"x":{"nodes":{"id":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19],"label":["1 rooms","applicant_ethnicity:Not Hispanic/Latino","applicant_race:Black/African American","debt_to_income_ratio:>80","deny","income:0-20","interest_rate:41-60","loan_to_value_ratio:>80","Navy Federal Credit Union","rule 1","rule 2","rule 3","rule 4","rule 5","rule 6","rule 7","rule 8","rule 9","rule 10"],"group":[1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2],"value":[1,1,1,1,1,1,1,1,1,14.1204819277109,14.1204819277109,1,1,37.97590361445782,37.97590361445782,100,100,26.04819277108436,26.04819277108436],"color":["#CBD2FC","#CBD2FC","#CBD2FC","#CBD2FC","#CBD2FC","#CBD2FC","#CBD2FC","#CBD2FC","#CBD2FC","#EE1B1B","#EE1B1B","#EE2525","#EE2525","#EED5D5","#EED5D5","#EED9D9","#EED9D9","#EEDCDC","#EEDCDC"],"title":["1 rooms","applicant_ethnicity:Not Hispanic/Latino","applicant_race:Black/African American","debt_to_income_ratio:>80","deny","income:0-20","interest_rate:41-60","loan_to_value_ratio:>80","Navy Federal Credit Union","<B>[1]<\/B><BR><B>{debt_to_income_ratio:>80,<BR>&nbsp;&nbsp;income:0-20,<BR>&nbsp;&nbsp;interest_rate:41-60}<\/B><BR>&nbsp;&nbsp; => <B>{deny}<\/B><BR><BR>support = 0.0419<BR>confidence = 0.978<BR>coverage = 0.0429<BR>lift = 2.94<BR>count = 656<BR>order = 4<BR>id = 1","<B>[2]<\/B><BR><B>{debt_to_income_ratio:>80,<BR>&nbsp;&nbsp;income:0-20,<BR>&nbsp;&nbsp;interest_rate:41-60,<BR>&nbsp;&nbsp;Navy Federal Credit Union}<\/B><BR>&nbsp;&nbsp; => <B>{deny}<\/B><BR><BR>support = 0.0419<BR>confidence = 0.978<BR>coverage = 0.0429<BR>lift = 2.94<BR>count = 656<BR>order = 5<BR>id = 2","<B>[3]<\/B><BR><B>{1 rooms,<BR>&nbsp;&nbsp;debt_to_income_ratio:>80,<BR>&nbsp;&nbsp;income:0-20,<BR>&nbsp;&nbsp;interest_rate:41-60}<\/B><BR>&nbsp;&nbsp; => <B>{deny}<\/B><BR><BR>support = 0.0412<BR>confidence = 0.977<BR>coverage = 0.0422<BR>lift = 2.94<BR>count = 645<BR>order = 5<BR>id = 3","<B>[4]<\/B><BR><B>{1 rooms,<BR>&nbsp;&nbsp;debt_to_income_ratio:>80,<BR>&nbsp;&nbsp;income:0-20,<BR>&nbsp;&nbsp;interest_rate:41-60,<BR>&nbsp;&nbsp;Navy Federal Credit Union}<\/B><BR>&nbsp;&nbsp; => <B>{deny}<\/B><BR><BR>support = 0.0412<BR>confidence = 0.977<BR>coverage = 0.0422<BR>lift = 2.94<BR>count = 645<BR>order = 6<BR>id = 4","<B>[5]<\/B><BR><B>{applicant_ethnicity:Not Hispanic/Latino,<BR>&nbsp;&nbsp;applicant_race:Black/African American,<BR>&nbsp;&nbsp;debt_to_income_ratio:>80,<BR>&nbsp;&nbsp;interest_rate:41-60}<\/B><BR>&nbsp;&nbsp; => <B>{deny}<\/B><BR><BR>support = 0.0432<BR>confidence = 0.966<BR>coverage = 0.0447<BR>lift = 2.9<BR>count = 676<BR>order = 5<BR>id = 5","<B>[6]<\/B><BR><B>{applicant_ethnicity:Not Hispanic/Latino,<BR>&nbsp;&nbsp;applicant_race:Black/African American,<BR>&nbsp;&nbsp;debt_to_income_ratio:>80,<BR>&nbsp;&nbsp;interest_rate:41-60,<BR>&nbsp;&nbsp;Navy Federal Credit Union}<\/B><BR>&nbsp;&nbsp; => <B>{deny}<\/B><BR><BR>support = 0.0432<BR>confidence = 0.966<BR>coverage = 0.0447<BR>lift = 2.9<BR>count = 676<BR>order = 6<BR>id = 6","<B>[7]<\/B><BR><B>{applicant_race:Black/African American,<BR>&nbsp;&nbsp;debt_to_income_ratio:>80,<BR>&nbsp;&nbsp;interest_rate:41-60}<\/B><BR>&nbsp;&nbsp; => <B>{deny}<\/B><BR><BR>support = 0.0465<BR>confidence = 0.966<BR>coverage = 0.0482<BR>lift = 2.9<BR>count = 728<BR>order = 4<BR>id = 7","<B>[8]<\/B><BR><B>{applicant_race:Black/African American,<BR>&nbsp;&nbsp;debt_to_income_ratio:>80,<BR>&nbsp;&nbsp;interest_rate:41-60,<BR>&nbsp;&nbsp;Navy Federal Credit Union}<\/B><BR>&nbsp;&nbsp; => <B>{deny}<\/B><BR><BR>support = 0.0465<BR>confidence = 0.966<BR>coverage = 0.0482<BR>lift = 2.9<BR>count = 728<BR>order = 5<BR>id = 8","<B>[9]<\/B><BR><B>{applicant_ethnicity:Not Hispanic/Latino,<BR>&nbsp;&nbsp;debt_to_income_ratio:>80,<BR>&nbsp;&nbsp;interest_rate:41-60,<BR>&nbsp;&nbsp;loan_to_value_ratio:>80}<\/B><BR>&nbsp;&nbsp; => <B>{deny}<\/B><BR><BR>support = 0.0425<BR>confidence = 0.965<BR>coverage = 0.0441<BR>lift = 2.9<BR>count = 666<BR>order = 5<BR>id = 9","<B>[10]<\/B><BR><B>{applicant_ethnicity:Not Hispanic/Latino,<BR>&nbsp;&nbsp;debt_to_income_ratio:>80,<BR>&nbsp;&nbsp;interest_rate:41-60,<BR>&nbsp;&nbsp;loan_to_value_ratio:>80,<BR>&nbsp;&nbsp;Navy Federal Credit Union}<\/B><BR>&nbsp;&nbsp; => <B>{deny}<\/B><BR><BR>support = 0.0425<BR>confidence = 0.965<BR>coverage = 0.0441<BR>lift = 2.9<BR>count = 666<BR>order = 6<BR>id = 10"],"shape":["box","box","box","box","box","box","box","box","box","circle","circle","circle","circle","circle","circle","circle","circle","circle","circle"],"x":[-0.5804626824680036,0.349271182055837,1,-0.1605940878068234,-0.1717397145912101,-1,-0.0255018291945095,-0.492411816199043,0.09677985945879386,-0.7884787183386077,-0.5416773524342144,-0.5330276747685769,-0.2875525907991519,0.4251971136680279,0.5208664979168052,0.5228557727655214,0.3489392038501493,-0.2395723307526347,-0.1677702130562458],"y":[1,-0.6969191860974738,-0.1185805401208199,-0.1000053723509657,0.01568291589105675,0.45514292643025,-0.001854516672898154,-1,0.2142781294103486,0.001337873196609163,0.1982745040820992,0.4588309375269259,0.4784118121920617,-0.3605134017582934,-0.115164697018572,0.1894530545938702,-0.1033792914069109,-0.582490484418885,-0.4179260614827733]},"edges":{"from":[4,6,7,4,6,7,9,1,4,6,7,1,4,6,7,9,2,3,4,7,2,3,4,7,9,3,4,7,3,4,7,9,2,4,7,8,2,4,7,8,9,10,11,12,13,14,15,16,17,18,19],"to":[10,10,10,11,11,11,11,12,12,12,12,13,13,13,13,13,14,14,14,14,15,15,15,15,15,16,16,16,17,17,17,17,18,18,18,18,19,19,19,19,19,5,5,5,5,5,5,5,5,5,5],"arrows":["to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to"]},"nodesToDataframe":true,"edgesToDataframe":true,"options":{"width":"100%","height":"100%","nodes":{"shape":"dot","physics":false},"manipulation":{"enabled":false},"edges":{"smooth":false},"physics":{"stabilization":false},"interaction":{"hover":true,"zoomSpeed":1}},"groups":["1","2"],"width":null,"height":null,"idselection":{"enabled":true,"style":"width: 150px; height: 26px","useLabels":true,"main":"Select by id"},"byselection":{"enabled":false,"style":"width: 150px; height: 26px","multiple":false,"hideColor":"rgba(200,200,200,0.5)","highlight":false},"main":null,"submain":null,"footer":null,"background":"rgba(0, 0, 0, 0)","igraphlayout":{"type":"square"},"tooltipStay":300,"tooltipStyle":"position: fixed;visibility:hidden;padding: 5px;white-space: nowrap;font-family: verdana;font-size:14px;font-color:#000000;background-color: #f5f4ed;-moz-border-radius: 3px;-webkit-border-radius: 3px;border-radius: 3px;border: 1px solid #808074;box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);","highlight":{"enabled":true,"hoverNearest":true,"degree":1,"algorithm":"all","hideColor":"rgba(200,200,200,0.5)","labelOnly":true},"collapse":{"enabled":false,"fit":false,"resetHighlight":true,"clusterOptions":null,"keepCoord":true,"labelSuffix":"(cluster)"}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">sort</span>(JPM_den,<span class="at">by=</span><span class="st">'lift'</span>)[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>],<span class="at">engine=</span><span class="st">'html'</span>,<span class="at">method=</span><span class="st">'graph'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="visNetwork html-widget html-fill-item" id="htmlwidget-0fabf393494d52af1fad" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-0fabf393494d52af1fad">{"x":{"nodes":{"id":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17],"label":["1 rooms","aus:Desktop Underwriter","aus:Loan Prospector/Product Advisor","aus:Other","deny","interest_rate:41-60","JP Morgan","rule 1","rule 2","rule 3","rule 4","rule 5","rule 6","rule 7","rule 8","rule 9","rule 10"],"group":[1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2],"value":[1,1,1,1,1,1,1,100,100,79.97752808988763,79.97752808988763,79.97752808988763,79.97752808988763,19.91011235955047,19.91011235955047,1,1],"color":["#CBD2FC","#CBD2FC","#CBD2FC","#CBD2FC","#CBD2FC","#CBD2FC","#CBD2FC","#EE1B1B","#EE1B1B","#EE3D3D","#EE3D3D","#EE3D3D","#EE3D3D","#EECBCB","#EECBCB","#EEDCDC","#EEDCDC"],"title":["1 rooms","aus:Desktop Underwriter","aus:Loan Prospector/Product Advisor","aus:Other","deny","interest_rate:41-60","JP Morgan","<B>[1]<\/B><BR><B>{aus:Desktop Underwriter,<BR>&nbsp;&nbsp;aus:Other,<BR>&nbsp;&nbsp;interest_rate:41-60}<\/B><BR>&nbsp;&nbsp; => <B>{deny}<\/B><BR><BR>support = 0.0482<BR>confidence = 0.451<BR>coverage = 0.107<BR>lift = 4.75<BR>count = 1970<BR>order = 4<BR>id = 1","<B>[2]<\/B><BR><B>{aus:Desktop Underwriter,<BR>&nbsp;&nbsp;aus:Other,<BR>&nbsp;&nbsp;interest_rate:41-60,<BR>&nbsp;&nbsp;JP Morgan}<\/B><BR>&nbsp;&nbsp; => <B>{deny}<\/B><BR><BR>support = 0.0482<BR>confidence = 0.451<BR>coverage = 0.107<BR>lift = 4.75<BR>count = 1970<BR>order = 5<BR>id = 2","<B>[3]<\/B><BR><B>{aus:Desktop Underwriter,<BR>&nbsp;&nbsp;aus:Loan Prospector/Product Advisor,<BR>&nbsp;&nbsp;interest_rate:41-60}<\/B><BR>&nbsp;&nbsp; => <B>{deny}<\/B><BR><BR>support = 0.0477<BR>confidence = 0.45<BR>coverage = 0.106<BR>lift = 4.74<BR>count = 1950<BR>order = 4<BR>id = 3","<B>[4]<\/B><BR><B>{aus:Desktop Underwriter,<BR>&nbsp;&nbsp;aus:Loan Prospector/Product Advisor,<BR>&nbsp;&nbsp;aus:Other,<BR>&nbsp;&nbsp;interest_rate:41-60}<\/B><BR>&nbsp;&nbsp; => <B>{deny}<\/B><BR><BR>support = 0.0477<BR>confidence = 0.45<BR>coverage = 0.106<BR>lift = 4.74<BR>count = 1950<BR>order = 5<BR>id = 4","<B>[5]<\/B><BR><B>{aus:Desktop Underwriter,<BR>&nbsp;&nbsp;aus:Loan Prospector/Product Advisor,<BR>&nbsp;&nbsp;interest_rate:41-60,<BR>&nbsp;&nbsp;JP Morgan}<\/B><BR>&nbsp;&nbsp; => <B>{deny}<\/B><BR><BR>support = 0.0477<BR>confidence = 0.45<BR>coverage = 0.106<BR>lift = 4.74<BR>count = 1950<BR>order = 5<BR>id = 5","<B>[6]<\/B><BR><B>{aus:Desktop Underwriter,<BR>&nbsp;&nbsp;aus:Loan Prospector/Product Advisor,<BR>&nbsp;&nbsp;aus:Other,<BR>&nbsp;&nbsp;interest_rate:41-60,<BR>&nbsp;&nbsp;JP Morgan}<\/B><BR>&nbsp;&nbsp; => <B>{deny}<\/B><BR><BR>support = 0.0477<BR>confidence = 0.45<BR>coverage = 0.106<BR>lift = 4.74<BR>count = 1950<BR>order = 6<BR>id = 6","<B>[7]<\/B><BR><B>{1 rooms,<BR>&nbsp;&nbsp;aus:Desktop Underwriter,<BR>&nbsp;&nbsp;aus:Other,<BR>&nbsp;&nbsp;interest_rate:41-60}<\/B><BR>&nbsp;&nbsp; => <B>{deny}<\/B><BR><BR>support = 0.0464<BR>confidence = 0.444<BR>coverage = 0.104<BR>lift = 4.69<BR>count = 1900<BR>order = 5<BR>id = 7","<B>[8]<\/B><BR><B>{1 rooms,<BR>&nbsp;&nbsp;aus:Desktop Underwriter,<BR>&nbsp;&nbsp;aus:Other,<BR>&nbsp;&nbsp;interest_rate:41-60,<BR>&nbsp;&nbsp;JP Morgan}<\/B><BR>&nbsp;&nbsp; => <B>{deny}<\/B><BR><BR>support = 0.0464<BR>confidence = 0.444<BR>coverage = 0.104<BR>lift = 4.69<BR>count = 1900<BR>order = 6<BR>id = 8","<B>[9]<\/B><BR><B>{1 rooms,<BR>&nbsp;&nbsp;aus:Desktop Underwriter,<BR>&nbsp;&nbsp;aus:Loan Prospector/Product Advisor,<BR>&nbsp;&nbsp;interest_rate:41-60}<\/B><BR>&nbsp;&nbsp; => <B>{deny}<\/B><BR><BR>support = 0.046<BR>confidence = 0.444<BR>coverage = 0.104<BR>lift = 4.68<BR>count = 1880<BR>order = 5<BR>id = 9","<B>[10]<\/B><BR><B>{1 rooms,<BR>&nbsp;&nbsp;aus:Desktop Underwriter,<BR>&nbsp;&nbsp;aus:Loan Prospector/Product Advisor,<BR>&nbsp;&nbsp;aus:Other,<BR>&nbsp;&nbsp;interest_rate:41-60}<\/B><BR>&nbsp;&nbsp; => <B>{deny}<\/B><BR><BR>support = 0.046<BR>confidence = 0.444<BR>coverage = 0.104<BR>lift = 4.68<BR>count = 1880<BR>order = 6<BR>id = 10"],"shape":["box","box","box","box","box","box","box","circle","circle","circle","circle","circle","circle","circle","circle","circle","circle"],"x":[1,0.06101836026824681,0.3916860687418151,-0.02291144726804473,0.06357696472965446,0.0457003540256169,-1,-0.4433316581612294,-0.6264632167834959,0.01141635879396152,0.5018305456775205,-0.4448835170725884,-0.4082664235915315,0.4923212860474804,-0.02477556543484682,0.8623256053584889,0.6509909164530197],"y":[-1,0.1384635533702763,0.876671020836874,-0.6104146738528335,-0.05975013101161375,-0.2439953747962884,-0.124461735566761,-0.8927767836867597,-0.3709035122214468,1,0.369194505396452,0.6914649522201304,0.2641366151603417,-0.8992248348250464,-0.9633390592138884,0.09581691478385101,-0.2632387639605472]},"edges":{"from":[2,4,6,2,4,6,7,2,3,6,2,3,4,6,2,3,6,7,2,3,4,6,7,1,2,4,6,1,2,4,6,7,1,2,3,6,1,2,3,4,6,8,9,10,11,12,13,14,15,16,17],"to":[8,8,8,9,9,9,9,10,10,10,11,11,11,11,12,12,12,12,13,13,13,13,13,14,14,14,14,15,15,15,15,15,16,16,16,16,17,17,17,17,17,5,5,5,5,5,5,5,5,5,5],"arrows":["to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to"]},"nodesToDataframe":true,"edgesToDataframe":true,"options":{"width":"100%","height":"100%","nodes":{"shape":"dot","physics":false},"manipulation":{"enabled":false},"edges":{"smooth":false},"physics":{"stabilization":false},"interaction":{"hover":true,"zoomSpeed":1}},"groups":["1","2"],"width":null,"height":null,"idselection":{"enabled":true,"style":"width: 150px; height: 26px","useLabels":true,"main":"Select by id"},"byselection":{"enabled":false,"style":"width: 150px; height: 26px","multiple":false,"hideColor":"rgba(200,200,200,0.5)","highlight":false},"main":null,"submain":null,"footer":null,"background":"rgba(0, 0, 0, 0)","igraphlayout":{"type":"square"},"tooltipStay":300,"tooltipStyle":"position: fixed;visibility:hidden;padding: 5px;white-space: nowrap;font-family: verdana;font-size:14px;font-color:#000000;background-color: #f5f4ed;-moz-border-radius: 3px;-webkit-border-radius: 3px;border-radius: 3px;border: 1px solid #808074;box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);","highlight":{"enabled":true,"hoverNearest":true,"degree":1,"algorithm":"all","hideColor":"rgba(200,200,200,0.5)","labelOnly":true},"collapse":{"enabled":false,"fit":false,"resetHighlight":true,"clusterOptions":null,"keepCoord":true,"labelSuffix":"(cluster)"}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">sort</span>(BOA_den,<span class="at">by=</span><span class="st">'lift'</span>)[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>],<span class="at">engine=</span><span class="st">'html'</span>,<span class="at">method=</span><span class="st">'graph'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="visNetwork html-widget html-fill-item" id="htmlwidget-115e0fb83f86147da4c6" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-115e0fb83f86147da4c6">{"x":{"nodes":{"id":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18],"label":["1 rooms","applicant_ethnicity:Not Hispanic/Latino","applicant_race:White","aus:Not applicable","Bank of America","debt_to_income_ratio:>80","deny","interest_rate:21-40","rule 1","rule 2","rule 3","rule 4","rule 5","rule 6","rule 7","rule 8","rule 9","rule 10"],"group":[1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2],"value":[1,1,1,1,1,1,1,1,92.6333938294011,92.6333938294011,100,100,12.49909255898366,12.49909255898366,1,1,16.81125226860252,16.81125226860252],"color":["#CBD2FC","#CBD2FC","#CBD2FC","#CBD2FC","#CBD2FC","#CBD2FC","#CBD2FC","#CBD2FC","#EE1B1B","#EE1B1B","#EE4747","#EE4747","#EEB7B7","#EEB7B7","#EED2D2","#EED2D2","#EEDCDC","#EEDCDC"],"title":["1 rooms","applicant_ethnicity:Not Hispanic/Latino","applicant_race:White","aus:Not applicable","Bank of America","debt_to_income_ratio:>80","deny","interest_rate:21-40","<B>[1]<\/B><BR><B>{1 rooms,<BR>&nbsp;&nbsp;aus:Not applicable,<BR>&nbsp;&nbsp;debt_to_income_ratio:>80,<BR>&nbsp;&nbsp;interest_rate:21-40}<\/B><BR>&nbsp;&nbsp; => <B>{deny}<\/B><BR><BR>support = 0.0619<BR>confidence = 0.993<BR>coverage = 0.0623<BR>lift = 4.68<BR>count = 1480<BR>order = 5<BR>id = 1","<B>[2]<\/B><BR><B>{1 rooms,<BR>&nbsp;&nbsp;aus:Not applicable,<BR>&nbsp;&nbsp;Bank of America,<BR>&nbsp;&nbsp;debt_to_income_ratio:>80,<BR>&nbsp;&nbsp;interest_rate:21-40}<\/B><BR>&nbsp;&nbsp; => <B>{deny}<\/B><BR><BR>support = 0.0619<BR>confidence = 0.993<BR>coverage = 0.0623<BR>lift = 4.68<BR>count = 1480<BR>order = 6<BR>id = 2","<B>[3]<\/B><BR><B>{aus:Not applicable,<BR>&nbsp;&nbsp;debt_to_income_ratio:>80,<BR>&nbsp;&nbsp;interest_rate:21-40}<\/B><BR>&nbsp;&nbsp; => <B>{deny}<\/B><BR><BR>support = 0.0636<BR>confidence = 0.993<BR>coverage = 0.0641<BR>lift = 4.68<BR>count = 1520<BR>order = 4<BR>id = 3","<B>[4]<\/B><BR><B>{aus:Not applicable,<BR>&nbsp;&nbsp;Bank of America,<BR>&nbsp;&nbsp;debt_to_income_ratio:>80,<BR>&nbsp;&nbsp;interest_rate:21-40}<\/B><BR>&nbsp;&nbsp; => <B>{deny}<\/B><BR><BR>support = 0.0636<BR>confidence = 0.993<BR>coverage = 0.0641<BR>lift = 4.68<BR>count = 1520<BR>order = 5<BR>id = 4","<B>[5]<\/B><BR><B>{1 rooms,<BR>&nbsp;&nbsp;applicant_ethnicity:Not Hispanic/Latino,<BR>&nbsp;&nbsp;aus:Not applicable,<BR>&nbsp;&nbsp;debt_to_income_ratio:>80,<BR>&nbsp;&nbsp;interest_rate:21-40}<\/B><BR>&nbsp;&nbsp; => <B>{deny}<\/B><BR><BR>support = 0.0433<BR>confidence = 0.991<BR>coverage = 0.0437<BR>lift = 4.67<BR>count = 1040<BR>order = 6<BR>id = 5","<B>[6]<\/B><BR><B>{1 rooms,<BR>&nbsp;&nbsp;applicant_ethnicity:Not Hispanic/Latino,<BR>&nbsp;&nbsp;aus:Not applicable,<BR>&nbsp;&nbsp;Bank of America,<BR>&nbsp;&nbsp;debt_to_income_ratio:>80,<BR>&nbsp;&nbsp;interest_rate:21-40}<\/B><BR>&nbsp;&nbsp; => <B>{deny}<\/B><BR><BR>support = 0.0433<BR>confidence = 0.991<BR>coverage = 0.0437<BR>lift = 4.67<BR>count = 1040<BR>order = 7<BR>id = 6","<B>[7]<\/B><BR><B>{1 rooms,<BR>&nbsp;&nbsp;applicant_race:White,<BR>&nbsp;&nbsp;aus:Not applicable,<BR>&nbsp;&nbsp;debt_to_income_ratio:>80,<BR>&nbsp;&nbsp;interest_rate:21-40}<\/B><BR>&nbsp;&nbsp; => <B>{deny}<\/B><BR><BR>support = 0.0406<BR>confidence = 0.991<BR>coverage = 0.041<BR>lift = 4.67<BR>count = 974<BR>order = 6<BR>id = 7","<B>[8]<\/B><BR><B>{1 rooms,<BR>&nbsp;&nbsp;applicant_race:White,<BR>&nbsp;&nbsp;aus:Not applicable,<BR>&nbsp;&nbsp;Bank of America,<BR>&nbsp;&nbsp;debt_to_income_ratio:>80,<BR>&nbsp;&nbsp;interest_rate:21-40}<\/B><BR>&nbsp;&nbsp; => <B>{deny}<\/B><BR><BR>support = 0.0406<BR>confidence = 0.991<BR>coverage = 0.041<BR>lift = 4.67<BR>count = 974<BR>order = 7<BR>id = 8","<B>[9]<\/B><BR><B>{applicant_ethnicity:Not Hispanic/Latino,<BR>&nbsp;&nbsp;aus:Not applicable,<BR>&nbsp;&nbsp;debt_to_income_ratio:>80,<BR>&nbsp;&nbsp;interest_rate:21-40}<\/B><BR>&nbsp;&nbsp; => <B>{deny}<\/B><BR><BR>support = 0.0443<BR>confidence = 0.991<BR>coverage = 0.0447<BR>lift = 4.67<BR>count = 1060<BR>order = 5<BR>id = 9","<B>[10]<\/B><BR><B>{applicant_ethnicity:Not Hispanic/Latino,<BR>&nbsp;&nbsp;aus:Not applicable,<BR>&nbsp;&nbsp;Bank of America,<BR>&nbsp;&nbsp;debt_to_income_ratio:>80,<BR>&nbsp;&nbsp;interest_rate:21-40}<\/B><BR>&nbsp;&nbsp; => <B>{deny}<\/B><BR><BR>support = 0.0443<BR>confidence = 0.991<BR>coverage = 0.0447<BR>lift = 4.67<BR>count = 1060<BR>order = 6<BR>id = 10"],"shape":["box","box","box","box","box","box","box","box","circle","circle","circle","circle","circle","circle","circle","circle","circle","circle"],"x":[0.6637404493683732,-0.6121926286680982,1,0.2709729403452719,-1,0.09136180087021528,-0.1122998546458931,0.07224615482867547,0.5277014746305024,-0.2625679942831969,0.8514851766159521,-0.7060940444467201,0.3162485023399566,-0.4034353704243898,0.8589628006743213,0.1367659219163682,-0.1189120868451072,-0.7791171894124544],"y":[-0.02744038314042618,-1,1,-0.147214694725245,0.2575978885205499,-0.2499185044906048,-0.1179863055387175,-0.01710282888408898,0.2644570546770759,0.2984323341810047,-0.4367585753054539,0.04005578642410468,-0.6402301583858041,-0.3824898935996036,0.2921421342905259,0.4549510486871731,-0.7221116543478581,-0.3573083201399737]},"edges":{"from":[1,4,6,8,1,4,5,6,8,4,6,8,4,5,6,8,1,2,4,6,8,1,2,4,5,6,8,1,3,4,6,8,1,3,4,5,6,8,2,4,6,8,2,4,5,6,8,9,10,11,12,13,14,15,16,17,18],"to":[9,9,9,9,10,10,10,10,10,11,11,11,12,12,12,12,13,13,13,13,13,14,14,14,14,14,14,15,15,15,15,15,16,16,16,16,16,16,17,17,17,17,18,18,18,18,18,7,7,7,7,7,7,7,7,7,7],"arrows":["to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to"]},"nodesToDataframe":true,"edgesToDataframe":true,"options":{"width":"100%","height":"100%","nodes":{"shape":"dot","physics":false},"manipulation":{"enabled":false},"edges":{"smooth":false},"physics":{"stabilization":false},"interaction":{"hover":true,"zoomSpeed":1}},"groups":["1","2"],"width":null,"height":null,"idselection":{"enabled":true,"style":"width: 150px; height: 26px","useLabels":true,"main":"Select by id"},"byselection":{"enabled":false,"style":"width: 150px; height: 26px","multiple":false,"hideColor":"rgba(200,200,200,0.5)","highlight":false},"main":null,"submain":null,"footer":null,"background":"rgba(0, 0, 0, 0)","igraphlayout":{"type":"square"},"tooltipStay":300,"tooltipStyle":"position: fixed;visibility:hidden;padding: 5px;white-space: nowrap;font-family: verdana;font-size:14px;font-color:#000000;background-color: #f5f4ed;-moz-border-radius: 3px;-webkit-border-radius: 3px;border-radius: 3px;border: 1px solid #808074;box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);","highlight":{"enabled":true,"hoverNearest":true,"degree":1,"algorithm":"all","hideColor":"rgba(200,200,200,0.5)","labelOnly":true},"collapse":{"enabled":false,"fit":false,"resetHighlight":true,"clusterOptions":null,"keepCoord":true,"labelSuffix":"(cluster)"}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">sort</span>(WF_den,<span class="at">by=</span><span class="st">'lift'</span>)[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>],<span class="at">engine=</span><span class="st">'html'</span>,<span class="at">method=</span><span class="st">'graph'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="visNetwork html-widget html-fill-item" id="htmlwidget-9a13ec3e7f066373c50f" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-9a13ec3e7f066373c50f">{"x":{"nodes":{"id":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18],"label":["1 rooms","aus:Desktop Underwriter","aus:Internal Proprietary","aus:Loan Prospector/Product Advisor","debt_to_income_ratio:>80","deny","interest_rate:21-40","Wells Fargo","rule 1","rule 2","rule 3","rule 4","rule 5","rule 6","rule 7","rule 8","rule 9","rule 10"],"group":[1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2],"value":[1,1,1,1,1,1,1,1,100,100,53.10526315789473,53.10526315789473,53.10526315789473,53.10526315789473,47.89473684210526,47.89473684210526,1,1],"color":["#CBD2FC","#CBD2FC","#CBD2FC","#CBD2FC","#CBD2FC","#CBD2FC","#CBD2FC","#CBD2FC","#EE1B1B","#EE1B1B","#EE8E8E","#EE8E8E","#EE8E8E","#EE8E8E","#EE9B9B","#EE9B9B","#EEDCDC","#EEDCDC"],"title":["1 rooms","aus:Desktop Underwriter","aus:Internal Proprietary","aus:Loan Prospector/Product Advisor","debt_to_income_ratio:>80","deny","interest_rate:21-40","Wells Fargo","<B>[1]<\/B><BR><B>{aus:Internal Proprietary,<BR>&nbsp;&nbsp;aus:Loan Prospector/Product Advisor,<BR>&nbsp;&nbsp;debt_to_income_ratio:>80,<BR>&nbsp;&nbsp;interest_rate:21-40}<\/B><BR>&nbsp;&nbsp; => <B>{deny}<\/B><BR><BR>support = 0.0602<BR>confidence = 0.989<BR>coverage = 0.0609<BR>lift = 6.2<BR>count = 1560<BR>order = 5<BR>id = 1","<B>[2]<\/B><BR><B>{aus:Internal Proprietary,<BR>&nbsp;&nbsp;aus:Loan Prospector/Product Advisor,<BR>&nbsp;&nbsp;debt_to_income_ratio:>80,<BR>&nbsp;&nbsp;interest_rate:21-40,<BR>&nbsp;&nbsp;Wells Fargo}<\/B><BR>&nbsp;&nbsp; => <B>{deny}<\/B><BR><BR>support = 0.0602<BR>confidence = 0.989<BR>coverage = 0.0609<BR>lift = 6.2<BR>count = 1560<BR>order = 6<BR>id = 2","<B>[3]<\/B><BR><B>{aus:Desktop Underwriter,<BR>&nbsp;&nbsp;aus:Loan Prospector/Product Advisor,<BR>&nbsp;&nbsp;debt_to_income_ratio:>80,<BR>&nbsp;&nbsp;interest_rate:21-40}<\/B><BR>&nbsp;&nbsp; => <B>{deny}<\/B><BR><BR>support = 0.0595<BR>confidence = 0.989<BR>coverage = 0.0602<BR>lift = 6.2<BR>count = 1540<BR>order = 5<BR>id = 3","<B>[4]<\/B><BR><B>{aus:Desktop Underwriter,<BR>&nbsp;&nbsp;aus:Internal Proprietary,<BR>&nbsp;&nbsp;aus:Loan Prospector/Product Advisor,<BR>&nbsp;&nbsp;debt_to_income_ratio:>80,<BR>&nbsp;&nbsp;interest_rate:21-40}<\/B><BR>&nbsp;&nbsp; => <B>{deny}<\/B><BR><BR>support = 0.0595<BR>confidence = 0.989<BR>coverage = 0.0602<BR>lift = 6.2<BR>count = 1540<BR>order = 6<BR>id = 4","<B>[5]<\/B><BR><B>{aus:Desktop Underwriter,<BR>&nbsp;&nbsp;aus:Loan Prospector/Product Advisor,<BR>&nbsp;&nbsp;debt_to_income_ratio:>80,<BR>&nbsp;&nbsp;interest_rate:21-40,<BR>&nbsp;&nbsp;Wells Fargo}<\/B><BR>&nbsp;&nbsp; => <B>{deny}<\/B><BR><BR>support = 0.0595<BR>confidence = 0.989<BR>coverage = 0.0602<BR>lift = 6.2<BR>count = 1540<BR>order = 6<BR>id = 5","<B>[6]<\/B><BR><B>{aus:Desktop Underwriter,<BR>&nbsp;&nbsp;aus:Internal Proprietary,<BR>&nbsp;&nbsp;aus:Loan Prospector/Product Advisor,<BR>&nbsp;&nbsp;debt_to_income_ratio:>80,<BR>&nbsp;&nbsp;interest_rate:21-40,<BR>&nbsp;&nbsp;Wells Fargo}<\/B><BR>&nbsp;&nbsp; => <B>{deny}<\/B><BR><BR>support = 0.0595<BR>confidence = 0.989<BR>coverage = 0.0602<BR>lift = 6.2<BR>count = 1540<BR>order = 7<BR>id = 6","<B>[7]<\/B><BR><B>{1 rooms,<BR>&nbsp;&nbsp;aus:Internal Proprietary,<BR>&nbsp;&nbsp;aus:Loan Prospector/Product Advisor,<BR>&nbsp;&nbsp;debt_to_income_ratio:>80,<BR>&nbsp;&nbsp;interest_rate:21-40}<\/B><BR>&nbsp;&nbsp; => <B>{deny}<\/B><BR><BR>support = 0.0595<BR>confidence = 0.989<BR>coverage = 0.0601<BR>lift = 6.2<BR>count = 1540<BR>order = 6<BR>id = 7","<B>[8]<\/B><BR><B>{1 rooms,<BR>&nbsp;&nbsp;aus:Internal Proprietary,<BR>&nbsp;&nbsp;aus:Loan Prospector/Product Advisor,<BR>&nbsp;&nbsp;debt_to_income_ratio:>80,<BR>&nbsp;&nbsp;interest_rate:21-40,<BR>&nbsp;&nbsp;Wells Fargo}<\/B><BR>&nbsp;&nbsp; => <B>{deny}<\/B><BR><BR>support = 0.0595<BR>confidence = 0.989<BR>coverage = 0.0601<BR>lift = 6.2<BR>count = 1540<BR>order = 7<BR>id = 8","<B>[9]<\/B><BR><B>{1 rooms,<BR>&nbsp;&nbsp;aus:Desktop Underwriter,<BR>&nbsp;&nbsp;aus:Loan Prospector/Product Advisor,<BR>&nbsp;&nbsp;debt_to_income_ratio:>80,<BR>&nbsp;&nbsp;interest_rate:21-40}<\/B><BR>&nbsp;&nbsp; => <B>{deny}<\/B><BR><BR>support = 0.0588<BR>confidence = 0.989<BR>coverage = 0.0594<BR>lift = 6.19<BR>count = 1520<BR>order = 6<BR>id = 9","<B>[10]<\/B><BR><B>{1 rooms,<BR>&nbsp;&nbsp;aus:Desktop Underwriter,<BR>&nbsp;&nbsp;aus:Internal Proprietary,<BR>&nbsp;&nbsp;aus:Loan Prospector/Product Advisor,<BR>&nbsp;&nbsp;debt_to_income_ratio:>80,<BR>&nbsp;&nbsp;interest_rate:21-40}<\/B><BR>&nbsp;&nbsp; => <B>{deny}<\/B><BR><BR>support = 0.0588<BR>confidence = 0.989<BR>coverage = 0.0594<BR>lift = 6.19<BR>count = 1520<BR>order = 7<BR>id = 10"],"shape":["box","box","box","box","box","box","box","box","circle","circle","circle","circle","circle","circle","circle","circle","circle","circle"],"x":[0.6689622789781584,-1,0.6973405588474235,0.1958095412463057,0.2637174813695879,-0.1484739449452498,0.05744643527247439,0.6087879220634449,0.9876749892733152,0.6183254612956248,-0.8306605021514936,-0.5028206865588634,-0.4110681923505166,-0.02565564961836431,0.6728716785326982,1,-0.3563152134127404,0.03332292964924455],"y":[1,0.06954960305692182,0.132462360050527,0.1093729965728947,-0.1489497334463347,-0.08656785855802807,-0.03200160207554503,-1,-0.3004686154673332,-0.54855790358964,-0.2855602761137803,0.2639480482981891,-0.6165213190898071,-0.5129936782206462,0.5218352349357307,0.01898929049446174,0.6023035271361066,0.5388115398098372]},"edges":{"from":[3,4,5,7,3,4,5,7,8,2,4,5,7,2,3,4,5,7,2,4,5,7,8,2,3,4,5,7,8,1,3,4,5,7,1,3,4,5,7,8,1,2,4,5,7,1,2,3,4,5,7,9,10,11,12,13,14,15,16,17,18],"to":[9,9,9,9,10,10,10,10,10,11,11,11,11,12,12,12,12,12,13,13,13,13,13,14,14,14,14,14,14,15,15,15,15,15,16,16,16,16,16,16,17,17,17,17,17,18,18,18,18,18,18,6,6,6,6,6,6,6,6,6,6],"arrows":["to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to"]},"nodesToDataframe":true,"edgesToDataframe":true,"options":{"width":"100%","height":"100%","nodes":{"shape":"dot","physics":false},"manipulation":{"enabled":false},"edges":{"smooth":false},"physics":{"stabilization":false},"interaction":{"hover":true,"zoomSpeed":1}},"groups":["1","2"],"width":null,"height":null,"idselection":{"enabled":true,"style":"width: 150px; height: 26px","useLabels":true,"main":"Select by id"},"byselection":{"enabled":false,"style":"width: 150px; height: 26px","multiple":false,"hideColor":"rgba(200,200,200,0.5)","highlight":false},"main":null,"submain":null,"footer":null,"background":"rgba(0, 0, 0, 0)","igraphlayout":{"type":"square"},"tooltipStay":300,"tooltipStyle":"position: fixed;visibility:hidden;padding: 5px;white-space: nowrap;font-family: verdana;font-size:14px;font-color:#000000;background-color: #f5f4ed;-moz-border-radius: 3px;-webkit-border-radius: 3px;border-radius: 3px;border: 1px solid #808074;box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);","highlight":{"enabled":true,"hoverNearest":true,"degree":1,"algorithm":"all","hideColor":"rgba(200,200,200,0.5)","labelOnly":true},"collapse":{"enabled":false,"fit":false,"resetHighlight":true,"clusterOptions":null,"keepCoord":true,"labelSuffix":"(cluster)"}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">sort</span>(RM_den,<span class="at">by=</span><span class="st">'lift'</span>)[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>],<span class="at">engine=</span><span class="st">'html'</span>,<span class="at">method=</span><span class="st">'graph'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="visNetwork html-widget html-fill-item" id="htmlwidget-fdf57844ee900a5a0188" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-fdf57844ee900a5a0188">{"x":{"nodes":{"id":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16],"label":["1 rooms","applicant_ethnicity:Not Hispanic/Latino","aus:Desktop Underwriter","deny","interest_rate:41-60","Rocket Mortgage","rule 1","rule 2","rule 3","rule 4","rule 5","rule 6","rule 7","rule 8","rule 9","rule 10"],"group":[1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2],"value":[1,1,1,1,1,1,100,18.98777838131449,18.98777838131449,95.85931558935359,95.85931558935359,16.91743617599131,16.91743617599131,3.258555133079832,3.258555133079832,1],"color":["#CBD2FC","#CBD2FC","#CBD2FC","#CBD2FC","#CBD2FC","#CBD2FC","#EE1B1B","#EE2B2B","#EE2B2B","#EE3131","#EE3131","#EE3A3A","#EE3A3A","#EED2D2","#EED2D2","#EEDCDC"],"title":["1 rooms","applicant_ethnicity:Not Hispanic/Latino","aus:Desktop Underwriter","deny","interest_rate:41-60","Rocket Mortgage","<B>[1]<\/B><BR><B>{interest_rate:41-60,<BR>&nbsp;&nbsp;Rocket Mortgage}<\/B><BR>&nbsp;&nbsp; => <B>{deny}<\/B><BR><BR>support = 0.0931<BR>confidence = 0.388<BR>coverage = 0.24<BR>lift = 3.39<BR>count = 9020<BR>order = 3<BR>id = 1","<B>[2]<\/B><BR><B>{aus:Desktop Underwriter,<BR>&nbsp;&nbsp;interest_rate:41-60}<\/B><BR>&nbsp;&nbsp; => <B>{deny}<\/B><BR><BR>support = 0.062<BR>confidence = 0.387<BR>coverage = 0.16<BR>lift = 3.37<BR>count = 6000<BR>order = 3<BR>id = 2","<B>[3]<\/B><BR><B>{aus:Desktop Underwriter,<BR>&nbsp;&nbsp;interest_rate:41-60,<BR>&nbsp;&nbsp;Rocket Mortgage}<\/B><BR>&nbsp;&nbsp; => <B>{deny}<\/B><BR><BR>support = 0.062<BR>confidence = 0.387<BR>coverage = 0.16<BR>lift = 3.37<BR>count = 6000<BR>order = 4<BR>id = 3","<B>[4]<\/B><BR><B>{1 rooms,<BR>&nbsp;&nbsp;interest_rate:41-60}<\/B><BR>&nbsp;&nbsp; => <B>{deny}<\/B><BR><BR>support = 0.0915<BR>confidence = 0.386<BR>coverage = 0.237<BR>lift = 3.36<BR>count = 8860<BR>order = 3<BR>id = 4","<B>[5]<\/B><BR><B>{1 rooms,<BR>&nbsp;&nbsp;interest_rate:41-60,<BR>&nbsp;&nbsp;Rocket Mortgage}<\/B><BR>&nbsp;&nbsp; => <B>{deny}<\/B><BR><BR>support = 0.0915<BR>confidence = 0.386<BR>coverage = 0.237<BR>lift = 3.36<BR>count = 8860<BR>order = 4<BR>id = 5","<B>[6]<\/B><BR><B>{1 rooms,<BR>&nbsp;&nbsp;aus:Desktop Underwriter,<BR>&nbsp;&nbsp;interest_rate:41-60}<\/B><BR>&nbsp;&nbsp; => <B>{deny}<\/B><BR><BR>support = 0.0612<BR>confidence = 0.385<BR>coverage = 0.159<BR>lift = 3.35<BR>count = 5930<BR>order = 4<BR>id = 6","<B>[7]<\/B><BR><B>{1 rooms,<BR>&nbsp;&nbsp;aus:Desktop Underwriter,<BR>&nbsp;&nbsp;interest_rate:41-60,<BR>&nbsp;&nbsp;Rocket Mortgage}<\/B><BR>&nbsp;&nbsp; => <B>{deny}<\/B><BR><BR>support = 0.0612<BR>confidence = 0.385<BR>coverage = 0.159<BR>lift = 3.35<BR>count = 5930<BR>order = 5<BR>id = 7","<B>[8]<\/B><BR><B>{applicant_ethnicity:Not Hispanic/Latino,<BR>&nbsp;&nbsp;interest_rate:41-60}<\/B><BR>&nbsp;&nbsp; => <B>{deny}<\/B><BR><BR>support = 0.0559<BR>confidence = 0.361<BR>coverage = 0.155<BR>lift = 3.15<BR>count = 5420<BR>order = 3<BR>id = 8","<B>[9]<\/B><BR><B>{applicant_ethnicity:Not Hispanic/Latino,<BR>&nbsp;&nbsp;interest_rate:41-60,<BR>&nbsp;&nbsp;Rocket Mortgage}<\/B><BR>&nbsp;&nbsp; => <B>{deny}<\/B><BR><BR>support = 0.0559<BR>confidence = 0.361<BR>coverage = 0.155<BR>lift = 3.15<BR>count = 5420<BR>order = 4<BR>id = 9","<B>[10]<\/B><BR><B>{1 rooms,<BR>&nbsp;&nbsp;applicant_ethnicity:Not Hispanic/Latino,<BR>&nbsp;&nbsp;interest_rate:41-60}<\/B><BR>&nbsp;&nbsp; => <B>{deny}<\/B><BR><BR>support = 0.0551<BR>confidence = 0.359<BR>coverage = 0.154<BR>lift = 3.13<BR>count = 5340<BR>order = 4<BR>id = 10"],"shape":["box","box","box","box","box","box","circle","circle","circle","circle","circle","circle","circle","circle","circle","circle"],"x":[-0.2501426840263544,1,-1,-0.0161584210549317,-0.05088303402348937,0.01618128018674891,0.336471532360596,-0.7310182444185045,-0.4593010091069514,-0.1155376814926159,-0.04173125804092925,-0.6455040959769425,-0.4411820282376084,0.6081172686403695,0.5452036197208072,0.3563892741325037],"y":[0.5298773408947861,0.4529258971403758,-0.3430393396737762,0.1472084123860655,-0.01746366931855803,-1,-0.7501446523731085,0.03866197825308704,-0.7385363950549534,1,-0.430999670973221,0.4271544642340641,-0.3047251911117502,0.3557339266824051,-0.2695494619212053,0.7072240673210022]},"edges":{"from":[5,6,3,5,3,5,6,1,5,1,5,6,1,3,5,1,3,5,6,2,5,2,5,6,1,2,5,7,8,9,10,11,12,13,14,15,16],"to":[7,7,8,8,9,9,9,10,10,11,11,11,12,12,12,13,13,13,13,14,14,15,15,15,16,16,16,4,4,4,4,4,4,4,4,4,4],"arrows":["to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to"]},"nodesToDataframe":true,"edgesToDataframe":true,"options":{"width":"100%","height":"100%","nodes":{"shape":"dot","physics":false},"manipulation":{"enabled":false},"edges":{"smooth":false},"physics":{"stabilization":false},"interaction":{"hover":true,"zoomSpeed":1}},"groups":["1","2"],"width":null,"height":null,"idselection":{"enabled":true,"style":"width: 150px; height: 26px","useLabels":true,"main":"Select by id"},"byselection":{"enabled":false,"style":"width: 150px; height: 26px","multiple":false,"hideColor":"rgba(200,200,200,0.5)","highlight":false},"main":null,"submain":null,"footer":null,"background":"rgba(0, 0, 0, 0)","igraphlayout":{"type":"square"},"tooltipStay":300,"tooltipStyle":"position: fixed;visibility:hidden;padding: 5px;white-space: nowrap;font-family: verdana;font-size:14px;font-color:#000000;background-color: #f5f4ed;-moz-border-radius: 3px;-webkit-border-radius: 3px;border-radius: 3px;border: 1px solid #808074;box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);","highlight":{"enabled":true,"hoverNearest":true,"degree":1,"algorithm":"all","hideColor":"rgba(200,200,200,0.5)","labelOnly":true},"collapse":{"enabled":false,"fit":false,"resetHighlight":true,"clusterOptions":null,"keepCoord":true,"labelSuffix":"(cluster)"}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>a_rules_den <span class="ot">&lt;-</span> arules<span class="sc">::</span><span class="fu">apriori</span>(</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>    dat,</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">control=</span><span class="fu">list</span>(<span class="at">verbose=</span>F),</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">parameter=</span><span class="fu">list</span>(<span class="at">support=</span><span class="fl">0.04</span>,<span class="at">confidence=</span><span class="fl">0.01</span>,<span class="at">minlen=</span><span class="dv">2</span>),</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">appearance =</span> <span class="fu">list</span>(<span class="at">default=</span><span class="st">'lhs'</span>,<span class="at">rhs=</span><span class="st">'deny'</span>)</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>a_rules_app <span class="ot">&lt;-</span> arules<span class="sc">::</span><span class="fu">apriori</span>(</span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>    dat,</span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">control=</span><span class="fu">list</span>(<span class="at">verbose=</span>F),</span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">parameter=</span><span class="fu">list</span>(<span class="at">support=</span><span class="fl">0.04</span>,<span class="at">confidence=</span><span class="fl">0.01</span>,<span class="at">minlen=</span><span class="dv">2</span>),</span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">appearance =</span> <span class="fu">list</span>(<span class="at">default=</span><span class="st">'lhs'</span>,<span class="at">rhs=</span><span class="st">'approve'</span>)</span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a><span class="fu">inspect</span>(<span class="fu">sort</span>(</span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">subset</span>(</span>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a>        a_rules_den,lhs <span class="sc">%pin%</span> <span class="st">'race:'</span></span>
+<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a>    ), <span class="at">by=</span><span class="st">'lift'</span></span>
+<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    lhs                                           rhs       support confidence  coverage      lift count
+[1] {applicant_race:White,                                                                              
+     interest_rate:41-60}                      =&gt; {deny} 0.04213514  0.3407446 0.1236561 2.3546500  8567
+[2] {1 rooms,                                                                                           
+     applicant_race:White,                                                                              
+     interest_rate:41-60}                      =&gt; {deny} 0.04138263  0.3381153 0.1223921 2.3364812  8414
+[3] {applicant_race:White}                     =&gt; {deny} 0.07539273  0.1235273 0.6103324 0.8536119 15329
+[4] {1 rooms,                                                                                           
+     applicant_race:White}                     =&gt; {deny} 0.07414348  0.1224923 0.6052911 0.8464593 15075
+[5] {applicant_race:White,                                                                              
+     aus:Desktop Underwriter}                  =&gt; {deny} 0.04111213  0.1185674 0.3467406 0.8193371  8359
+[6] {1 rooms,                                                                                           
+     applicant_race:White,                                                                              
+     aus:Desktop Underwriter}                  =&gt; {deny} 0.04052193  0.1176227 0.3445077 0.8128092  8239
+[7] {applicant_ethnicity:Not Hispanic/Latino,                                                           
+     applicant_race:White}                     =&gt; {deny} 0.05616707  0.1111652 0.5052577 0.7681857 11420
+[8] {1 rooms,                                                                                           
+     applicant_ethnicity:Not Hispanic/Latino,                                                           
+     applicant_race:White}                     =&gt; {deny} 0.05537030  0.1103444 0.5017952 0.7625140 11258</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">inspect</span>(<span class="fu">sort</span>(</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">subset</span>(</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>        a_rules_app,lhs <span class="sc">%pin%</span> <span class="st">'race:'</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>    ), <span class="at">by=</span><span class="st">'lift'</span></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>)[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     lhs                                           rhs          support confidence   coverage     lift count
+[1]  {applicant_race:White,                                                                                 
+      interest_rate:&gt;80}                        =&gt; {approve} 0.11876236          1 0.11876236 1.169203 24147
+[2]  {applicant_race:White,                                                                                 
+      interest_rate:&gt;80,                                                                                    
+      Joint}                                    =&gt; {approve} 0.04705836          1 0.04705836 1.169203  9568
+[3]  {applicant_race:White,                                                                                 
+      interest_rate:&gt;80,                                                                                    
+      Male}                                     =&gt; {approve} 0.04324667          1 0.04324667 1.169203  8793
+[4]  {applicant_race:White,                                                                                 
+      aus:Loan Prospector/Product Advisor,                                                                  
+      interest_rate:&gt;80}                        =&gt; {approve} 0.05488339          1 0.05488339 1.169203 11159
+[5]  {applicant_race:White,                                                                                 
+      interest_rate:&gt;80,                                                                                    
+      Rocket Mortgage}                          =&gt; {approve} 0.06145424          1 0.06145424 1.169203 12495
+[6]  {applicant_race:White,                                                                                 
+      aus:Desktop Underwriter,                                                                              
+      interest_rate:&gt;80}                        =&gt; {approve} 0.08051760          1 0.08051760 1.169203 16371
+[7]  {applicant_ethnicity:Not Hispanic/Latino,                                                              
+      applicant_race:White,                                                                                 
+      interest_rate:&gt;80}                        =&gt; {approve} 0.09885305          1 0.09885305 1.169203 20099
+[8]  {1 rooms,                                                                                              
+      applicant_race:White,                                                                                 
+      interest_rate:&gt;80}                        =&gt; {approve} 0.11780329          1 0.11780329 1.169203 23952
+[9]  {applicant_race:White,                                                                                 
+      interest_rate:0-20,                                                                                   
+      Rocket Mortgage}                          =&gt; {approve} 0.05066840          1 0.05066840 1.169203 10302
+[10] {1 rooms,                                                                                              
+      applicant_race:White,                                                                                 
+      interest_rate:&gt;80,                                                                                    
+      Joint}                                    =&gt; {approve} 0.04677802          1 0.04677802 1.169203  9511</code></pre>
+</div>
+</div>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation column-body">
+  <div class="nav-page nav-page-previous">
+      <a href="./app2.html" class="pagination-link  aria-label=" &lt;span="" analysis="" code="" (pca="" and="" mca)&lt;="" span&gt;"="">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Component Analysis Code (PCA and MCA)</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+<script src="site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>
