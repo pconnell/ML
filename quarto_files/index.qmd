@@ -14,17 +14,29 @@ Also of interest is an August 2024 story from Lehigh University on Artificial In
 
 The [Home Mortgage Disclosure Act (HMDA)](https://www.consumerfinance.gov/data-research/hmda/) is a federal law that establishes mandatory reporting for financial institutions that provide loans to borrowers.  It mandates reporting of various values, metrics, and qualities of applicants and co-applicants, such as their debt-to-income ratio, loan amount requested vs. property value, age/gender/race of applicants, whether or not the loan was approved, along with many other datapoints.  Part of the intent of this law is to enable the examination of lenders for potential discriminatory practices in lending, and enable accountability and oversight to combat such issues.  HMDA data was leveraged for both the CNN's report and for the study referenced in Lehigh University's article.
 
+<!-- add a aparagraph -->
+
+The examination of available HMDA data solely from measures of central tendency (e.g. means, medians, and spreads) can be useful as an exploratory analysis, but may not provide a full picture of what is and is not happening under the hood in terms of the factors that influence a lender's decision to ultimately approve or deny a mortgage application.  HMDA data provides publicly available information, but not any trade-secret, proprietary, or protected information that they leverage to arrive at their decision.  It may not be possible to know or to attain knowledge of the underlying variables and considerations employed to reach the decision.  It may also pose challenges in building predictive mechanisms to support reaching such decisions.  That being said, this study seeks to explore the available data to see if effective predictions can be made, and what conditions or subsets of the available features and values of the data are needed to make them.
+
 In an ideal world, a potential borrower's protected class features should have no impact on their ability to attain a loan, but instead be based solely on the borrower's overall ability to repay the loan, given multiple financial factors.  This research seeks to leverage HMDA data to explore CNN's identified disparities, and explore other possible disparities within other lending organizations, through predictive modeling.  <!--Predictive modeling may be a portion of one or more of these financial institutions' processes for mortgage underwriting.  Should any such decision models include protected classes, or proxies for protected class, the possibility of discrimination and disparate impact quickly arise.  -->Leveraging multiple techniques such as identifying common associations and trends within the data, performing statistical analyses, developing multiple model constructs, and via inclusion and exclusion of protected classes as part of model training and evaluation data, this study seeks to explore and answer some of the following questions (solely using publically available data):
 
 1. Which factors within avaialble HMDA data are the greatest influencers in mortgage approvals?
 
 1. Are protected classes of applicants and co-applicants strong predictors for determining loan approval?
 
+    <!-- * Explore this with Bernoulli Naive Bayes -->
+
 1. If protected classes are strong predictors for loan approval, is the predictive strength greater for one institution over another?
+
+    <!-- * Explore this with label encoded data, potentially with Bernoulli Naive Bayes -->
 
 1. If protected classes are strong predictors for loan approval, is the predictor's strength higher within a particular geographic region?
 
+    <!-- * Explore this with Bernoulli Naive Bayes -->
+
 1. How is predictive model performance impacted when including or excluding protected class data in training and testing data? e.g. Does performance increase when including?  If so, by how much?
+
+    <!-- * for DT, MNB, CNB, BNB, LogReg - performance has significant differences.  None of them justify leveraging protected class information as a predictive variable. -->
 
 1. How well do predictive models perform when trained using protected class information that was collected by a lender observationally (e.g. via inspection of surname or visually seeing the applicant)?
 

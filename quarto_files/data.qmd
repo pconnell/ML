@@ -94,6 +94,7 @@ mapper = {
 }
 
 fr = pd.read_csv('../data/final_clean.csv')
+# fr = pd.read_csv('../data/final_clean_r2.csv')
 ```
 
 In efforts to answer the established research questions, data was collected, predominantly, from the HMDA database for the top 5 lenders listed within CNN's reporting.  As both CNN and the Lehigh University articles leveraged this data, working with and examining the same type of data is ideal in the pursuit of furthering the research.

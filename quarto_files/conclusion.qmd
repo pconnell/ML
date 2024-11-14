@@ -1,2 +1,9 @@
 # Conclusion {#sec-conclusions}
 
+Several models produced strong results
+
+Many results between models trained with and without protected class information had statistically significant differences.
+
+Operationally and ethically speaking, the percentage difference in performance for the best models were insufficient to justify the inclusion of protected class data as part of a model to make a decision on mortgage loan applications.
+
+## Research Questions

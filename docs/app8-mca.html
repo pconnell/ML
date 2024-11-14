@@ -1,0 +1,3675 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.549">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Exploring Protected Classes as Predictors in Mortgage Approval - Appendix G — Multiple Correspondence Analysis</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./app7.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<style>html{ scroll-behavior: smooth; }</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./app1.html">Appendices</a></li><li class="breadcrumb-item"><a href="./app8-mca.html"><span class="chapter-number">G</span>&nbsp; <span class="chapter-title">Multiple Correspondence Analysis</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Exploring Protected Classes as Predictors in Mortgage Approval</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/pconnell/ML" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+    <a href="./ML-Final-Report.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Data Gathering and Exploratory Analysis</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./pca.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Principal Component Analysis</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./mca.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Multiple Correspondence Analysis</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./clustering.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Data Clustering</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./arm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Association Rule Mining</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./nb.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Naive Bayes</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./dt.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Decision Tree Modeling</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./reg.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Regression Modeling</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./app1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Data Gathering/Cleaning Code</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./app2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Component Analysis Code (PCA and MCA)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./app4.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Association Rule Mining Code</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./app6.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">Naive Bayes Code</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./app5.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">E</span>&nbsp; <span class="chapter-title">Decision Tree Code</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./app7.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">F</span>&nbsp; <span class="chapter-title">Regression Code</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./app8-mca.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">G</span>&nbsp; <span class="chapter-title">Multiple Correspondence Analysis</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#data-transformations" id="toc-data-transformations" class="nav-link active" data-scroll-target="#data-transformations"><span class="header-section-number">G.1</span> Data Transformations</a>
+  <ul class="collapse">
+  <li><a href="#breakout-race-ethnicity-and-underwriting-system-columns" id="toc-breakout-race-ethnicity-and-underwriting-system-columns" class="nav-link" data-scroll-target="#breakout-race-ethnicity-and-underwriting-system-columns"><span class="header-section-number">G.1.1</span> Breakout Race, Ethnicity, and Underwriting System Columns</a></li>
+  <li><a href="#check-for-buggy-columns" id="toc-check-for-buggy-columns" class="nav-link" data-scroll-target="#check-for-buggy-columns"><span class="header-section-number">G.1.2</span> Check for Buggy Columns</a></li>
+  <li><a href="#mca-with-protected-classes" id="toc-mca-with-protected-classes" class="nav-link" data-scroll-target="#mca-with-protected-classes"><span class="header-section-number">G.1.3</span> MCA With Protected Classes</a></li>
+  <li><a href="#mca-without-protected-classes" id="toc-mca-without-protected-classes" class="nav-link" data-scroll-target="#mca-without-protected-classes"><span class="header-section-number">G.1.4</span> MCA without Protected Classes</a></li>
+  <li><a href="#output-the-results-to-csv" id="toc-output-the-results-to-csv" class="nav-link" data-scroll-target="#output-the-results-to-csv"><span class="header-section-number">G.1.5</span> Output the Results to CSV</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content column-body" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./app1.html">Appendices</a></li><li class="breadcrumb-item"><a href="./app8-mca.html"><span class="chapter-number">G</span>&nbsp; <span class="chapter-title">Multiple Correspondence Analysis</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span id="sec-MCA-app" class="quarto-section-identifier">Appendix G — Multiple Correspondence Analysis</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta column-body">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>First, import the necessary modules</p>
+<div id="f9fe23bb" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd, numpy <span class="im">as</span> np, seaborn <span class="im">as</span> sns, matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> StandardScaler</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.decomposition <span class="im">import</span> PCA</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.cluster <span class="im">import</span> KMeans</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> mpl_toolkits.mplot3d <span class="im">import</span> Axes3D</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> OneHotEncoder</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> prince <span class="im">import</span> MCA</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>fr <span class="op">=</span> pd.read_csv(<span class="st">'../data/final_clean_r2.csv'</span>)</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>labels <span class="op">=</span> fr[<span class="st">'outcome'</span>].copy()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="data-transformations" class="level2" data-number="G.1">
+<h2 data-number="G.1" class="anchored" data-anchor-id="data-transformations"><span class="header-section-number">G.1</span> Data Transformations</h2>
+<p>First, to perform MCA, variables require separation, and transformation to categorical variables. Below, the binary encoded fields for applicant race, ethnicity, and underwriting system, are broken back out into corresponding binary True/False columns for each category.</p>
+<section id="breakout-race-ethnicity-and-underwriting-system-columns" class="level3" data-number="G.1.1">
+<h3 data-number="G.1.1" class="anchored" data-anchor-id="breakout-race-ethnicity-and-underwriting-system-columns"><span class="header-section-number">G.1.1</span> Breakout Race, Ethnicity, and Underwriting System Columns</h3>
+<div id="5f103989" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">##for use in splitting the collapsed columns </span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co">##back out into their respective binary values</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>mapper <span class="op">=</span> {</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">'applicant_race'</span>:{</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>        <span class="st">'American Indian/Alaska Native'</span>:<span class="bn">0b0000000000000000001</span>,</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Asian'</span>:<span class="bn">0b0000000000000000010</span>,</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Asian Indian'</span>:<span class="bn">0b0000000000000000100</span>,</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Chinese'</span>:<span class="bn">0b0000000000000001000</span>,</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Filipino'</span>:<span class="bn">0b0000000000000010000</span>,</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Japanese'</span>:<span class="bn">0b0000000000000100000</span>,</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Korean'</span>:<span class="bn">0b0000000000001000000</span>,</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Vietnamese'</span>:<span class="bn">0b0000000000010000000</span>,</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Other Asian'</span>:<span class="bn">0b0000000000100000000</span>,</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Black/African American'</span>:<span class="bn">0b0000000001000000000</span>,</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Native Hawaiian/Pacific Islander'</span>:<span class="bn">0b0000000010000000000</span>,</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Native Hawaiian'</span>:<span class="bn">0b0000000100000000000</span>,</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Guamanian/Chamorro'</span>:<span class="bn">0b0000001000000000000</span>,</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Samoan'</span>:<span class="bn">0b0000010000000000000</span>,</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Other Pacific Islander'</span>:<span class="bn">0b0000100000000000000</span>,</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>        <span class="st">'White'</span>:<span class="bn">0b0001000000000000000</span>,</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Information not provided'</span>:<span class="bn">0b0010000000000000000</span>,</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Not Applicable'</span>:<span class="bn">0b0100000000000000000</span>,</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>        <span class="st">'No Co-applicant'</span>:<span class="bn">0b1000000000000000000</span></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>    },</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>    <span class="st">'co-applicant_race'</span>:{</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>        <span class="st">'American Indian/Alaska Native'</span>:<span class="bn">0b0000000000000000001</span>,</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Asian'</span>:<span class="bn">0b0000000000000000010</span>,</span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Asian Indian'</span>:<span class="bn">0b0000000000000000100</span>,</span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Chinese'</span>:<span class="bn">0b0000000000000001000</span>,</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Filipino'</span>:<span class="bn">0b0000000000000010000</span>,</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Japanese'</span>:<span class="bn">0b0000000000000100000</span>,</span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Korean'</span>:<span class="bn">0b0000000000001000000</span>,</span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Vietnamese'</span>:<span class="bn">0b0000000000010000000</span>,</span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Other Asian'</span>:<span class="bn">0b0000000000100000000</span>,</span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Black/African American'</span>:<span class="bn">0b0000000001000000000</span>,</span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Native Hawaiian/Pacific Islander'</span>:<span class="bn">0b0000000010000000000</span>,</span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Native Hawaiian'</span>:<span class="bn">0b0000000100000000000</span>,</span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Guamanian/Chamorro'</span>:<span class="bn">0b0000001000000000000</span>,</span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Samoan'</span>:<span class="bn">0b0000010000000000000</span>,</span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Other Pacific Islander'</span>:<span class="bn">0b0000100000000000000</span>,</span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>        <span class="st">'White'</span>:<span class="bn">0b0001000000000000000</span>,</span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Information not provided'</span>:<span class="bn">0b0010000000000000000</span>,</span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Not Applicable'</span>:<span class="bn">0b0100000000000000000</span>,</span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>        <span class="st">'No Co-applicant'</span>:<span class="bn">0b1000000000000000000</span></span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>    },</span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>    <span class="st">'applicant_ethnicity'</span>:{</span>
+<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Hispanic/Latino'</span>:<span class="bn">0b000000001</span>,</span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Mexican'</span>:<span class="bn">0b000000010</span>,</span>
+<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Puerto Rican'</span>:<span class="bn">0b000000100</span>,</span>
+<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Cuban'</span>:<span class="bn">0b000001000</span>,</span>
+<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Other Hispanic/Latino'</span>:<span class="bn">0b000010000</span>,</span>
+<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Not Hispanic/Latino'</span>:<span class="bn">0b000100000</span>,</span>
+<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Information Not Provided'</span>:<span class="bn">0b001000000</span>,</span>
+<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Not Applicable'</span>:<span class="bn">0b010000000</span>,</span>
+<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a>        <span class="st">'No Co-applicant'</span>:<span class="bn">0b100000000</span></span>
+<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a>    },</span>
+<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a>    <span class="st">'co-applicant_ethnicity'</span>:{</span>
+<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Hispanic/Latino'</span>:<span class="bn">0b000000001</span>,</span>
+<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Mexican'</span>:<span class="bn">0b000000010</span>,</span>
+<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Puerto Rican'</span>:<span class="bn">0b000000100</span>,</span>
+<span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Cuban'</span>:<span class="bn">0b000001000</span>,</span>
+<span id="cb2-62"><a href="#cb2-62" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Other Hispanic/Latino'</span>:<span class="bn">0b000010000</span>,</span>
+<span id="cb2-63"><a href="#cb2-63" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Not Hispanic/Latino'</span>:<span class="bn">0b000100000</span>,</span>
+<span id="cb2-64"><a href="#cb2-64" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Information Not Provided'</span>:<span class="bn">0b001000000</span>,</span>
+<span id="cb2-65"><a href="#cb2-65" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Not Applicable'</span>:<span class="bn">0b010000000</span>,</span>
+<span id="cb2-66"><a href="#cb2-66" aria-hidden="true" tabindex="-1"></a>        <span class="st">'No Co-applicant'</span>:<span class="bn">0b100000000</span></span>
+<span id="cb2-67"><a href="#cb2-67" aria-hidden="true" tabindex="-1"></a>    },</span>
+<span id="cb2-68"><a href="#cb2-68" aria-hidden="true" tabindex="-1"></a>    <span class="st">'aus'</span>:{</span>
+<span id="cb2-69"><a href="#cb2-69" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Desktop Underwriter'</span>:<span class="bn">0b00000001</span>,</span>
+<span id="cb2-70"><a href="#cb2-70" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Loan Prospector/Product Advisor'</span>:<span class="bn">0b00000010</span>,</span>
+<span id="cb2-71"><a href="#cb2-71" aria-hidden="true" tabindex="-1"></a>        <span class="st">'TOTAL Scorecard'</span>:<span class="bn">0b00000100</span>,</span>
+<span id="cb2-72"><a href="#cb2-72" aria-hidden="true" tabindex="-1"></a>        <span class="st">'GUS'</span>:<span class="bn">0b00001000</span>,</span>
+<span id="cb2-73"><a href="#cb2-73" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Other'</span>:<span class="bn">0b00010000</span>,</span>
+<span id="cb2-74"><a href="#cb2-74" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Internal Proprietary'</span>:<span class="bn">0b00100000</span>,</span>
+<span id="cb2-75"><a href="#cb2-75" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Not applicable'</span>:<span class="bn">0b01000000</span>,</span>
+<span id="cb2-76"><a href="#cb2-76" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Exempt'</span>:<span class="bn">0b10000000</span>,</span>
+<span id="cb2-77"><a href="#cb2-77" aria-hidden="true" tabindex="-1"></a>    }, </span>
+<span id="cb2-78"><a href="#cb2-78" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-79"><a href="#cb2-79" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-80"><a href="#cb2-80" aria-hidden="true" tabindex="-1"></a>new_mapper <span class="op">=</span> {}</span>
+<span id="cb2-81"><a href="#cb2-81" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> k,v <span class="kw">in</span> mapper.items():</span>
+<span id="cb2-82"><a href="#cb2-82" aria-hidden="true" tabindex="-1"></a>    new_mapper[k] <span class="op">=</span> {}</span>
+<span id="cb2-83"><a href="#cb2-83" aria-hidden="true" tabindex="-1"></a>    <span class="co">#print(k)</span></span>
+<span id="cb2-84"><a href="#cb2-84" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> j,w <span class="kw">in</span> v.items():</span>
+<span id="cb2-85"><a href="#cb2-85" aria-hidden="true" tabindex="-1"></a>        <span class="co">#print(w,j)</span></span>
+<span id="cb2-86"><a href="#cb2-86" aria-hidden="true" tabindex="-1"></a>        new_mapper[k][w] <span class="op">=</span> j</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Next, the numeric variables require transformation to categorical. In this case, the standard deviation was leveraged to produce the following categories:</p>
+<ul>
+<li><p>Value &lt; Mean - 2*standard deviation =&gt; L (low)</p></li>
+<li><p>Mean - 2 * standard deviation &lt; Value &lt; Mean - standard deviation =&gt; ML (Mid-Low)</p></li>
+<li><p>Mean - standard deviation &lt; Value &lt; Mean + standard deviation =&gt; M</p></li>
+<li><p>Mean + standard deviation &lt; Value &lt; Mean + 2 * standard deviation =&gt; MH (Mid-High)</p></li>
+<li><p>Value &gt; Mean + 2 * standard deviation =&gt; H (High)</p></li>
+</ul>
+<p>This categorization allowed for diversity in the source data prior to transforming with MCA</p>
+<div id="55930719" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">#adjust numerics to categoricals</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co">#drop columns that will not be leveraged in MCA</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>fr.drop(</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    labels <span class="op">=</span> [</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>        <span class="st">'balloon_payment'</span>, </span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>        <span class="st">'interest_only_payment'</span>, </span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>        <span class="st">'other_nonamortizing_features'</span>,</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>        <span class="st">'income_from_median'</span>,</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>        <span class="st">'state_code'</span>,</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>        <span class="st">'county_code'</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    ],</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    axis<span class="op">=</span><span class="dv">1</span>,inplace<span class="op">=</span><span class="va">True</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="co">#identify numeric columns to convert to categorical</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>numerics <span class="op">=</span> [</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>    <span class="st">'income'</span>,</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>    <span class="st">'loan_amount'</span>,</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>    <span class="st">'interest_rate'</span>,</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>    <span class="st">'total_loan_costs'</span>,</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>    <span class="st">'origination_charges'</span>,</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>    <span class="st">'discount_points'</span>,</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>    <span class="st">'lender_credits'</span>,</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>    <span class="st">'loan_term'</span>,</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>    <span class="st">'intro_rate_period'</span>,</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>    <span class="st">'property_value'</span>,</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>    <span class="st">'total_units'</span>,</span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>    <span class="st">'tract_population'</span>,</span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>    <span class="st">'tract_minority_population_percent'</span>,</span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>    <span class="st">'ffiec_msa_md_median_family_income'</span>,</span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>    <span class="st">'tract_to_msa_income_percentage'</span>,</span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>    <span class="st">'tract_owner_occupied_units'</span>,</span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>    <span class="st">'tract_one_to_four_family_homes'</span>,</span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>    <span class="st">'tract_median_age_of_housing_units'</span>,</span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>    <span class="st">'loan_to_value_ratio'</span></span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a><span class="co">#set the cutting boundaries</span></span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>bounds <span class="op">=</span> [i<span class="op">/</span><span class="dv">5</span> <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>,<span class="dv">5</span>)]</span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> col <span class="kw">in</span> numerics:</span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a>    <span class="co">#income had some errors, for some reason</span></span>
+<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> col <span class="op">==</span> <span class="st">'income'</span>:</span>
+<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a>        fr.loc[fr[col]<span class="op">&lt;=</span><span class="dv">0</span>,col] <span class="op">=</span> <span class="fl">0.01</span></span>
+<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a>        fr[col] <span class="op">=</span> np.log(fr[col])</span>
+<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a>    s <span class="op">=</span> fr[col].std()</span>
+<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a>    m <span class="op">=</span> fr[col].mean()</span>
+<span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a>    <span class="co">#cut everything based on standard deviations</span></span>
+<span id="cb3-53"><a href="#cb3-53" aria-hidden="true" tabindex="-1"></a>    cut_level <span class="op">=</span> [</span>
+<span id="cb3-54"><a href="#cb3-54" aria-hidden="true" tabindex="-1"></a>        m<span class="op">-</span><span class="dv">2</span><span class="op">*</span>s,</span>
+<span id="cb3-55"><a href="#cb3-55" aria-hidden="true" tabindex="-1"></a>        m<span class="op">-</span>s,</span>
+<span id="cb3-56"><a href="#cb3-56" aria-hidden="true" tabindex="-1"></a>        m<span class="op">+</span>s,</span>
+<span id="cb3-57"><a href="#cb3-57" aria-hidden="true" tabindex="-1"></a>        m<span class="op">+</span><span class="dv">2</span><span class="op">*</span>s</span>
+<span id="cb3-58"><a href="#cb3-58" aria-hidden="true" tabindex="-1"></a>    ]</span>
+<span id="cb3-59"><a href="#cb3-59" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-60"><a href="#cb3-60" aria-hidden="true" tabindex="-1"></a>    cut_level <span class="op">=</span> [<span class="op">-</span>np.inf] <span class="op">+</span> cut_level <span class="op">+</span> [np.inf]</span>
+<span id="cb3-61"><a href="#cb3-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-62"><a href="#cb3-62" aria-hidden="true" tabindex="-1"></a>    <span class="co">#assign value based on cut boundaries</span></span>
+<span id="cb3-63"><a href="#cb3-63" aria-hidden="true" tabindex="-1"></a>    fr[col] <span class="op">=</span> pd.cut(</span>
+<span id="cb3-64"><a href="#cb3-64" aria-hidden="true" tabindex="-1"></a>        fr[col],</span>
+<span id="cb3-65"><a href="#cb3-65" aria-hidden="true" tabindex="-1"></a>        bins<span class="op">=</span>cut_level,</span>
+<span id="cb3-66"><a href="#cb3-66" aria-hidden="true" tabindex="-1"></a>        labels<span class="op">=</span>[<span class="st">"L"</span>,<span class="st">"ML"</span>,<span class="st">"M"</span>,<span class="st">"MH"</span>,<span class="st">"H"</span>]</span>
+<span id="cb3-67"><a href="#cb3-67" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb3-68"><a href="#cb3-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-69"><a href="#cb3-69" aria-hidden="true" tabindex="-1"></a>    <span class="co">#convert to categorical</span></span>
+<span id="cb3-70"><a href="#cb3-70" aria-hidden="true" tabindex="-1"></a>    fr[col] <span class="op">=</span> fr[col].astype(<span class="st">'category'</span>)</span>
+<span id="cb3-71"><a href="#cb3-71" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-72"><a href="#cb3-72" aria-hidden="true" tabindex="-1"></a>fr[numerics].head(<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="3">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">income</th>
+<th data-quarto-table-cell-role="th">loan_amount</th>
+<th data-quarto-table-cell-role="th">interest_rate</th>
+<th data-quarto-table-cell-role="th">total_loan_costs</th>
+<th data-quarto-table-cell-role="th">origination_charges</th>
+<th data-quarto-table-cell-role="th">discount_points</th>
+<th data-quarto-table-cell-role="th">lender_credits</th>
+<th data-quarto-table-cell-role="th">loan_term</th>
+<th data-quarto-table-cell-role="th">intro_rate_period</th>
+<th data-quarto-table-cell-role="th">property_value</th>
+<th data-quarto-table-cell-role="th">total_units</th>
+<th data-quarto-table-cell-role="th">tract_population</th>
+<th data-quarto-table-cell-role="th">tract_minority_population_percent</th>
+<th data-quarto-table-cell-role="th">ffiec_msa_md_median_family_income</th>
+<th data-quarto-table-cell-role="th">tract_to_msa_income_percentage</th>
+<th data-quarto-table-cell-role="th">tract_owner_occupied_units</th>
+<th data-quarto-table-cell-role="th">tract_one_to_four_family_homes</th>
+<th data-quarto-table-cell-role="th">tract_median_age_of_housing_units</th>
+<th data-quarto-table-cell-role="th">loan_to_value_ratio</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>M</td>
+<td>MH</td>
+<td>L</td>
+<td>H</td>
+<td>H</td>
+<td>M</td>
+<td>H</td>
+<td>M</td>
+<td>H</td>
+<td>M</td>
+<td>M</td>
+<td>M</td>
+<td>M</td>
+<td>M</td>
+<td>M</td>
+<td>MH</td>
+<td>MH</td>
+<td>M</td>
+<td>M</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>L</td>
+<td>MH</td>
+<td>L</td>
+<td>M</td>
+<td>M</td>
+<td>M</td>
+<td>M</td>
+<td>M</td>
+<td>H</td>
+<td>H</td>
+<td>M</td>
+<td>M</td>
+<td>ML</td>
+<td>M</td>
+<td>H</td>
+<td>M</td>
+<td>L</td>
+<td>ML</td>
+<td>L</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>MH</td>
+<td>H</td>
+<td>ML</td>
+<td>M</td>
+<td>M</td>
+<td>M</td>
+<td>M</td>
+<td>M</td>
+<td>H</td>
+<td>H</td>
+<td>M</td>
+<td>H</td>
+<td>M</td>
+<td>M</td>
+<td>H</td>
+<td>M</td>
+<td>L</td>
+<td>ML</td>
+<td>M</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>M</td>
+<td>MH</td>
+<td>ML</td>
+<td>M</td>
+<td>M</td>
+<td>M</td>
+<td>M</td>
+<td>M</td>
+<td>H</td>
+<td>M</td>
+<td>M</td>
+<td>H</td>
+<td>M</td>
+<td>M</td>
+<td>H</td>
+<td>H</td>
+<td>H</td>
+<td>ML</td>
+<td>M</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>M</td>
+<td>H</td>
+<td>ML</td>
+<td>M</td>
+<td>M</td>
+<td>M</td>
+<td>M</td>
+<td>M</td>
+<td>H</td>
+<td>H</td>
+<td>M</td>
+<td>M</td>
+<td>M</td>
+<td>H</td>
+<td>MH</td>
+<td>M</td>
+<td>M</td>
+<td>MH</td>
+<td>M</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">5</td>
+<td>MH</td>
+<td>MH</td>
+<td>M</td>
+<td>MH</td>
+<td>M</td>
+<td>M</td>
+<td>M</td>
+<td>M</td>
+<td>M</td>
+<td>MH</td>
+<td>M</td>
+<td>M</td>
+<td>ML</td>
+<td>M</td>
+<td>M</td>
+<td>M</td>
+<td>M</td>
+<td>M</td>
+<td>M</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">6</td>
+<td>MH</td>
+<td>H</td>
+<td>M</td>
+<td>M</td>
+<td>M</td>
+<td>M</td>
+<td>M</td>
+<td>M</td>
+<td>MH</td>
+<td>H</td>
+<td>M</td>
+<td>M</td>
+<td>MH</td>
+<td>M</td>
+<td>M</td>
+<td>M</td>
+<td>M</td>
+<td>M</td>
+<td>M</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">7</td>
+<td>MH</td>
+<td>M</td>
+<td>ML</td>
+<td>M</td>
+<td>M</td>
+<td>M</td>
+<td>M</td>
+<td>M</td>
+<td>M</td>
+<td>H</td>
+<td>M</td>
+<td>M</td>
+<td>ML</td>
+<td>M</td>
+<td>H</td>
+<td>MH</td>
+<td>ML</td>
+<td>MH</td>
+<td>L</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">8</td>
+<td>M</td>
+<td>H</td>
+<td>ML</td>
+<td>M</td>
+<td>M</td>
+<td>M</td>
+<td>M</td>
+<td>M</td>
+<td>H</td>
+<td>H</td>
+<td>M</td>
+<td>H</td>
+<td>M</td>
+<td>M</td>
+<td>MH</td>
+<td>MH</td>
+<td>ML</td>
+<td>H</td>
+<td>M</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">9</td>
+<td>M</td>
+<td>M</td>
+<td>ML</td>
+<td>M</td>
+<td>M</td>
+<td>M</td>
+<td>M</td>
+<td>M</td>
+<td>H</td>
+<td>M</td>
+<td>M</td>
+<td>M</td>
+<td>ML</td>
+<td>M</td>
+<td>MH</td>
+<td>MH</td>
+<td>M</td>
+<td>ML</td>
+<td>ML</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p>After transforming numerics, the one-hot encoded columns extracted from race, ethnicity, and underwriting system required separation from the rest of the data so that all remaining categorical columns could be converted to a one-hot encoding.</p>
+<p>Below outlines the separation of the race, ethnicity, and underwriting columns.</p>
+<div id="9a6bf619" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#extract binary columns</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co">## because they're already one-hot encoded</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>fr_bin <span class="op">=</span> fr[[</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">'applicant_race'</span>,</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">'applicant_ethnicity'</span>,</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">'co-applicant_race'</span>,</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">'co-applicant_ethnicity'</span>,</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">'aus'</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>]].copy()</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> k,v <span class="kw">in</span> new_mapper.items():</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> l,w <span class="kw">in</span> v.items():</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>        fr_bin[k<span class="op">+</span><span class="st">'_'</span><span class="op">+</span>w] <span class="op">=</span> (fr_bin[k]<span class="op">&amp;</span>l <span class="op">&gt;</span> <span class="dv">0</span>).astype(<span class="bu">int</span>)</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>fr_bin.drop(</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    labels<span class="op">=</span>[    </span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>        <span class="st">'applicant_race'</span>,</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>        <span class="st">'applicant_ethnicity'</span>,</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>        <span class="st">'co-applicant_race'</span>,</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>        <span class="st">'co-applicant_ethnicity'</span>,</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>        <span class="st">'aus'</span></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>    ],</span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>    inplace<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>    axis<span class="op">=</span><span class="dv">1</span></span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>fr.drop(</span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>    labels<span class="op">=</span>[</span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>        <span class="st">'applicant_race'</span>,</span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>        <span class="st">'applicant_ethnicity'</span>,</span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>        <span class="st">'co-applicant_race'</span>,</span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>        <span class="st">'co-applicant_ethnicity'</span>,</span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>        <span class="st">'denial_reason'</span>,</span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a>        <span class="st">'aus'</span>,</span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a>        <span class="st">'outcome'</span>,</span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a>        <span class="st">'action_taken'</span></span>
+<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a>    ],</span>
+<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a>    inplace<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a>    axis<span class="op">=</span><span class="dv">1</span></span>
+<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a>display(</span>
+<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a>    fr.head(<span class="dv">10</span>),</span>
+<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a>    fr_bin.head(<span class="dv">10</span>)</span>
+<span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">derived_sex</th>
+<th data-quarto-table-cell-role="th">purchaser_type</th>
+<th data-quarto-table-cell-role="th">preapproval</th>
+<th data-quarto-table-cell-role="th">open-end_line_of_credit</th>
+<th data-quarto-table-cell-role="th">loan_amount</th>
+<th data-quarto-table-cell-role="th">loan_to_value_ratio</th>
+<th data-quarto-table-cell-role="th">interest_rate</th>
+<th data-quarto-table-cell-role="th">total_loan_costs</th>
+<th data-quarto-table-cell-role="th">origination_charges</th>
+<th data-quarto-table-cell-role="th">discount_points</th>
+<th data-quarto-table-cell-role="th">...</th>
+<th data-quarto-table-cell-role="th">applicant_age</th>
+<th data-quarto-table-cell-role="th">co-applicant_age</th>
+<th data-quarto-table-cell-role="th">tract_population</th>
+<th data-quarto-table-cell-role="th">tract_minority_population_percent</th>
+<th data-quarto-table-cell-role="th">ffiec_msa_md_median_family_income</th>
+<th data-quarto-table-cell-role="th">tract_to_msa_income_percentage</th>
+<th data-quarto-table-cell-role="th">tract_owner_occupied_units</th>
+<th data-quarto-table-cell-role="th">tract_one_to_four_family_homes</th>
+<th data-quarto-table-cell-role="th">tract_median_age_of_housing_units</th>
+<th data-quarto-table-cell-role="th">company</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>Sex Not Available</td>
+<td>0</td>
+<td>2</td>
+<td>2</td>
+<td>MH</td>
+<td>M</td>
+<td>L</td>
+<td>H</td>
+<td>H</td>
+<td>M</td>
+<td>...</td>
+<td>3.0</td>
+<td>7.0</td>
+<td>M</td>
+<td>M</td>
+<td>M</td>
+<td>M</td>
+<td>MH</td>
+<td>MH</td>
+<td>M</td>
+<td>JP Morgan</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>Male</td>
+<td>0</td>
+<td>2</td>
+<td>2</td>
+<td>MH</td>
+<td>L</td>
+<td>L</td>
+<td>M</td>
+<td>M</td>
+<td>M</td>
+<td>...</td>
+<td>1.0</td>
+<td>8.0</td>
+<td>M</td>
+<td>ML</td>
+<td>M</td>
+<td>H</td>
+<td>M</td>
+<td>L</td>
+<td>ML</td>
+<td>JP Morgan</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>Sex Not Available</td>
+<td>0</td>
+<td>1</td>
+<td>2</td>
+<td>H</td>
+<td>M</td>
+<td>ML</td>
+<td>M</td>
+<td>M</td>
+<td>M</td>
+<td>...</td>
+<td>3.0</td>
+<td>8.0</td>
+<td>H</td>
+<td>M</td>
+<td>M</td>
+<td>H</td>
+<td>M</td>
+<td>L</td>
+<td>ML</td>
+<td>JP Morgan</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>Male</td>
+<td>0</td>
+<td>2</td>
+<td>2</td>
+<td>MH</td>
+<td>M</td>
+<td>ML</td>
+<td>M</td>
+<td>M</td>
+<td>M</td>
+<td>...</td>
+<td>4.0</td>
+<td>8.0</td>
+<td>H</td>
+<td>M</td>
+<td>M</td>
+<td>H</td>
+<td>H</td>
+<td>H</td>
+<td>ML</td>
+<td>JP Morgan</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>Joint</td>
+<td>0</td>
+<td>2</td>
+<td>2</td>
+<td>H</td>
+<td>M</td>
+<td>ML</td>
+<td>M</td>
+<td>M</td>
+<td>M</td>
+<td>...</td>
+<td>1.0</td>
+<td>1.0</td>
+<td>M</td>
+<td>M</td>
+<td>H</td>
+<td>MH</td>
+<td>M</td>
+<td>M</td>
+<td>MH</td>
+<td>JP Morgan</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">5</td>
+<td>Joint</td>
+<td>0</td>
+<td>1</td>
+<td>2</td>
+<td>MH</td>
+<td>M</td>
+<td>M</td>
+<td>MH</td>
+<td>M</td>
+<td>M</td>
+<td>...</td>
+<td>2.0</td>
+<td>3.0</td>
+<td>M</td>
+<td>ML</td>
+<td>M</td>
+<td>M</td>
+<td>M</td>
+<td>M</td>
+<td>M</td>
+<td>JP Morgan</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">6</td>
+<td>Joint</td>
+<td>0</td>
+<td>2</td>
+<td>2</td>
+<td>H</td>
+<td>M</td>
+<td>M</td>
+<td>M</td>
+<td>M</td>
+<td>M</td>
+<td>...</td>
+<td>2.0</td>
+<td>1.0</td>
+<td>M</td>
+<td>MH</td>
+<td>M</td>
+<td>M</td>
+<td>M</td>
+<td>M</td>
+<td>M</td>
+<td>JP Morgan</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">7</td>
+<td>Sex Not Available</td>
+<td>0</td>
+<td>1</td>
+<td>2</td>
+<td>M</td>
+<td>L</td>
+<td>ML</td>
+<td>M</td>
+<td>M</td>
+<td>M</td>
+<td>...</td>
+<td>1.0</td>
+<td>1.0</td>
+<td>M</td>
+<td>ML</td>
+<td>M</td>
+<td>H</td>
+<td>MH</td>
+<td>ML</td>
+<td>MH</td>
+<td>JP Morgan</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">8</td>
+<td>Joint</td>
+<td>0</td>
+<td>1</td>
+<td>2</td>
+<td>H</td>
+<td>M</td>
+<td>ML</td>
+<td>M</td>
+<td>M</td>
+<td>M</td>
+<td>...</td>
+<td>1.0</td>
+<td>1.0</td>
+<td>H</td>
+<td>M</td>
+<td>M</td>
+<td>MH</td>
+<td>MH</td>
+<td>ML</td>
+<td>H</td>
+<td>JP Morgan</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">9</td>
+<td>Sex Not Available</td>
+<td>0</td>
+<td>1</td>
+<td>2</td>
+<td>M</td>
+<td>ML</td>
+<td>ML</td>
+<td>M</td>
+<td>M</td>
+<td>M</td>
+<td>...</td>
+<td>1.0</td>
+<td>1.0</td>
+<td>M</td>
+<td>ML</td>
+<td>M</td>
+<td>MH</td>
+<td>MH</td>
+<td>M</td>
+<td>ML</td>
+<td>JP Morgan</td>
+</tr>
+</tbody>
+</table>
+
+<p>10 rows × 37 columns</p>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">applicant_race_American Indian/Alaska Native</th>
+<th data-quarto-table-cell-role="th">applicant_race_Asian</th>
+<th data-quarto-table-cell-role="th">applicant_race_Asian Indian</th>
+<th data-quarto-table-cell-role="th">applicant_race_Chinese</th>
+<th data-quarto-table-cell-role="th">applicant_race_Filipino</th>
+<th data-quarto-table-cell-role="th">applicant_race_Japanese</th>
+<th data-quarto-table-cell-role="th">applicant_race_Korean</th>
+<th data-quarto-table-cell-role="th">applicant_race_Vietnamese</th>
+<th data-quarto-table-cell-role="th">applicant_race_Other Asian</th>
+<th data-quarto-table-cell-role="th">applicant_race_Black/African American</th>
+<th data-quarto-table-cell-role="th">...</th>
+<th data-quarto-table-cell-role="th">co-applicant_ethnicity_Not Applicable</th>
+<th data-quarto-table-cell-role="th">co-applicant_ethnicity_No Co-applicant</th>
+<th data-quarto-table-cell-role="th">aus_Desktop Underwriter</th>
+<th data-quarto-table-cell-role="th">aus_Loan Prospector/Product Advisor</th>
+<th data-quarto-table-cell-role="th">aus_TOTAL Scorecard</th>
+<th data-quarto-table-cell-role="th">aus_GUS</th>
+<th data-quarto-table-cell-role="th">aus_Other</th>
+<th data-quarto-table-cell-role="th">aus_Internal Proprietary</th>
+<th data-quarto-table-cell-role="th">aus_Not applicable</th>
+<th data-quarto-table-cell-role="th">aus_Exempt</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>...</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>...</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>...</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>...</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>...</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">5</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>...</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">6</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>...</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">7</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>...</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">8</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>...</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">9</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>...</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+
+<p>10 rows × 64 columns</p>
+</div>
+</div>
+</div>
+<p>The below cell takes the remaining non-binary encoded data and performs one-hot encoding.</p>
+<div id="1bf11d11" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># perform one-hot encoding of remaining columns</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>ohe <span class="op">=</span> OneHotEncoder()</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>out <span class="op">=</span> ohe.fit_transform(fr)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>outdf <span class="op">=</span> pd.DataFrame(out.toarray(),columns<span class="op">=</span>ohe.get_feature_names_out().tolist())</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co">#prepare a copy of the dataframe</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>outdf_nr <span class="op">=</span> outdf.copy()</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co">#transfer columns over from the already one-hot encoded dataframe</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> col <span class="kw">in</span> fr_bin.columns:</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    outdf[col] <span class="op">=</span> fr_bin[col].copy()</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="co">#convert all columns to integers</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> col <span class="kw">in</span> outdf.columns:</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>    outdf[col] <span class="op">=</span> outdf[col].astype(<span class="bu">int</span>)</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="co">#display the output</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>display(outdf.head())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">derived_sex_Female</th>
+<th data-quarto-table-cell-role="th">derived_sex_Joint</th>
+<th data-quarto-table-cell-role="th">derived_sex_Male</th>
+<th data-quarto-table-cell-role="th">derived_sex_Sex Not Available</th>
+<th data-quarto-table-cell-role="th">purchaser_type_0</th>
+<th data-quarto-table-cell-role="th">purchaser_type_1</th>
+<th data-quarto-table-cell-role="th">purchaser_type_3</th>
+<th data-quarto-table-cell-role="th">purchaser_type_5</th>
+<th data-quarto-table-cell-role="th">purchaser_type_6</th>
+<th data-quarto-table-cell-role="th">purchaser_type_9</th>
+<th data-quarto-table-cell-role="th">...</th>
+<th data-quarto-table-cell-role="th">co-applicant_ethnicity_Not Applicable</th>
+<th data-quarto-table-cell-role="th">co-applicant_ethnicity_No Co-applicant</th>
+<th data-quarto-table-cell-role="th">aus_Desktop Underwriter</th>
+<th data-quarto-table-cell-role="th">aus_Loan Prospector/Product Advisor</th>
+<th data-quarto-table-cell-role="th">aus_TOTAL Scorecard</th>
+<th data-quarto-table-cell-role="th">aus_GUS</th>
+<th data-quarto-table-cell-role="th">aus_Other</th>
+<th data-quarto-table-cell-role="th">aus_Internal Proprietary</th>
+<th data-quarto-table-cell-role="th">aus_Not applicable</th>
+<th data-quarto-table-cell-role="th">aus_Exempt</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>...</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>...</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>...</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>...</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>...</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+
+<p>5 rows × 243 columns</p>
+</div>
+</div>
+</div>
+</section>
+<section id="check-for-buggy-columns" class="level3" data-number="G.1.2">
+<h3 data-number="G.1.2" class="anchored" data-anchor-id="check-for-buggy-columns"><span class="header-section-number">G.1.2</span> Check for Buggy Columns</h3>
+<p>MCA requires a one-hot encoded vector to have at least 1 zero and at least 1 one per column. The below checks for any columns that did not meet this requirement, and any such columns are exlcued from the MCA.</p>
+<div id="01bcee27" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">#check for any columns that only have one value/result</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> col <span class="kw">in</span> outdf.columns:</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> <span class="bu">list</span>(outdf[col].unique())</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    x.sort()</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> x <span class="op">!=</span> [<span class="dv">0</span>,<span class="dv">1</span>]:</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(col)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>applicant_race_No Co-applicant
+applicant_ethnicity_No Co-applicant
+aus_GUS
+aus_Exempt</code></pre>
+</div>
+</div>
+</section>
+<section id="mca-with-protected-classes" class="level3" data-number="G.1.3">
+<h3 data-number="G.1.3" class="anchored" data-anchor-id="mca-with-protected-classes"><span class="header-section-number">G.1.3</span> MCA With Protected Classes</h3>
+<div id="e925c677" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>ncomp<span class="op">=</span><span class="dv">181</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>mcaNd <span class="op">=</span> MCA(n_components<span class="op">=</span>ncomp,one_hot<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co">#exclude columns that had no variability (only a single value) </span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co">#and fit a multiple correspondence analysis</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>xformNd <span class="op">=</span> mcaNd.fit_transform(</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    outdf.drop(</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>        labels<span class="op">=</span>[</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>            <span class="st">'applicant_race_No Co-applicant'</span>,</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>            <span class="st">'applicant_ethnicity_No Co-applicant'</span>,</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>            <span class="st">'aus_GUS'</span>,</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>            <span class="st">'aus_Exempt'</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>        ],axis<span class="op">=</span><span class="dv">1</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>xformNd.columns <span class="op">=</span> [<span class="st">'MC</span><span class="sc">{}</span><span class="st">'</span>.<span class="bu">format</span>(i<span class="op">+</span><span class="dv">1</span>) <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(xformNd.columns))]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="50034908" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">#head of the MCA dataframe</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>xformNd.head(<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="8">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">MC1</th>
+<th data-quarto-table-cell-role="th">MC2</th>
+<th data-quarto-table-cell-role="th">MC3</th>
+<th data-quarto-table-cell-role="th">MC4</th>
+<th data-quarto-table-cell-role="th">MC5</th>
+<th data-quarto-table-cell-role="th">MC6</th>
+<th data-quarto-table-cell-role="th">MC7</th>
+<th data-quarto-table-cell-role="th">MC8</th>
+<th data-quarto-table-cell-role="th">MC9</th>
+<th data-quarto-table-cell-role="th">MC10</th>
+<th data-quarto-table-cell-role="th">...</th>
+<th data-quarto-table-cell-role="th">MC172</th>
+<th data-quarto-table-cell-role="th">MC173</th>
+<th data-quarto-table-cell-role="th">MC174</th>
+<th data-quarto-table-cell-role="th">MC175</th>
+<th data-quarto-table-cell-role="th">MC176</th>
+<th data-quarto-table-cell-role="th">MC177</th>
+<th data-quarto-table-cell-role="th">MC178</th>
+<th data-quarto-table-cell-role="th">MC179</th>
+<th data-quarto-table-cell-role="th">MC180</th>
+<th data-quarto-table-cell-role="th">MC181</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>0.451521</td>
+<td>6.128471</td>
+<td>61.481532</td>
+<td>-0.582675</td>
+<td>0.142174</td>
+<td>-0.446411</td>
+<td>-0.155301</td>
+<td>0.005913</td>
+<td>0.387730</td>
+<td>-0.210268</td>
+<td>...</td>
+<td>-0.038055</td>
+<td>-0.012424</td>
+<td>-0.000177</td>
+<td>-0.001205</td>
+<td>0.009249</td>
+<td>-0.005225</td>
+<td>-0.003449</td>
+<td>0.001742</td>
+<td>0.003897</td>
+<td>-0.004720</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>-0.319092</td>
+<td>0.052840</td>
+<td>0.031634</td>
+<td>0.207948</td>
+<td>-0.063021</td>
+<td>0.541456</td>
+<td>0.596652</td>
+<td>-0.107125</td>
+<td>0.091412</td>
+<td>0.025145</td>
+<td>...</td>
+<td>0.046762</td>
+<td>-0.086929</td>
+<td>-0.002160</td>
+<td>0.006824</td>
+<td>-0.084655</td>
+<td>-0.006127</td>
+<td>-0.002646</td>
+<td>0.012392</td>
+<td>0.002616</td>
+<td>0.000280</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>-0.233362</td>
+<td>0.054331</td>
+<td>0.034305</td>
+<td>-0.336069</td>
+<td>0.122278</td>
+<td>0.455142</td>
+<td>1.004323</td>
+<td>-0.075047</td>
+<td>0.135570</td>
+<td>-0.089234</td>
+<td>...</td>
+<td>0.028105</td>
+<td>-0.080263</td>
+<td>-0.000241</td>
+<td>0.011704</td>
+<td>-0.138774</td>
+<td>-0.004096</td>
+<td>0.011195</td>
+<td>0.001980</td>
+<td>-0.000695</td>
+<td>0.002452</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>-0.302904</td>
+<td>0.025349</td>
+<td>0.025218</td>
+<td>0.236800</td>
+<td>-0.090089</td>
+<td>0.174363</td>
+<td>0.410053</td>
+<td>-0.525227</td>
+<td>0.699016</td>
+<td>-0.263994</td>
+<td>...</td>
+<td>0.046171</td>
+<td>-0.085637</td>
+<td>0.000008</td>
+<td>0.006094</td>
+<td>-0.074695</td>
+<td>-0.002369</td>
+<td>0.002111</td>
+<td>0.009786</td>
+<td>-0.001861</td>
+<td>0.001232</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>0.634415</td>
+<td>0.012939</td>
+<td>0.028819</td>
+<td>0.400410</td>
+<td>-0.163398</td>
+<td>0.245667</td>
+<td>0.736226</td>
+<td>0.056253</td>
+<td>-0.248964</td>
+<td>0.088020</td>
+<td>...</td>
+<td>0.026770</td>
+<td>-0.069725</td>
+<td>0.000374</td>
+<td>0.009017</td>
+<td>-0.129854</td>
+<td>-0.002576</td>
+<td>0.012426</td>
+<td>0.013691</td>
+<td>0.002016</td>
+<td>0.000075</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">5</td>
+<td>0.684141</td>
+<td>0.009116</td>
+<td>0.007519</td>
+<td>0.267646</td>
+<td>-0.094813</td>
+<td>0.307864</td>
+<td>0.136132</td>
+<td>-0.002112</td>
+<td>0.192184</td>
+<td>-0.031398</td>
+<td>...</td>
+<td>0.212160</td>
+<td>0.006548</td>
+<td>-0.001180</td>
+<td>0.011061</td>
+<td>-0.075641</td>
+<td>0.006081</td>
+<td>0.001703</td>
+<td>0.013096</td>
+<td>0.002621</td>
+<td>0.002301</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">6</td>
+<td>0.649954</td>
+<td>0.004748</td>
+<td>0.014900</td>
+<td>0.356419</td>
+<td>-0.135796</td>
+<td>0.275216</td>
+<td>0.713745</td>
+<td>0.010690</td>
+<td>-0.266578</td>
+<td>-0.003736</td>
+<td>...</td>
+<td>0.032658</td>
+<td>-0.058016</td>
+<td>0.001301</td>
+<td>0.007645</td>
+<td>-0.091264</td>
+<td>0.001304</td>
+<td>-0.112194</td>
+<td>-0.005152</td>
+<td>-0.045460</td>
+<td>-0.004703</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">7</td>
+<td>0.569649</td>
+<td>0.039957</td>
+<td>0.014486</td>
+<td>-0.852346</td>
+<td>0.334152</td>
+<td>0.879204</td>
+<td>0.562587</td>
+<td>0.009737</td>
+<td>-0.127637</td>
+<td>0.000647</td>
+<td>...</td>
+<td>0.059040</td>
+<td>-0.090289</td>
+<td>-0.001719</td>
+<td>0.013249</td>
+<td>-0.097626</td>
+<td>0.008894</td>
+<td>0.001857</td>
+<td>0.000997</td>
+<td>0.003241</td>
+<td>0.003394</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">8</td>
+<td>0.643866</td>
+<td>0.013070</td>
+<td>0.028519</td>
+<td>0.316946</td>
+<td>-0.121840</td>
+<td>0.209269</td>
+<td>0.495583</td>
+<td>-0.080518</td>
+<td>0.103247</td>
+<td>-0.041161</td>
+<td>...</td>
+<td>0.031299</td>
+<td>-0.071656</td>
+<td>0.000867</td>
+<td>0.009461</td>
+<td>-0.135678</td>
+<td>-0.001970</td>
+<td>0.008649</td>
+<td>-0.007681</td>
+<td>0.002351</td>
+<td>0.002077</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">9</td>
+<td>0.465507</td>
+<td>0.023988</td>
+<td>0.021353</td>
+<td>-1.000502</td>
+<td>0.358704</td>
+<td>0.639682</td>
+<td>0.285072</td>
+<td>-0.181713</td>
+<td>0.044954</td>
+<td>0.006286</td>
+<td>...</td>
+<td>0.066260</td>
+<td>-0.093161</td>
+<td>0.000555</td>
+<td>0.006261</td>
+<td>-0.064012</td>
+<td>-0.003694</td>
+<td>0.002558</td>
+<td>0.000544</td>
+<td>-0.000423</td>
+<td>0.001978</td>
+</tr>
+</tbody>
+</table>
+
+<p>10 rows × 181 columns</p>
+</div>
+</div>
+</div>
+<div id="71c3ce17" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">#summary of eigenvalues</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>display(mcaNd.eigenvalues_summary)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">eigenvalue</th>
+<th data-quarto-table-cell-role="th">% of variance</th>
+<th data-quarto-table-cell-role="th">% of variance (cumulative)</th>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">component</th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>0.215</td>
+<td>4.69%</td>
+<td>4.69%</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>0.167</td>
+<td>3.63%</td>
+<td>8.32%</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>0.166</td>
+<td>3.62%</td>
+<td>11.93%</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>0.115</td>
+<td>2.49%</td>
+<td>14.43%</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>0.102</td>
+<td>2.21%</td>
+<td>16.64%</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">176</td>
+<td>0.001</td>
+<td>0.02%</td>
+<td>99.96%</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">177</td>
+<td>0.001</td>
+<td>0.01%</td>
+<td>99.97%</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">178</td>
+<td>0.000</td>
+<td>0.01%</td>
+<td>99.98%</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">179</td>
+<td>0.000</td>
+<td>0.01%</td>
+<td>99.99%</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">180</td>
+<td>0.000</td>
+<td>0.01%</td>
+<td>100.00%</td>
+</tr>
+</tbody>
+</table>
+
+<p>181 rows × 3 columns</p>
+</div>
+</div>
+</div>
+<div id="5cfcf928" class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co">#summary of column contributions to each component, sorted by the first component (e.g)</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co">#max eigenvalue's top 10 contributors</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>display(mcaNd.column_contributions_.sort_values(by<span class="op">=</span><span class="dv">0</span>,ascending<span class="op">=</span><span class="va">False</span>).head(<span class="dv">10</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">0</th>
+<th data-quarto-table-cell-role="th">1</th>
+<th data-quarto-table-cell-role="th">2</th>
+<th data-quarto-table-cell-role="th">3</th>
+<th data-quarto-table-cell-role="th">4</th>
+<th data-quarto-table-cell-role="th">5</th>
+<th data-quarto-table-cell-role="th">6</th>
+<th data-quarto-table-cell-role="th">7</th>
+<th data-quarto-table-cell-role="th">8</th>
+<th data-quarto-table-cell-role="th">9</th>
+<th data-quarto-table-cell-role="th">...</th>
+<th data-quarto-table-cell-role="th">171</th>
+<th data-quarto-table-cell-role="th">172</th>
+<th data-quarto-table-cell-role="th">173</th>
+<th data-quarto-table-cell-role="th">174</th>
+<th data-quarto-table-cell-role="th">175</th>
+<th data-quarto-table-cell-role="th">176</th>
+<th data-quarto-table-cell-role="th">177</th>
+<th data-quarto-table-cell-role="th">178</th>
+<th data-quarto-table-cell-role="th">179</th>
+<th data-quarto-table-cell-role="th">180</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">co-applicant_sex_observed_2</td>
+<td>0.061418</td>
+<td>0.000009</td>
+<td>9.547786e-06</td>
+<td>0.000537</td>
+<td>0.000206</td>
+<td>0.000370</td>
+<td>0.001228</td>
+<td>7.078606e-05</td>
+<td>0.000358</td>
+<td>0.000027</td>
+<td>...</td>
+<td>9.090788e-06</td>
+<td>0.000057</td>
+<td>9.194148e-04</td>
+<td>2.548507e-04</td>
+<td>0.000192</td>
+<td>2.767818e-06</td>
+<td>0.003954</td>
+<td>0.000062</td>
+<td>0.002840</td>
+<td>0.005715</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">co-applicant_ethnicity_observed_2</td>
+<td>0.061381</td>
+<td>0.000009</td>
+<td>9.545378e-06</td>
+<td>0.000564</td>
+<td>0.000261</td>
+<td>0.000386</td>
+<td>0.001226</td>
+<td>7.261382e-05</td>
+<td>0.000358</td>
+<td>0.000026</td>
+<td>...</td>
+<td>1.594640e-06</td>
+<td>0.000037</td>
+<td>6.545288e-06</td>
+<td>1.604834e-03</td>
+<td>0.000099</td>
+<td>2.790837e-06</td>
+<td>0.003903</td>
+<td>0.000058</td>
+<td>0.002822</td>
+<td>0.005734</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">co-applicant_race_observed_2</td>
+<td>0.061369</td>
+<td>0.000009</td>
+<td>9.542219e-06</td>
+<td>0.000572</td>
+<td>0.000275</td>
+<td>0.000386</td>
+<td>0.001215</td>
+<td>6.994850e-05</td>
+<td>0.000360</td>
+<td>0.000026</td>
+<td>...</td>
+<td>3.701321e-06</td>
+<td>0.000033</td>
+<td>1.013418e-03</td>
+<td>4.079012e-04</td>
+<td>0.000224</td>
+<td>3.182675e-06</td>
+<td>0.003976</td>
+<td>0.000059</td>
+<td>0.002853</td>
+<td>0.005723</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">derived_sex_Joint</td>
+<td>0.053307</td>
+<td>0.000027</td>
+<td>5.610064e-06</td>
+<td>0.008021</td>
+<td>0.000851</td>
+<td>0.000131</td>
+<td>0.002191</td>
+<td>5.000923e-05</td>
+<td>0.000005</td>
+<td>0.000049</td>
+<td>...</td>
+<td>1.003506e-03</td>
+<td>0.000284</td>
+<td>9.737514e-05</td>
+<td>1.936380e-05</td>
+<td>0.000046</td>
+<td>1.287449e-07</td>
+<td>0.000169</td>
+<td>0.003894</td>
+<td>0.000058</td>
+<td>0.000248</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">co-applicant_credit_score_type_9</td>
+<td>0.047954</td>
+<td>0.000029</td>
+<td>2.215064e-06</td>
+<td>0.003363</td>
+<td>0.000227</td>
+<td>0.004860</td>
+<td>0.002476</td>
+<td>8.910958e-07</td>
+<td>0.001545</td>
+<td>0.015377</td>
+<td>...</td>
+<td>9.534944e-06</td>
+<td>0.000128</td>
+<td>1.583074e-08</td>
+<td>1.048725e-08</td>
+<td>0.000330</td>
+<td>1.582662e-04</td>
+<td>0.003368</td>
+<td>0.000068</td>
+<td>0.003135</td>
+<td>0.006879</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">co-applicant_ethnicity_Not Hispanic/Latino</td>
+<td>0.046580</td>
+<td>0.000019</td>
+<td>4.598133e-06</td>
+<td>0.012423</td>
+<td>0.001830</td>
+<td>0.000412</td>
+<td>0.000204</td>
+<td>9.886380e-03</td>
+<td>0.002706</td>
+<td>0.000063</td>
+<td>...</td>
+<td>5.756610e-07</td>
+<td>0.000037</td>
+<td>3.882840e-06</td>
+<td>6.085041e-06</td>
+<td>0.000258</td>
+<td>6.342339e-06</td>
+<td>0.004570</td>
+<td>0.000095</td>
+<td>0.009585</td>
+<td>0.204413</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">co-applicant_ethnicity_observed_4</td>
+<td>0.045165</td>
+<td>0.000006</td>
+<td>3.893077e-07</td>
+<td>0.000104</td>
+<td>0.000036</td>
+<td>0.000117</td>
+<td>0.000839</td>
+<td>7.990930e-05</td>
+<td>0.000380</td>
+<td>0.000045</td>
+<td>...</td>
+<td>8.054315e-05</td>
+<td>0.000096</td>
+<td>1.192476e-06</td>
+<td>1.178042e-06</td>
+<td>0.000159</td>
+<td>1.314536e-06</td>
+<td>0.000200</td>
+<td>0.000037</td>
+<td>0.002541</td>
+<td>0.000430</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">co-applicant_age_8.0</td>
+<td>0.045165</td>
+<td>0.000006</td>
+<td>3.893077e-07</td>
+<td>0.000104</td>
+<td>0.000036</td>
+<td>0.000117</td>
+<td>0.000839</td>
+<td>7.990930e-05</td>
+<td>0.000380</td>
+<td>0.000045</td>
+<td>...</td>
+<td>8.054315e-05</td>
+<td>0.000096</td>
+<td>1.192476e-06</td>
+<td>1.178042e-06</td>
+<td>0.000159</td>
+<td>1.314536e-06</td>
+<td>0.000200</td>
+<td>0.000037</td>
+<td>0.002541</td>
+<td>0.000430</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">co-applicant_race_observed_4</td>
+<td>0.045165</td>
+<td>0.000006</td>
+<td>3.893077e-07</td>
+<td>0.000104</td>
+<td>0.000036</td>
+<td>0.000117</td>
+<td>0.000839</td>
+<td>7.990930e-05</td>
+<td>0.000380</td>
+<td>0.000045</td>
+<td>...</td>
+<td>8.054315e-05</td>
+<td>0.000096</td>
+<td>1.192476e-06</td>
+<td>1.178042e-06</td>
+<td>0.000159</td>
+<td>1.314536e-06</td>
+<td>0.000200</td>
+<td>0.000037</td>
+<td>0.002541</td>
+<td>0.000430</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">co-applicant_sex_observed_4</td>
+<td>0.045165</td>
+<td>0.000006</td>
+<td>3.893077e-07</td>
+<td>0.000104</td>
+<td>0.000036</td>
+<td>0.000117</td>
+<td>0.000839</td>
+<td>7.990930e-05</td>
+<td>0.000380</td>
+<td>0.000045</td>
+<td>...</td>
+<td>8.054315e-05</td>
+<td>0.000096</td>
+<td>1.192476e-06</td>
+<td>1.178042e-06</td>
+<td>0.000159</td>
+<td>1.314536e-06</td>
+<td>0.000200</td>
+<td>0.000037</td>
+<td>0.002541</td>
+<td>0.000430</td>
+</tr>
+</tbody>
+</table>
+
+<p>10 rows × 181 columns</p>
+</div>
+</div>
+</div>
+</section>
+<section id="mca-without-protected-classes" class="level3" data-number="G.1.4">
+<h3 data-number="G.1.4" class="anchored" data-anchor-id="mca-without-protected-classes"><span class="header-section-number">G.1.4</span> MCA without Protected Classes</h3>
+<div id="d2271f54" class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co">#perform an MCA, excluding any information on:</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co">#age, gender, or race</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="co">##need 99 components to get 100% of variance</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co">##may need these two versions to do full compare</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="co"># ncomp = 90</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>ncomp<span class="op">=</span><span class="dv">100</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>mcaNd_nr <span class="op">=</span> MCA(n_components<span class="op">=</span>ncomp,one_hot<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>xformNd_nr <span class="op">=</span> mcaNd_nr.fit_transform(outdf_nr.drop(</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>    labels<span class="op">=</span>[</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>        <span class="st">'derived_sex_Female'</span>,</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>        <span class="st">'derived_sex_Joint'</span>,</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>        <span class="st">'derived_sex_Male'</span>,</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>        <span class="st">'derived_sex_Sex Not Available'</span>,</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>        <span class="st">'applicant_ethnicity_observed_1'</span>,</span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>        <span class="st">'applicant_ethnicity_observed_2'</span>,</span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>        <span class="st">'applicant_ethnicity_observed_3'</span>,</span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>        <span class="st">'co-applicant_ethnicity_observed_1'</span>,</span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>        <span class="st">'co-applicant_ethnicity_observed_2'</span>,</span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>        <span class="st">'co-applicant_ethnicity_observed_3'</span>,</span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>        <span class="st">'co-applicant_ethnicity_observed_4'</span>,</span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>        <span class="st">'applicant_race_observed_1'</span>,</span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>        <span class="st">'applicant_race_observed_2'</span>,</span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a>        <span class="st">'applicant_race_observed_3'</span>,</span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a>        <span class="st">'co-applicant_race_observed_1'</span>,</span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a>        <span class="st">'co-applicant_race_observed_2'</span>,</span>
+<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a>        <span class="st">'co-applicant_race_observed_3'</span>,</span>
+<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a>        <span class="st">'co-applicant_race_observed_4'</span>,</span>
+<span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a>        <span class="st">'applicant_sex_1'</span>,</span>
+<span id="cb12-29"><a href="#cb12-29" aria-hidden="true" tabindex="-1"></a>        <span class="st">'applicant_sex_2'</span>,</span>
+<span id="cb12-30"><a href="#cb12-30" aria-hidden="true" tabindex="-1"></a>        <span class="st">'applicant_sex_3'</span>,</span>
+<span id="cb12-31"><a href="#cb12-31" aria-hidden="true" tabindex="-1"></a>        <span class="st">'applicant_sex_4'</span>,</span>
+<span id="cb12-32"><a href="#cb12-32" aria-hidden="true" tabindex="-1"></a>        <span class="st">'applicant_sex_6'</span>,</span>
+<span id="cb12-33"><a href="#cb12-33" aria-hidden="true" tabindex="-1"></a>        <span class="st">'co-applicant_sex_1'</span>,</span>
+<span id="cb12-34"><a href="#cb12-34" aria-hidden="true" tabindex="-1"></a>        <span class="st">'co-applicant_sex_2'</span>,</span>
+<span id="cb12-35"><a href="#cb12-35" aria-hidden="true" tabindex="-1"></a>        <span class="st">'co-applicant_sex_3'</span>,</span>
+<span id="cb12-36"><a href="#cb12-36" aria-hidden="true" tabindex="-1"></a>        <span class="st">'co-applicant_sex_4'</span>,</span>
+<span id="cb12-37"><a href="#cb12-37" aria-hidden="true" tabindex="-1"></a>        <span class="st">'co-applicant_sex_5'</span>,</span>
+<span id="cb12-38"><a href="#cb12-38" aria-hidden="true" tabindex="-1"></a>        <span class="st">'co-applicant_sex_6'</span>,</span>
+<span id="cb12-39"><a href="#cb12-39" aria-hidden="true" tabindex="-1"></a>        <span class="st">'applicant_sex_observed_1'</span>,</span>
+<span id="cb12-40"><a href="#cb12-40" aria-hidden="true" tabindex="-1"></a>        <span class="st">'applicant_sex_observed_2'</span>,</span>
+<span id="cb12-41"><a href="#cb12-41" aria-hidden="true" tabindex="-1"></a>        <span class="st">'applicant_sex_observed_3'</span>,</span>
+<span id="cb12-42"><a href="#cb12-42" aria-hidden="true" tabindex="-1"></a>        <span class="st">'co-applicant_sex_observed_1'</span>,</span>
+<span id="cb12-43"><a href="#cb12-43" aria-hidden="true" tabindex="-1"></a>        <span class="st">'co-applicant_sex_observed_2'</span>,</span>
+<span id="cb12-44"><a href="#cb12-44" aria-hidden="true" tabindex="-1"></a>        <span class="st">'co-applicant_sex_observed_3'</span>,</span>
+<span id="cb12-45"><a href="#cb12-45" aria-hidden="true" tabindex="-1"></a>        <span class="st">'co-applicant_sex_observed_4'</span>,</span>
+<span id="cb12-46"><a href="#cb12-46" aria-hidden="true" tabindex="-1"></a>        <span class="st">'applicant_age_0.0'</span>,</span>
+<span id="cb12-47"><a href="#cb12-47" aria-hidden="true" tabindex="-1"></a>        <span class="st">'applicant_age_1.0'</span>,</span>
+<span id="cb12-48"><a href="#cb12-48" aria-hidden="true" tabindex="-1"></a>        <span class="st">'applicant_age_2.0'</span>,</span>
+<span id="cb12-49"><a href="#cb12-49" aria-hidden="true" tabindex="-1"></a>        <span class="st">'applicant_age_3.0'</span>,</span>
+<span id="cb12-50"><a href="#cb12-50" aria-hidden="true" tabindex="-1"></a>        <span class="st">'applicant_age_4.0'</span>,</span>
+<span id="cb12-51"><a href="#cb12-51" aria-hidden="true" tabindex="-1"></a>        <span class="st">'applicant_age_5.0'</span>,</span>
+<span id="cb12-52"><a href="#cb12-52" aria-hidden="true" tabindex="-1"></a>        <span class="st">'applicant_age_6.0'</span>,</span>
+<span id="cb12-53"><a href="#cb12-53" aria-hidden="true" tabindex="-1"></a>        <span class="st">'applicant_age_7.0'</span>,</span>
+<span id="cb12-54"><a href="#cb12-54" aria-hidden="true" tabindex="-1"></a>        <span class="st">'co-applicant_age_0.0'</span>,</span>
+<span id="cb12-55"><a href="#cb12-55" aria-hidden="true" tabindex="-1"></a>        <span class="st">'co-applicant_age_1.0'</span>,</span>
+<span id="cb12-56"><a href="#cb12-56" aria-hidden="true" tabindex="-1"></a>        <span class="st">'co-applicant_age_2.0'</span>,</span>
+<span id="cb12-57"><a href="#cb12-57" aria-hidden="true" tabindex="-1"></a>        <span class="st">'co-applicant_age_3.0'</span>,</span>
+<span id="cb12-58"><a href="#cb12-58" aria-hidden="true" tabindex="-1"></a>        <span class="st">'co-applicant_age_4.0'</span>,</span>
+<span id="cb12-59"><a href="#cb12-59" aria-hidden="true" tabindex="-1"></a>        <span class="st">'co-applicant_age_5.0'</span>,</span>
+<span id="cb12-60"><a href="#cb12-60" aria-hidden="true" tabindex="-1"></a>        <span class="st">'co-applicant_age_6.0'</span>,</span>
+<span id="cb12-61"><a href="#cb12-61" aria-hidden="true" tabindex="-1"></a>        <span class="st">'co-applicant_age_7.0'</span>,</span>
+<span id="cb12-62"><a href="#cb12-62" aria-hidden="true" tabindex="-1"></a>        <span class="st">'co-applicant_age_8.0'</span></span>
+<span id="cb12-63"><a href="#cb12-63" aria-hidden="true" tabindex="-1"></a>    ], </span>
+<span id="cb12-64"><a href="#cb12-64" aria-hidden="true" tabindex="-1"></a>    axis<span class="op">=</span><span class="dv">1</span></span>
+<span id="cb12-65"><a href="#cb12-65" aria-hidden="true" tabindex="-1"></a>))</span>
+<span id="cb12-66"><a href="#cb12-66" aria-hidden="true" tabindex="-1"></a>xformNd_nr.columns <span class="op">=</span> [<span class="st">'MC</span><span class="sc">{}</span><span class="st">'</span>.<span class="bu">format</span>(i<span class="op">+</span><span class="dv">1</span>) <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(xformNd_nr.columns))]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="ebdb3cdf" class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co">#head of the MCA dataframe</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>xformNd_nr.head(<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="12">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">MC1</th>
+<th data-quarto-table-cell-role="th">MC2</th>
+<th data-quarto-table-cell-role="th">MC3</th>
+<th data-quarto-table-cell-role="th">MC4</th>
+<th data-quarto-table-cell-role="th">MC5</th>
+<th data-quarto-table-cell-role="th">MC6</th>
+<th data-quarto-table-cell-role="th">MC7</th>
+<th data-quarto-table-cell-role="th">MC8</th>
+<th data-quarto-table-cell-role="th">MC9</th>
+<th data-quarto-table-cell-role="th">MC10</th>
+<th data-quarto-table-cell-role="th">...</th>
+<th data-quarto-table-cell-role="th">MC91</th>
+<th data-quarto-table-cell-role="th">MC92</th>
+<th data-quarto-table-cell-role="th">MC93</th>
+<th data-quarto-table-cell-role="th">MC94</th>
+<th data-quarto-table-cell-role="th">MC95</th>
+<th data-quarto-table-cell-role="th">MC96</th>
+<th data-quarto-table-cell-role="th">MC97</th>
+<th data-quarto-table-cell-role="th">MC98</th>
+<th data-quarto-table-cell-role="th">MC99</th>
+<th data-quarto-table-cell-role="th">MC100</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>-0.764720</td>
+<td>0.723758</td>
+<td>0.125389</td>
+<td>-0.056585</td>
+<td>0.170870</td>
+<td>0.548785</td>
+<td>-0.424036</td>
+<td>-0.241991</td>
+<td>0.097430</td>
+<td>0.513754</td>
+<td>...</td>
+<td>-0.132230</td>
+<td>-0.380647</td>
+<td>-0.171881</td>
+<td>0.643932</td>
+<td>-0.047217</td>
+<td>-0.006711</td>
+<td>-0.111764</td>
+<td>0.019441</td>
+<td>-0.075462</td>
+<td>-0.008763</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>0.140150</td>
+<td>1.022436</td>
+<td>0.076617</td>
+<td>-0.388087</td>
+<td>0.022334</td>
+<td>-0.423135</td>
+<td>-0.292322</td>
+<td>0.252731</td>
+<td>-0.214779</td>
+<td>0.088909</td>
+<td>...</td>
+<td>0.209340</td>
+<td>-0.153709</td>
+<td>0.088645</td>
+<td>-0.070257</td>
+<td>-0.278045</td>
+<td>0.102762</td>
+<td>-0.002714</td>
+<td>-0.035754</td>
+<td>-0.016209</td>
+<td>-0.007529</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>-0.382006</td>
+<td>1.207435</td>
+<td>0.016253</td>
+<td>-0.675044</td>
+<td>0.254554</td>
+<td>-0.804334</td>
+<td>-0.305620</td>
+<td>0.294332</td>
+<td>-0.503778</td>
+<td>-0.252445</td>
+<td>...</td>
+<td>0.530322</td>
+<td>0.212954</td>
+<td>-0.084617</td>
+<td>0.070987</td>
+<td>0.042070</td>
+<td>-0.008835</td>
+<td>-0.001938</td>
+<td>0.005713</td>
+<td>-0.031815</td>
+<td>-0.006028</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>-0.322021</td>
+<td>0.627399</td>
+<td>-1.025139</td>
+<td>-0.423863</td>
+<td>1.221655</td>
+<td>-0.311233</td>
+<td>-0.274495</td>
+<td>0.188478</td>
+<td>-0.149330</td>
+<td>-0.948647</td>
+<td>...</td>
+<td>-0.146744</td>
+<td>-0.033300</td>
+<td>-0.009274</td>
+<td>0.073137</td>
+<td>0.166896</td>
+<td>-0.090431</td>
+<td>-0.140857</td>
+<td>0.015810</td>
+<td>-0.021260</td>
+<td>-0.004191</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>-0.222096</td>
+<td>0.986399</td>
+<td>0.342411</td>
+<td>-0.517554</td>
+<td>-0.440269</td>
+<td>-0.432887</td>
+<td>-0.167812</td>
+<td>0.169848</td>
+<td>-0.530523</td>
+<td>-0.208360</td>
+<td>...</td>
+<td>-0.061780</td>
+<td>-0.004806</td>
+<td>0.018112</td>
+<td>-0.017873</td>
+<td>0.077980</td>
+<td>-0.052323</td>
+<td>0.012778</td>
+<td>-0.014635</td>
+<td>-0.026638</td>
+<td>-0.004269</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">5</td>
+<td>-0.221344</td>
+<td>0.601721</td>
+<td>0.008450</td>
+<td>-0.185320</td>
+<td>-0.387269</td>
+<td>0.006025</td>
+<td>0.150320</td>
+<td>0.375523</td>
+<td>0.461518</td>
+<td>-0.034283</td>
+<td>...</td>
+<td>0.022191</td>
+<td>-0.134455</td>
+<td>-0.361678</td>
+<td>0.100214</td>
+<td>-0.095434</td>
+<td>0.000053</td>
+<td>0.081231</td>
+<td>0.031581</td>
+<td>0.214385</td>
+<td>0.007798</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">6</td>
+<td>-0.042042</td>
+<td>0.825237</td>
+<td>0.223653</td>
+<td>-0.488704</td>
+<td>-0.353445</td>
+<td>-0.016609</td>
+<td>-0.012096</td>
+<td>0.187879</td>
+<td>-0.816343</td>
+<td>-0.194093</td>
+<td>...</td>
+<td>-0.090645</td>
+<td>-0.056575</td>
+<td>0.058021</td>
+<td>-0.051419</td>
+<td>0.022802</td>
+<td>0.039888</td>
+<td>-0.002228</td>
+<td>-0.028715</td>
+<td>-0.030764</td>
+<td>-0.000873</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">7</td>
+<td>0.072632</td>
+<td>1.034400</td>
+<td>0.031038</td>
+<td>-0.342971</td>
+<td>-0.175534</td>
+<td>-0.413475</td>
+<td>-0.225371</td>
+<td>0.303189</td>
+<td>0.460221</td>
+<td>0.414513</td>
+<td>...</td>
+<td>0.038167</td>
+<td>-0.069464</td>
+<td>0.040725</td>
+<td>-0.028568</td>
+<td>-0.415168</td>
+<td>0.299228</td>
+<td>0.182213</td>
+<td>-0.011537</td>
+<td>-0.010310</td>
+<td>0.011517</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">8</td>
+<td>-0.307864</td>
+<td>0.906534</td>
+<td>-0.026393</td>
+<td>-0.526053</td>
+<td>0.337134</td>
+<td>-0.601458</td>
+<td>-0.253877</td>
+<td>0.238076</td>
+<td>-0.385210</td>
+<td>0.078999</td>
+<td>...</td>
+<td>0.605544</td>
+<td>0.285794</td>
+<td>-0.096174</td>
+<td>0.047887</td>
+<td>0.039686</td>
+<td>0.239895</td>
+<td>-0.010113</td>
+<td>0.011185</td>
+<td>-0.025836</td>
+<td>-0.002878</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">9</td>
+<td>-0.033257</td>
+<td>0.346177</td>
+<td>-0.359762</td>
+<td>-0.135270</td>
+<td>-0.053814</td>
+<td>-0.052379</td>
+<td>-0.025562</td>
+<td>-0.059310</td>
+<td>-0.197474</td>
+<td>0.223686</td>
+<td>...</td>
+<td>-0.163153</td>
+<td>-0.069786</td>
+<td>-0.003615</td>
+<td>0.146050</td>
+<td>0.032843</td>
+<td>0.194863</td>
+<td>-0.094570</td>
+<td>0.014722</td>
+<td>-0.002103</td>
+<td>-0.003909</td>
+</tr>
+</tbody>
+</table>
+
+<p>10 rows × 100 columns</p>
+</div>
+</div>
+</div>
+<div id="c9039296" class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co">#summary of eigenvalues</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>display(mcaNd_nr.eigenvalues_summary)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">eigenvalue</th>
+<th data-quarto-table-cell-role="th">% of variance</th>
+<th data-quarto-table-cell-role="th">% of variance (cumulative)</th>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">component</th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>0.124</td>
+<td>3.21%</td>
+<td>3.21%</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>0.116</td>
+<td>3.01%</td>
+<td>6.23%</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>0.100</td>
+<td>2.61%</td>
+<td>8.83%</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>0.086</td>
+<td>2.23%</td>
+<td>11.06%</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>0.085</td>
+<td>2.22%</td>
+<td>13.28%</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">95</td>
+<td>0.009</td>
+<td>0.24%</td>
+<td>99.52%</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">96</td>
+<td>0.007</td>
+<td>0.17%</td>
+<td>99.69%</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">97</td>
+<td>0.007</td>
+<td>0.17%</td>
+<td>99.86%</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">98</td>
+<td>0.004</td>
+<td>0.11%</td>
+<td>99.97%</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">99</td>
+<td>0.001</td>
+<td>0.03%</td>
+<td>100.00%</td>
+</tr>
+</tbody>
+</table>
+
+<p>100 rows × 3 columns</p>
+</div>
+</div>
+</div>
+<div id="c54fd2c8" class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co">#summary of column contributions to each component, sorted by the first component (e.g)</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="co">#max eigenvalue's top contributors</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>display(mcaNd_nr.column_contributions_.sort_values(by<span class="op">=</span><span class="dv">0</span>,ascending<span class="op">=</span><span class="va">False</span>).head(<span class="dv">20</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">0</th>
+<th data-quarto-table-cell-role="th">1</th>
+<th data-quarto-table-cell-role="th">2</th>
+<th data-quarto-table-cell-role="th">3</th>
+<th data-quarto-table-cell-role="th">4</th>
+<th data-quarto-table-cell-role="th">5</th>
+<th data-quarto-table-cell-role="th">6</th>
+<th data-quarto-table-cell-role="th">7</th>
+<th data-quarto-table-cell-role="th">8</th>
+<th data-quarto-table-cell-role="th">9</th>
+<th data-quarto-table-cell-role="th">...</th>
+<th data-quarto-table-cell-role="th">90</th>
+<th data-quarto-table-cell-role="th">91</th>
+<th data-quarto-table-cell-role="th">92</th>
+<th data-quarto-table-cell-role="th">93</th>
+<th data-quarto-table-cell-role="th">94</th>
+<th data-quarto-table-cell-role="th">95</th>
+<th data-quarto-table-cell-role="th">96</th>
+<th data-quarto-table-cell-role="th">97</th>
+<th data-quarto-table-cell-role="th">98</th>
+<th data-quarto-table-cell-role="th">99</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">origination_charges_H</td>
+<td>0.088933</td>
+<td>8.942172e-03</td>
+<td>3.623890e-02</td>
+<td>0.034505</td>
+<td>0.012401</td>
+<td>0.097634</td>
+<td>0.045595</td>
+<td>0.008395</td>
+<td>0.000913</td>
+<td>9.811357e-05</td>
+<td>...</td>
+<td>0.000608</td>
+<td>3.762587e-02</td>
+<td>0.113043</td>
+<td>0.012385</td>
+<td>0.002687</td>
+<td>6.808054e-05</td>
+<td>7.799676e-04</td>
+<td>1.020531e-04</td>
+<td>4.273904e-01</td>
+<td>3.882523e-07</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">total_loan_costs_H</td>
+<td>0.084998</td>
+<td>1.035486e-02</td>
+<td>3.586364e-02</td>
+<td>0.029490</td>
+<td>0.011701</td>
+<td>0.083204</td>
+<td>0.043297</td>
+<td>0.006285</td>
+<td>0.000281</td>
+<td>7.044364e-05</td>
+<td>...</td>
+<td>0.000008</td>
+<td>9.952770e-05</td>
+<td>0.010288</td>
+<td>0.170899</td>
+<td>0.013513</td>
+<td>1.634182e-04</td>
+<td>4.238083e-05</td>
+<td>1.011652e-04</td>
+<td>3.245955e-01</td>
+<td>7.379104e-07</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">discount_points_H</td>
+<td>0.076381</td>
+<td>6.579247e-03</td>
+<td>2.680753e-02</td>
+<td>0.031293</td>
+<td>0.012241</td>
+<td>0.078079</td>
+<td>0.024438</td>
+<td>0.004070</td>
+<td>0.007833</td>
+<td>1.578854e-04</td>
+<td>...</td>
+<td>0.001013</td>
+<td>6.219218e-02</td>
+<td>0.087251</td>
+<td>0.344232</td>
+<td>0.025247</td>
+<td>1.838789e-05</td>
+<td>6.597205e-04</td>
+<td>7.203051e-04</td>
+<td>1.090670e-02</td>
+<td>8.576594e-08</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">loan_amount_ML</td>
+<td>0.054607</td>
+<td>1.096792e-02</td>
+<td>1.401917e-02</td>
+<td>0.000428</td>
+<td>0.003975</td>
+<td>0.000037</td>
+<td>0.098195</td>
+<td>0.098392</td>
+<td>0.010839</td>
+<td>4.374160e-04</td>
+<td>...</td>
+<td>0.000399</td>
+<td>7.009303e-05</td>
+<td>0.000026</td>
+<td>0.014265</td>
+<td>0.203888</td>
+<td>5.612735e-04</td>
+<td>1.900939e-01</td>
+<td>2.722371e-02</td>
+<td>1.364451e-05</td>
+<td>4.457975e-06</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">total_loan_costs_MH</td>
+<td>0.049097</td>
+<td>2.092212e-03</td>
+<td>3.964357e-04</td>
+<td>0.006480</td>
+<td>0.000034</td>
+<td>0.000908</td>
+<td>0.086860</td>
+<td>0.125954</td>
+<td>0.003481</td>
+<td>7.030098e-05</td>
+<td>...</td>
+<td>0.001394</td>
+<td>5.438767e-02</td>
+<td>0.189695</td>
+<td>0.001752</td>
+<td>0.000194</td>
+<td>7.493222e-08</td>
+<td>1.082877e-07</td>
+<td>6.609995e-06</td>
+<td>6.789266e-02</td>
+<td>2.494463e-07</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">origination_charges_MH</td>
+<td>0.047695</td>
+<td>5.291334e-03</td>
+<td>1.314798e-05</td>
+<td>0.007483</td>
+<td>0.000316</td>
+<td>0.002069</td>
+<td>0.114474</td>
+<td>0.159078</td>
+<td>0.003506</td>
+<td>1.969190e-04</td>
+<td>...</td>
+<td>0.000797</td>
+<td>6.254710e-02</td>
+<td>0.309200</td>
+<td>0.109115</td>
+<td>0.004430</td>
+<td>6.008099e-06</td>
+<td>7.908615e-05</td>
+<td>8.730695e-08</td>
+<td>6.953100e-02</td>
+<td>1.126411e-07</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">property_value_ML</td>
+<td>0.043231</td>
+<td>1.311904e-02</td>
+<td>2.361116e-02</td>
+<td>0.000225</td>
+<td>0.006645</td>
+<td>0.001983</td>
+<td>0.079686</td>
+<td>0.111624</td>
+<td>0.002818</td>
+<td>1.176477e-04</td>
+<td>...</td>
+<td>0.003947</td>
+<td>2.806396e-04</td>
+<td>0.000114</td>
+<td>0.008425</td>
+<td>0.217519</td>
+<td>2.815655e-06</td>
+<td>1.540480e-01</td>
+<td>2.014790e-02</td>
+<td>2.489933e-05</td>
+<td>5.612855e-06</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">discount_points_MH</td>
+<td>0.033078</td>
+<td>4.344227e-03</td>
+<td>3.090285e-05</td>
+<td>0.006287</td>
+<td>0.000074</td>
+<td>0.002746</td>
+<td>0.087229</td>
+<td>0.116690</td>
+<td>0.007014</td>
+<td>3.781955e-04</td>
+<td>...</td>
+<td>0.000003</td>
+<td>3.379782e-03</td>
+<td>0.045276</td>
+<td>0.146388</td>
+<td>0.009086</td>
+<td>1.432915e-05</td>
+<td>1.318505e-05</td>
+<td>2.382708e-05</td>
+<td>4.700539e-04</td>
+<td>2.749443e-08</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">purchaser_type_0</td>
+<td>0.032864</td>
+<td>5.101933e-02</td>
+<td>5.134128e-05</td>
+<td>0.000131</td>
+<td>0.000346</td>
+<td>0.017773</td>
+<td>0.005854</td>
+<td>0.002768</td>
+<td>0.024542</td>
+<td>2.130675e-05</td>
+<td>...</td>
+<td>0.013549</td>
+<td>2.877823e-04</td>
+<td>0.000093</td>
+<td>0.000437</td>
+<td>0.000206</td>
+<td>1.423601e-06</td>
+<td>5.923642e-04</td>
+<td>1.386355e-03</td>
+<td>9.410552e-07</td>
+<td>2.602806e-07</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">open-end_line_of_credit_1</td>
+<td>0.030098</td>
+<td>3.497459e-02</td>
+<td>3.147512e-03</td>
+<td>0.270842</td>
+<td>0.000043</td>
+<td>0.016216</td>
+<td>0.002723</td>
+<td>0.000650</td>
+<td>0.000119</td>
+<td>7.713089e-05</td>
+<td>...</td>
+<td>0.000072</td>
+<td>4.264123e-06</td>
+<td>0.000008</td>
+<td>0.000191</td>
+<td>0.000081</td>
+<td>2.761905e-08</td>
+<td>1.606608e-05</td>
+<td>2.476935e-06</td>
+<td>3.188185e-07</td>
+<td>4.925486e-01</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">income_ML</td>
+<td>0.027202</td>
+<td>2.880571e-03</td>
+<td>5.876898e-03</td>
+<td>0.004245</td>
+<td>0.003249</td>
+<td>0.000997</td>
+<td>0.036600</td>
+<td>0.059010</td>
+<td>0.000014</td>
+<td>1.913531e-05</td>
+<td>...</td>
+<td>0.000243</td>
+<td>3.641664e-06</td>
+<td>0.000100</td>
+<td>0.000925</td>
+<td>0.001264</td>
+<td>1.180952e-04</td>
+<td>1.426697e-04</td>
+<td>2.402477e-05</td>
+<td>3.522036e-07</td>
+<td>4.322885e-06</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">applicant_credit_score_type_8</td>
+<td>0.023624</td>
+<td>2.252189e-02</td>
+<td>1.936850e-03</td>
+<td>0.221591</td>
+<td>0.000008</td>
+<td>0.014466</td>
+<td>0.001494</td>
+<td>0.000439</td>
+<td>0.006472</td>
+<td>1.602758e-04</td>
+<td>...</td>
+<td>0.000325</td>
+<td>2.646222e-05</td>
+<td>0.000011</td>
+<td>0.000186</td>
+<td>0.000020</td>
+<td>7.810669e-07</td>
+<td>4.211464e-05</td>
+<td>5.847733e-04</td>
+<td>4.673938e-07</td>
+<td>3.942036e-01</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">debt_to_income_ratio_18.0</td>
+<td>0.022513</td>
+<td>1.081502e-02</td>
+<td>1.665984e-03</td>
+<td>0.020357</td>
+<td>0.000969</td>
+<td>0.006126</td>
+<td>0.002172</td>
+<td>0.001373</td>
+<td>0.028440</td>
+<td>4.319469e-05</td>
+<td>...</td>
+<td>0.000344</td>
+<td>3.474722e-07</td>
+<td>0.000018</td>
+<td>0.000296</td>
+<td>0.000127</td>
+<td>2.200983e-06</td>
+<td>3.635712e-06</td>
+<td>3.165596e-04</td>
+<td>5.901178e-07</td>
+<td>1.647005e-06</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">loan_amount_MH</td>
+<td>0.022203</td>
+<td>1.950365e-02</td>
+<td>2.109436e-03</td>
+<td>0.000615</td>
+<td>0.000016</td>
+<td>0.001156</td>
+<td>0.001097</td>
+<td>0.000228</td>
+<td>0.009686</td>
+<td>1.696359e-04</td>
+<td>...</td>
+<td>0.002764</td>
+<td>2.114010e-05</td>
+<td>0.000608</td>
+<td>0.000015</td>
+<td>0.012514</td>
+<td>1.093064e-05</td>
+<td>5.994630e-02</td>
+<td>1.001983e-02</td>
+<td>1.617146e-04</td>
+<td>3.625249e-07</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">company_Navy Federal Credit Union</td>
+<td>0.021360</td>
+<td>1.382622e-02</td>
+<td>7.652527e-03</td>
+<td>0.024050</td>
+<td>0.000687</td>
+<td>0.138437</td>
+<td>0.017836</td>
+<td>0.009102</td>
+<td>0.041316</td>
+<td>8.876005e-06</td>
+<td>...</td>
+<td>0.007175</td>
+<td>8.647908e-04</td>
+<td>0.000281</td>
+<td>0.001228</td>
+<td>0.000032</td>
+<td>2.159210e-05</td>
+<td>2.375829e-02</td>
+<td>1.576080e-01</td>
+<td>4.473596e-05</td>
+<td>1.660420e-04</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">co-applicant_credit_score_type_9</td>
+<td>0.020690</td>
+<td>4.557131e-04</td>
+<td>6.755788e-07</td>
+<td>0.000520</td>
+<td>0.003270</td>
+<td>0.016488</td>
+<td>0.001447</td>
+<td>0.002080</td>
+<td>0.007025</td>
+<td>5.846616e-07</td>
+<td>...</td>
+<td>0.000218</td>
+<td>2.176786e-06</td>
+<td>0.000032</td>
+<td>0.000010</td>
+<td>0.000025</td>
+<td>1.267790e-06</td>
+<td>4.024599e-03</td>
+<td>1.622137e-02</td>
+<td>2.032551e-05</td>
+<td>4.518054e-05</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">origination_charges_M</td>
+<td>0.018343</td>
+<td>1.853453e-08</td>
+<td>2.048184e-03</td>
+<td>0.004807</td>
+<td>0.000418</td>
+<td>0.003443</td>
+<td>0.002822</td>
+<td>0.009952</td>
+<td>0.000624</td>
+<td>4.297237e-05</td>
+<td>...</td>
+<td>0.000008</td>
+<td>9.540820e-04</td>
+<td>0.008231</td>
+<td>0.015886</td>
+<td>0.001038</td>
+<td>1.369357e-06</td>
+<td>8.420563e-05</td>
+<td>5.919102e-06</td>
+<td>5.366124e-02</td>
+<td>6.069544e-08</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">purchaser_type_1</td>
+<td>0.015311</td>
+<td>1.264095e-02</td>
+<td>7.400198e-05</td>
+<td>0.000004</td>
+<td>0.002262</td>
+<td>0.002061</td>
+<td>0.001437</td>
+<td>0.001671</td>
+<td>0.000003</td>
+<td>3.912600e-05</td>
+<td>...</td>
+<td>0.005013</td>
+<td>9.121422e-05</td>
+<td>0.000009</td>
+<td>0.000021</td>
+<td>0.000058</td>
+<td>6.294184e-06</td>
+<td>2.411526e-04</td>
+<td>7.236456e-05</td>
+<td>4.126922e-07</td>
+<td>1.541073e-10</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">total_loan_costs_M</td>
+<td>0.015282</td>
+<td>1.597282e-04</td>
+<td>3.768925e-03</td>
+<td>0.001067</td>
+<td>0.001801</td>
+<td>0.001352</td>
+<td>0.001175</td>
+<td>0.002676</td>
+<td>0.009979</td>
+<td>2.529182e-05</td>
+<td>...</td>
+<td>0.000004</td>
+<td>4.037010e-03</td>
+<td>0.008549</td>
+<td>0.008052</td>
+<td>0.000817</td>
+<td>3.548314e-06</td>
+<td>7.984920e-07</td>
+<td>6.811171e-05</td>
+<td>3.599548e-02</td>
+<td>1.046963e-08</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">loan_to_value_ratio_MH</td>
+<td>0.014452</td>
+<td>4.061576e-03</td>
+<td>5.026527e-05</td>
+<td>0.003849</td>
+<td>0.002806</td>
+<td>0.085140</td>
+<td>0.012913</td>
+<td>0.006081</td>
+<td>0.017323</td>
+<td>1.591876e-05</td>
+<td>...</td>
+<td>0.000027</td>
+<td>7.783720e-05</td>
+<td>0.000164</td>
+<td>0.000191</td>
+<td>0.000906</td>
+<td>8.208134e-06</td>
+<td>1.281691e-04</td>
+<td>1.841615e-02</td>
+<td>1.551564e-09</td>
+<td>1.157982e-05</td>
+</tr>
+</tbody>
+</table>
+
+<p>20 rows × 100 columns</p>
+</div>
+</div>
+</div>
+<div id="01bfbc8e" class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co">#forgot to drop from outdf_nr earlier.  fixing...</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>outdf_nr.drop(</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    columns<span class="op">=</span>[<span class="st">'derived_sex_Female'</span>,<span class="st">'derived_sex_Joint'</span>,<span class="st">'derived_sex_Male'</span>,</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>            <span class="st">'derived_sex_Sex Not Available'</span>],inplace<span class="op">=</span><span class="va">True</span>,axis<span class="op">=</span><span class="dv">1</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="output-the-results-to-csv" class="level3" data-number="G.1.5">
+<h3 data-number="G.1.5" class="anchored" data-anchor-id="output-the-results-to-csv"><span class="header-section-number">G.1.5</span> Output the Results to CSV</h3>
+<div id="3cce5e15" class="cell" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>out <span class="op">=</span> mcaNd.column_contributions_.copy()</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>out_nr <span class="op">=</span> mcaNd_nr.column_contributions_.copy()</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>out.reset_index(inplace<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>out_nr.reset_index(inplace<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>out.columns <span class="op">=</span> [<span class="st">'Column'</span>]<span class="op">+</span>[<span class="st">"MC</span><span class="sc">{}</span><span class="st">"</span>.<span class="bu">format</span>(i<span class="op">+</span><span class="dv">1</span>) <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(out.columns)<span class="op">-</span><span class="dv">1</span>)]</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>out_nr.columns <span class="op">=</span> [<span class="st">'Column'</span>]<span class="op">+</span>[<span class="st">"MC</span><span class="sc">{}</span><span class="st">"</span>.<span class="bu">format</span>(i<span class="op">+</span><span class="dv">1</span>) <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(out_nr.columns)<span class="op">-</span><span class="dv">1</span>)]</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>mcaNd.eigenvalues_summary.to_csv(<span class="st">'../data/mca-Nd-eig.csv'</span>,index<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>out.to_csv(<span class="st">'../data/mca-Nd-ColCont.csv'</span>,index<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>mcaNd_nr.eigenvalues_summary.to_csv(<span class="st">'../data/mca-Nd-npc-eig.csv'</span>,index<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>out_nr.to_csv(<span class="st">'../data/mca-Nd-npc-ColCont.csv'</span>,index<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>outdf.to_csv(<span class="st">'../data/data-one-hot.csv'</span>,index<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>outdf_nr.to_csv(<span class="st">'../data/data-one-hot-npc.csv'</span>,index<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>xformNd.to_csv(<span class="st">'../data/mcaNd.csv'</span>,index<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>xformNd_nr.to_csv(<span class="st">'../data/mcaNd-npc.csv'</span>,index<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="5fdcdf9f" class="cell" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>tmp <span class="op">=</span> pd.concat([out,labels],axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>sns.scatterplot(</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>    data<span class="op">=</span>tmp,</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>    x<span class="op">=</span><span class="st">'MC1'</span>,y<span class="op">=</span><span class="st">'MC2'</span>,</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>    hue<span class="op">=</span><span class="st">'outcome'</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="app8-mca_files/figure-html/cell-19-output-1.png" width="585" height="429" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="987e1704" class="cell" data-execution_count="19">
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="app8-mca_files/figure-html/cell-20-output-1.png" width="600" height="429" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation column-body">
+  <div class="nav-page nav-page-previous">
+      <a href="./app7.html" class="pagination-link  aria-label=" &lt;span="" code&lt;="" span&gt;"="">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">F</span>&nbsp; <span class="chapter-title">Regression Code</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+<script src="site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>

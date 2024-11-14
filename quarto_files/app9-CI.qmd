@@ -1,0 +1,353 @@
+# Causal Inference {#sec-CI-app .appendix}
+
+```{python}
+import pandas as pd, numpy as np, seaborn as sns
+from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import classification_report
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.metrics import (
+    accuracy_score,roc_auc_score,
+    precision_score, recall_score, 
+    f1_score, confusion_matrix,
+    ConfusionMatrixDisplay
+)
+from prince import MCA
+```
+
+```{python}
+df = pd.read_csv('../data/data-one-hot.csv')
+labels = pd.read_csv('../data/final_clean_r2.csv')['outcome']
+```
+
+```{python}
+cols = df.columns.tolist()
+
+race_inds = list(map(lambda x: "applicant_race" in x and not 'observed' in x, cols))
+df.columns[race_inds]
+
+eth_inds = list(map(lambda x: "applicant_eth" in x and not 'observed' in x, cols))
+display(
+    df.columns[race_inds],
+    df.columns[eth_inds]
+)
+race_cols = list(df.columns[race_inds])[:-1]
+eth_cols = list(df.columns[eth_inds])[:-1]
+```
+
+```{python}
+mcaNd = MCA(n_components=130,one_hot=False)
+xformNd = mcaNd.fit_transform(
+    df.drop(
+        labels=[
+            'applicant_race_No Co-applicant',
+            'applicant_ethnicity_No Co-applicant',
+            'aus_GUS',
+            'aus_Exempt'
+        ],axis=1
+    )
+)
+
+
+```
+
+```{python}
+xformNd = pd.read_csv('../data/mcaNd.csv')
+xformNd_npc = pd.read_csv('../data/mcaNd-npc.csv')
+```
+
+```{python}
+X_train,X_test,y_train,y_test = train_test_split(
+    xformNd,
+    labels,
+    stratify=labels,
+    random_state=8808
+)
+
+inds = X_test.index
+```
+
+```{python}
+df_cpy = df.loc[inds].copy()
+
+lr = LogisticRegression(max_iter=300)
+lr.fit(X_train,y_train)
+```
+
+```{python}
+dists_pc = pd.DataFrame({
+    'Column':[],
+    'Accuracy':[],
+    'Precision':[],
+    'Recall':[],
+    'F1':[]
+})
+
+dists2_pc = pd.DataFrame({
+    'TP':[],
+    'TN':[],
+    'FP':[],
+    'FN':[]
+})
+
+dists_npc = pd.DataFrame({
+    'Column':[],
+    'Accuracy':[],
+    'Precision':[],
+    'Recall':[],
+    'F1':[]
+})
+
+dists2_npc = pd.DataFrame({
+    'TP':[],
+    'TN':[],
+    'FP':[],
+    'FN':[]
+})
+
+lr_dist = LogisticRegression(max_iter=300)
+lr_dist_npc = LogisticRegression(max_iter=300)
+
+np.random.seed(9001)
+for i in range(1000):
+    r = np.random.randint(1,10000)
+    X_train,X_test,y_train,y_test = train_test_split(
+        xformNd,
+        labels,
+        stratify=labels,
+        random_state=r
+    )
+    X_train2,X_test2,y_train,y_test = train_test_split(
+        xformNd_npc,
+        labels,
+        stratify=labels,
+        random_state=r
+    )
+    lr_dist.fit(X_train,y_train)
+    lr_dist_npc.fit(X_train2,y_train)
+    y_pred = lr_dist.predict(X_test)
+    y_pred_npc = lr_dist_npc.predict(X_test2)
+    # tp,fp,fn,tn = confusion_matrix(y_test,y_pred).ravel()
+
+    tn, fp, fn, tp = confusion_matrix(y_test,y_pred).ravel()
+    tn2, fp2, fn2, tp2 = confusion_matrix(y_test,y_pred_npc).ravel()
+    dists_pc.loc[len(dists_pc)] = {
+        'Accuracy':accuracy_score(y_test,y_pred),
+        'Precision':precision_score(y_test,y_pred),
+        'Recall':recall_score(y_test,y_pred),
+        'F1':f1_score(y_test,y_pred),
+    }
+    dists2_pc.loc[len(dists2_pc)] = {
+        'TP':tp,'TN':tn,'FP':fp,'FN':fn
+    }
+
+    dists_npc.loc[len(dists_npc)] = {
+        'Accuracy':accuracy_score(y_test,y_pred_npc),
+        'Precision':precision_score(y_test,y_pred_npc),
+        'Recall':recall_score(y_test,y_pred_npc),
+        'F1':f1_score(y_test,y_pred_npc),
+    }
+    dists2_npc.loc[len(dists2_npc)] = {
+        'TP':tp2,'TN':tn2,'FP':fp2,'FN':fn2
+    }
+
+```
+
+```{python}
+import matplotlib.pyplot as plt
+dist_piv_pc = dists_pc.melt(value_vars=['Accuracy','Precision','Recall','F1'])
+dist_piv_npc = dists_npc.melt(value_vars=['Accuracy','Precision','Recall','F1'])
+
+dist_piv_pc['Data'] = 'PC'
+dist_piv_npc['Data'] = 'NPC'
+
+dists = pd.concat([dist_piv_pc, dist_piv_npc])
+
+g = sns.FacetGrid(data=dists,col='variable',row='Data')
+
+g.map_dataframe(sns.kdeplot,x='value')
+
+plt.show()
+```
+
+```{python}
+from pingouin import ttest
+rdf = pd.DataFrame({})
+for col in ['Accuracy','Precision','Recall','F1']:
+    df = ttest(
+        dists_npc[col],
+        dists_pc[col],
+        paired=True #exact same subjects on each iteration
+    )
+    df['score'] = col
+    rdf = pd.concat([rdf,df])
+display(rdf.style.hide(axis='index'))
+```
+
+```{python}
+X_train,X_test,y_train,y_test = train_test_split(
+    xformNd,
+    labels,
+    stratify=labels,
+    random_state=8808
+)
+lr.fit(X_train,y_train)
+y_pred = lr.predict(X_test) #the source data itself
+results = pd.DataFrame({
+    'Column':[],
+    'Accuracy':[],
+    'Precision':[],
+    'Recall':[],
+    'F1':[],
+    'Specificity':[]
+})
+results2 = pd.DataFrame({
+    'TP':[],
+    'TN':[],
+    'FP':[],
+    'FN':[]
+})
+tp,fp,fn,tn = confusion_matrix(y_test,y_pred).ravel()
+results.loc[len(results)] ={
+    'Column':"Source Data",
+    'Accuracy':accuracy_score(y_test,y_pred),
+    'Precision':precision_score(y_test,y_pred),
+    'Recall':recall_score(y_test,y_pred),
+    'F1':f1_score(y_test,y_pred),
+    'Specificity':tn/(tn+fp)
+}
+for i in range(len(race_cols)):
+    l = race_cols.copy()
+    col = race_cols[i]
+    l.pop(i)
+    df_cpy[col] = 1
+    df_cpy[l]=0
+    X_tst = mcaNd.transform(df_cpy)
+    y_pred = lr.predict(X_tst)
+    # tp,fp,fn,tn = confusion_matrix(y_test,y_pred).ravel()
+    tn, fp, fn, tp = confusion_matrix(y_test,y_pred).ravel()
+    results.loc[len(results)] ={
+        'Column':col,
+        'Accuracy':accuracy_score(y_test,y_pred),
+        'Precision':precision_score(y_test,y_pred),
+        'Recall':recall_score(y_test,y_pred),
+        'F1':f1_score(y_test,y_pred),
+        'Specificity':tn/(tn+fp)
+    }
+    results2.loc[len(results2)] = {
+        'TP':tp,'TN':tn,'FP':fp,'FN':fn
+    }
+results
+```
+
+```{python}
+# acc_mu, acc_sd = dists['Accuracy'].mean(),dists['Accuracy'].std()
+
+# prec_mu, prec_sd = dists['Accuracy'].mean(),dists['Accuracy'].std()
+
+# rec_mu, rec_sd = dists['Accuracy'].mean(),dists['Accuracy'].std()
+
+# f1_mu, f1_sd = dists['Accuracy'].mean(),dists['Accuracy'].std()
+
+tbl = dists.describe().T.reset_index()
+tbl[['index','mean','std']]
+
+import matplotlib.pyplot as plt
+```
+
+```{python}
+from scipy import stats
+sig = pd.DataFrame({
+    'Stat':[],
+    'race':[],
+    'p-value':[]
+})
+for race in results['Column']:
+    for v in ['Accuracy','Precision','Recall','F1']:
+        # print("*"*80)
+        # print(v)
+        r = tbl.loc[tbl['index']==v]
+        mu,sd = r['mean'].iloc[0],r['std'].iloc[0]
+        x = results.loc[
+            results['Column'].str.contains(race)
+        ][v].iloc[0]
+        # print(x)
+        z = (x-mu)/sd
+        p_val = 2*(1-stats.norm.cdf(abs(z)))
+        if p_val < 0.003:
+            sig.loc[len(sig)] = {
+                'Stat':v,
+                'race':race,
+                'p-value':p_val
+            }
+sig.sort_values(by='Stat')
+```
+
+```{python}
+from scipy import stats
+sig = pd.DataFrame({
+    'Stat':[],
+    'race':[],
+    'p-value':[]
+})
+for race in results2['Column']:
+    for v in ['FNR']:#'Accuracy','Precision','Recall','F1']:
+        # print("*"*80)
+        # print(v)
+        r = tbl.loc[tbl['index']==v]
+        print(r)
+        mu,sd = r['mean'].iloc[0],r['std'].iloc[0]
+        x = results2.loc[
+            results2['Column'].str.contains(race)
+        ][v].iloc[0]
+        # print(x)
+        z = (x-mu)/sd
+        p_val = 2*(1-stats.norm.cdf(abs(z)))
+        if p_val < 0.003:
+            sig.loc[len(sig)] = {
+                'Stat':v,
+                'race':race,
+                'p-value':p_val
+            }
+sig.sort_values(by='Stat')
+```
+
+```{python}
+dists[dists.columns[:-1]].to_csv('../data/model_score_distributions.csv',index=False)
+sig.to_csv('../data/two_tailed_z_tests.csv',index=False)
+```
+
+Accuracy = (TP+TN) / (TP+TN+FP+FN)
+Precision = TP / (TP+FP)
+1-PREC = TN / (TN + FP)
+Recall = TP / (TP+FN)
+1-Rec = TN / (TN+FN)
+
+## Causal Experiment
+
+* Create a distribution of model scores (sensitivity, specificity, etc)
+
+    * Set a random seed
+
+    * Repeat 1000x
+
+        * Create a random 80/20 split of the data
+
+        * Train a logistic regression using the current split (no hyperparameter tuning, less iterations for convergence?)
+
+        * collect model scores and record
+
+    * Create a new and unseen 80/20 split of the data
+
+        * Train a new logistic regression on the 80%
+
+        * For the testing set, change every record's protected category to a specific category in question (e.g. race=Black, Race=White)
+
+        * Run the modified test dataset through the model and capture the metrics (recall / precision / F1 / accuracy / etc)
+
+    * For each of the test sets with changing/setting race to a new category
+
+        * conduct a two-tailed Z-test for the test value vs. the randomized distribution of scores
+
+        * if Z-test < $\alpha$ - then we have a significant result that can only really be explained by a person being a particular race?
+    

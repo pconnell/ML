@@ -1,0 +1,525 @@
+# Multiple Correspondence Analysis {#sec-MCA-app .appendix}
+
+First, import the necessary modules
+
+```{python imports}
+#| echo: true
+#| eval: true
+
+import pandas as pd, numpy as np, seaborn as sns, matplotlib.pyplot as plt
+
+from sklearn.preprocessing import StandardScaler
+
+from sklearn.decomposition import PCA
+
+from sklearn.cluster import KMeans
+
+from mpl_toolkits.mplot3d import Axes3D
+
+from sklearn.preprocessing import OneHotEncoder
+
+from prince import MCA
+
+fr = pd.read_csv('../data/final_clean_r2.csv')
+
+labels = fr['outcome'].copy()
+```
+
+## Data Transformations
+
+First, to perform MCA, variables require separation, and transformation to categorical variables.  Below, the binary encoded fields for applicant race, ethnicity, and underwriting system, are broken back out into corresponding binary True/False columns for each category.
+
+### Breakout Race, Ethnicity, and Underwriting System Columns
+
+```{python}
+#| eval: true
+#| echo: true
+
+##for use in splitting the collapsed columns 
+##back out into their respective binary values
+mapper = {
+    'applicant_race':{
+        'American Indian/Alaska Native':0b0000000000000000001,
+        'Asian':0b0000000000000000010,
+        'Asian Indian':0b0000000000000000100,
+        'Chinese':0b0000000000000001000,
+        'Filipino':0b0000000000000010000,
+        'Japanese':0b0000000000000100000,
+        'Korean':0b0000000000001000000,
+        'Vietnamese':0b0000000000010000000,
+        'Other Asian':0b0000000000100000000,
+        'Black/African American':0b0000000001000000000,
+        'Native Hawaiian/Pacific Islander':0b0000000010000000000,
+        'Native Hawaiian':0b0000000100000000000,
+        'Guamanian/Chamorro':0b0000001000000000000,
+        'Samoan':0b0000010000000000000,
+        'Other Pacific Islander':0b0000100000000000000,
+        'White':0b0001000000000000000,
+        'Information not provided':0b0010000000000000000,
+        'Not Applicable':0b0100000000000000000,
+        'No Co-applicant':0b1000000000000000000
+    },
+    'co-applicant_race':{
+        'American Indian/Alaska Native':0b0000000000000000001,
+        'Asian':0b0000000000000000010,
+        'Asian Indian':0b0000000000000000100,
+        'Chinese':0b0000000000000001000,
+        'Filipino':0b0000000000000010000,
+        'Japanese':0b0000000000000100000,
+        'Korean':0b0000000000001000000,
+        'Vietnamese':0b0000000000010000000,
+        'Other Asian':0b0000000000100000000,
+        'Black/African American':0b0000000001000000000,
+        'Native Hawaiian/Pacific Islander':0b0000000010000000000,
+        'Native Hawaiian':0b0000000100000000000,
+        'Guamanian/Chamorro':0b0000001000000000000,
+        'Samoan':0b0000010000000000000,
+        'Other Pacific Islander':0b0000100000000000000,
+        'White':0b0001000000000000000,
+        'Information not provided':0b0010000000000000000,
+        'Not Applicable':0b0100000000000000000,
+        'No Co-applicant':0b1000000000000000000
+    },
+    'applicant_ethnicity':{
+        'Hispanic/Latino':0b000000001,
+        'Mexican':0b000000010,
+        'Puerto Rican':0b000000100,
+        'Cuban':0b000001000,
+        'Other Hispanic/Latino':0b000010000,
+        'Not Hispanic/Latino':0b000100000,
+        'Information Not Provided':0b001000000,
+        'Not Applicable':0b010000000,
+        'No Co-applicant':0b100000000
+    },
+    'co-applicant_ethnicity':{
+        'Hispanic/Latino':0b000000001,
+        'Mexican':0b000000010,
+        'Puerto Rican':0b000000100,
+        'Cuban':0b000001000,
+        'Other Hispanic/Latino':0b000010000,
+        'Not Hispanic/Latino':0b000100000,
+        'Information Not Provided':0b001000000,
+        'Not Applicable':0b010000000,
+        'No Co-applicant':0b100000000
+    },
+    'aus':{
+        'Desktop Underwriter':0b00000001,
+        'Loan Prospector/Product Advisor':0b00000010,
+        'TOTAL Scorecard':0b00000100,
+        'GUS':0b00001000,
+        'Other':0b00010000,
+        'Internal Proprietary':0b00100000,
+        'Not applicable':0b01000000,
+        'Exempt':0b10000000,
+    }, 
+}
+
+new_mapper = {}
+for k,v in mapper.items():
+    new_mapper[k] = {}
+    #print(k)
+    for j,w in v.items():
+        #print(w,j)
+        new_mapper[k][w] = j
+
+```
+
+Next, the numeric variables require transformation to categorical.  In this case, the standard deviation was leveraged to produce the following categories:
+
+* Value < Mean - 2*standard deviation => L (low)
+
+* Mean - 2 * standard deviation < Value < Mean - standard deviation =>  ML (Mid-Low)
+
+* Mean - standard deviation < Value < Mean + standard deviation => M
+
+* Mean + standard deviation < Value < Mean + 2 * standard deviation => MH (Mid-High)
+
+* Value > Mean + 2 * standard deviation => H (High)
+
+This categorization allowed for diversity in the source data prior to transforming with MCA
+
+```{python}
+#| eval: true
+#| echo: true
+#adjust numerics to categoricals
+
+#drop columns that will not be leveraged in MCA
+fr.drop(
+    labels = [
+        'balloon_payment', 
+        'interest_only_payment', 
+        'other_nonamortizing_features',
+        'income_from_median',
+        'state_code',
+        'county_code'
+    ],
+    axis=1,inplace=True
+)
+
+#identify numeric columns to convert to categorical
+numerics = [
+    'income',
+    'loan_amount',
+    'interest_rate',
+    'total_loan_costs',
+    'origination_charges',
+    'discount_points',
+    'lender_credits',
+    'loan_term',
+    'intro_rate_period',
+    'property_value',
+    'total_units',
+    'tract_population',
+    'tract_minority_population_percent',
+    'ffiec_msa_md_median_family_income',
+    'tract_to_msa_income_percentage',
+    'tract_owner_occupied_units',
+    'tract_one_to_four_family_homes',
+    'tract_median_age_of_housing_units',
+    'loan_to_value_ratio'
+]
+
+#set the cutting boundaries
+bounds = [i/5 for i in range(1,5)]
+
+for col in numerics:
+    #income had some errors, for some reason
+    if col == 'income':
+        fr.loc[fr[col]<=0,col] = 0.01
+        fr[col] = np.log(fr[col])
+
+    s = fr[col].std()
+
+    m = fr[col].mean()
+
+    #cut everything based on standard deviations
+    cut_level = [
+        m-2*s,
+        m-s,
+        m+s,
+        m+2*s
+    ]
+    
+    cut_level = [-np.inf] + cut_level + [np.inf]
+
+    #assign value based on cut boundaries
+    fr[col] = pd.cut(
+        fr[col],
+        bins=cut_level,
+        labels=["L","ML","M","MH","H"]
+    )
+
+    #convert to categorical
+    fr[col] = fr[col].astype('category')
+
+fr[numerics].head(10)
+```
+
+After transforming numerics, the one-hot encoded columns extracted from race, ethnicity, and underwriting system required separation from the rest of the data so that all remaining categorical columns could be converted to a one-hot encoding.
+
+Below outlines the separation of the race, ethnicity, and underwriting columns.
+
+```{python}
+#| eval: true
+#| echo: true
+
+#extract binary columns
+## because they're already one-hot encoded
+fr_bin = fr[[
+    'applicant_race',
+    'applicant_ethnicity',
+    'co-applicant_race',
+    'co-applicant_ethnicity',
+    'aus'
+]].copy()
+
+for k,v in new_mapper.items():
+    for l,w in v.items():
+        fr_bin[k+'_'+w] = (fr_bin[k]&l > 0).astype(int)
+
+fr_bin.drop(
+    labels=[    
+        'applicant_race',
+        'applicant_ethnicity',
+        'co-applicant_race',
+        'co-applicant_ethnicity',
+        'aus'
+    ],
+    inplace=True,
+    axis=1
+)
+
+fr.drop(
+    labels=[
+        'applicant_race',
+        'applicant_ethnicity',
+        'co-applicant_race',
+        'co-applicant_ethnicity',
+        'denial_reason',
+        'aus',
+        'outcome',
+        'action_taken'
+    ],
+    inplace=True,
+    axis=1
+)
+display(
+    fr.head(10),
+    fr_bin.head(10)
+)
+```
+
+The below cell takes the remaining non-binary encoded data and performs one-hot encoding.
+
+```{python}
+#| eval: true
+#| echo: true
+
+# perform one-hot encoding of remaining columns
+ohe = OneHotEncoder()
+out = ohe.fit_transform(fr)
+outdf = pd.DataFrame(out.toarray(),columns=ohe.get_feature_names_out().tolist())
+
+#prepare a copy of the dataframe
+outdf_nr = outdf.copy()
+
+#transfer columns over from the already one-hot encoded dataframe
+for col in fr_bin.columns:
+    outdf[col] = fr_bin[col].copy()
+
+#convert all columns to integers
+for col in outdf.columns:
+    outdf[col] = outdf[col].astype(int)
+
+#display the output
+display(outdf.head())
+```
+
+### Check for Buggy Columns
+
+MCA requires a one-hot encoded vector to have at least 1 zero and at least 1 one per column.  The below checks for any columns that did not meet this requirement, and any such columns are exlcued from the MCA.
+
+```{python}
+#| echo: true
+#| eval: true
+
+#check for any columns that only have one value/result
+for col in outdf.columns:
+    x = list(outdf[col].unique())
+    x.sort()
+    if x != [0,1]:
+        print(col)
+
+
+```
+
+### MCA With Protected Classes
+```{python}
+#| eval: true
+#| echo: true
+
+ncomp=181
+mcaNd = MCA(n_components=ncomp,one_hot=False)
+
+#exclude columns that had no variability (only a single value) 
+#and fit a multiple correspondence analysis
+xformNd = mcaNd.fit_transform(
+    outdf.drop(
+        labels=[
+            'applicant_race_No Co-applicant',
+            'applicant_ethnicity_No Co-applicant',
+            'aus_GUS',
+            'aus_Exempt'
+        ],axis=1
+    )
+)
+xformNd.columns = ['MC{}'.format(i+1) for i in range(len(xformNd.columns))]
+```
+
+```{python}
+#| eval: true
+#| echo: true
+#head of the MCA dataframe
+xformNd.head(10)
+```
+
+```{python}
+#| eval: true
+#| echo: true
+#summary of eigenvalues
+display(mcaNd.eigenvalues_summary)
+```
+
+```{python}
+#| eval: true
+#| echo: true
+#summary of column contributions to each component, sorted by the first component (e.g)
+#max eigenvalue's top 10 contributors
+display(mcaNd.column_contributions_.sort_values(by=0,ascending=False).head(10))
+```
+
+
+### MCA without Protected Classes
+```{python}
+#| eval: true
+#| echo: true
+
+
+#perform an MCA, excluding any information on:
+#age, gender, or race
+##need 99 components to get 100% of variance
+##may need these two versions to do full compare
+# ncomp = 90
+ncomp=100
+mcaNd_nr = MCA(n_components=ncomp,one_hot=False)
+xformNd_nr = mcaNd_nr.fit_transform(outdf_nr.drop(
+    labels=[
+        'derived_sex_Female',
+        'derived_sex_Joint',
+        'derived_sex_Male',
+        'derived_sex_Sex Not Available',
+        'applicant_ethnicity_observed_1',
+        'applicant_ethnicity_observed_2',
+        'applicant_ethnicity_observed_3',
+        'co-applicant_ethnicity_observed_1',
+        'co-applicant_ethnicity_observed_2',
+        'co-applicant_ethnicity_observed_3',
+        'co-applicant_ethnicity_observed_4',
+        'applicant_race_observed_1',
+        'applicant_race_observed_2',
+        'applicant_race_observed_3',
+        'co-applicant_race_observed_1',
+        'co-applicant_race_observed_2',
+        'co-applicant_race_observed_3',
+        'co-applicant_race_observed_4',
+        'applicant_sex_1',
+        'applicant_sex_2',
+        'applicant_sex_3',
+        'applicant_sex_4',
+        'applicant_sex_6',
+        'co-applicant_sex_1',
+        'co-applicant_sex_2',
+        'co-applicant_sex_3',
+        'co-applicant_sex_4',
+        'co-applicant_sex_5',
+        'co-applicant_sex_6',
+        'applicant_sex_observed_1',
+        'applicant_sex_observed_2',
+        'applicant_sex_observed_3',
+        'co-applicant_sex_observed_1',
+        'co-applicant_sex_observed_2',
+        'co-applicant_sex_observed_3',
+        'co-applicant_sex_observed_4',
+        'applicant_age_0.0',
+        'applicant_age_1.0',
+        'applicant_age_2.0',
+        'applicant_age_3.0',
+        'applicant_age_4.0',
+        'applicant_age_5.0',
+        'applicant_age_6.0',
+        'applicant_age_7.0',
+        'co-applicant_age_0.0',
+        'co-applicant_age_1.0',
+        'co-applicant_age_2.0',
+        'co-applicant_age_3.0',
+        'co-applicant_age_4.0',
+        'co-applicant_age_5.0',
+        'co-applicant_age_6.0',
+        'co-applicant_age_7.0',
+        'co-applicant_age_8.0'
+    ], 
+    axis=1
+))
+xformNd_nr.columns = ['MC{}'.format(i+1) for i in range(len(xformNd_nr.columns))]
+```
+
+```{python}
+#| eval: true
+#| echo: true
+#head of the MCA dataframe
+xformNd_nr.head(10)
+```
+
+```{python}
+#| eval: true
+#| echo: true
+#summary of eigenvalues
+display(mcaNd_nr.eigenvalues_summary)
+```
+
+```{python}
+#| eval: true
+#| echo: true
+#summary of column contributions to each component, sorted by the first component (e.g)
+#max eigenvalue's top contributors
+display(mcaNd_nr.column_contributions_.sort_values(by=0,ascending=False).head(20))
+```
+
+
+```{python}
+#| eval: true
+#| echo: true
+
+#forgot to drop from outdf_nr earlier.  fixing...
+outdf_nr.drop(
+    columns=['derived_sex_Female','derived_sex_Joint','derived_sex_Male',
+            'derived_sex_Sex Not Available'],inplace=True,axis=1
+)
+```
+
+### Output the Results to CSV
+
+```{python}
+#| eval: false
+#| echo: true
+
+out = mcaNd.column_contributions_.copy()
+out_nr = mcaNd_nr.column_contributions_.copy()
+
+out.reset_index(inplace=True)
+out_nr.reset_index(inplace=True)
+
+out.columns = ['Column']+["MC{}".format(i+1) for i in range(len(out.columns)-1)]
+out_nr.columns = ['Column']+["MC{}".format(i+1) for i in range(len(out_nr.columns)-1)]
+
+mcaNd.eigenvalues_summary.to_csv('../data/mca-Nd-eig.csv',index=False)
+out.to_csv('../data/mca-Nd-ColCont.csv',index=False)
+mcaNd_nr.eigenvalues_summary.to_csv('../data/mca-Nd-npc-eig.csv',index=False)
+out_nr.to_csv('../data/mca-Nd-npc-ColCont.csv',index=False)
+
+outdf.to_csv('../data/data-one-hot.csv',index=False)
+outdf_nr.to_csv('../data/data-one-hot-npc.csv',index=False)
+xformNd.to_csv('../data/mcaNd.csv',index=False)
+xformNd_nr.to_csv('../data/mcaNd-npc.csv',index=False)
+```
+
+```{python}
+#| echo: false
+#| eval: true
+
+out = pd.read_csv('../data/mcaNd.csv')
+out_nr = pd.read_csv('../data/mcaNd-npc.csv')
+```
+
+```{python}
+#| echo: true
+#| eval: true
+tmp = pd.concat([out,labels],axis=1)
+
+sns.scatterplot(
+    data=tmp,
+    x='MC1',y='MC2',
+    hue='outcome'
+)
+
+```
+
+```{python}
+tmp = pd.concat([out_nr,labels],axis=1)
+
+sns.scatterplot(
+    data=tmp,
+    x='MC1',y='MC2',
+    hue='outcome'
+)
+```

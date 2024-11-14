@@ -72,3 +72,24 @@ data/2dpca.csv
 data/3dpca.csv
 data/final_clean_r2.csv
 quarto_files/Other Notes.md
+data/bnbRandTest.csv
+data/cnb_npc.csv
+data/cnb_pc.csv
+data/cnbRandTest.csv
+data/data-one-hot.csv
+data/data-one-hot-npc.csv
+data/dtRandTest.csv
+data/LogRegDiffStats.csv
+data/logRegRandTest.csv
+data/mca-Nd-ColCont.csv
+data/mca-Nd-eig.csv
+data/mcaNd-npc.csv
+data/mca-Nd-npc-ColCont.csv
+data/mca-Nd-npc-eig.csv
+data/mnb_npc.csv
+data/mnb_pc.csv
+data/mnbRandTest.csv
+data/model_score_distributions.csv
+data/testgraph
+data/two_tailed_z_tests.csv
+src/MCA.ipynb

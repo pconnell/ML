@@ -1,0 +1,1684 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.549">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Exploring Protected Classes as Predictors in Mortgage Approval - 4&nbsp; Multiple Correspondence Analysis</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./clustering.html" rel="next">
+<link href="./pca.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<style>html{ scroll-behavior: smooth; }</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./mca.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Multiple Correspondence Analysis</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Exploring Protected Classes as Predictors in Mortgage Approval</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/pconnell/ML" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+    <a href="./ML-Final-Report.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Data Gathering and Exploratory Analysis</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./pca.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Principal Component Analysis</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./mca.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Multiple Correspondence Analysis</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./clustering.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Data Clustering</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./arm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Association Rule Mining</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./nb.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Naive Bayes</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./dt.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Decision Tree Modeling</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./reg.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Regression Modeling</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./app1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Data Gathering/Cleaning Code</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./app2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Component Analysis Code (PCA and MCA)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./app4.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Association Rule Mining Code</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./app6.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">Naive Bayes Code</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./app5.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">E</span>&nbsp; <span class="chapter-title">Decision Tree Code</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./app7.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">F</span>&nbsp; <span class="chapter-title">Regression Code</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./app8-mca.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">G</span>&nbsp; <span class="chapter-title">Multiple Correspondence Analysis</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview"><span class="header-section-number">4.1</span> Overview</a></li>
+  <li><a href="#data-code" id="toc-data-code" class="nav-link" data-scroll-target="#data-code"><span class="header-section-number">4.2</span> Data &amp; Code</a></li>
+  <li><a href="#results" id="toc-results" class="nav-link" data-scroll-target="#results"><span class="header-section-number">4.3</span> Results</a>
+  <ul class="collapse">
+  <li><a href="#with-protected-classes" id="toc-with-protected-classes" class="nav-link" data-scroll-target="#with-protected-classes"><span class="header-section-number">4.3.1</span> With Protected Classes</a></li>
+  <li><a href="#without-protected-classes" id="toc-without-protected-classes" class="nav-link" data-scroll-target="#without-protected-classes"><span class="header-section-number">4.3.2</span> Without Protected Classes</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content column-body" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span id="sec-MCA" class="quarto-section-identifier"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Multiple Correspondence Analysis</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta column-body">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="overview" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="overview"><span class="header-section-number">4.1</span> Overview</h2>
+<p>Many of the research questions within this effort are inherently linked to categorical factors in lieu of numeric factors. Principal component analysis is only executable upon <em>numeric</em> data and not upon categorical data - even in the case of ordinal data. As a simple example, consider a ordinal variable “size” with categories small, medium, large, and extra-large. One could apply a simple encoding and assign small=1, medium=2, large=3, and extra-large=4. This encoding, while apparently holding a degree of validity in terms of increasing size, does not match up mathematically to reality. Consider getting a fountain drink at a fast-food restaurant and ask the question - is a large the same as 3 smalls? Is an extra large the same as 1 medium and two smalls? Rarely are either of these answers “yes”. One might have to add decimal places to the categories, and at that point, one may as well get the exact size measurements in terms of fluid ounces or liters, which may or may not be possible.</p>
+<p>The additive and multiplicative challenges between these categories when assigning them a value produces challenges for ordinal variables. These challenges are further confounded when pivoting away from an ordinal variables. One runs the risk of making mathematical claims such as red is 4 times blue, or that sad is 3 less than happy. Such statements are nonsensical, have no foundation in mathematics, and while they may produce results in a model post-transformation, do not hold validity, explainability, or generalizability.</p>
+<p>Enter Multiple Correspondence Analysis (or MCA). MCA performs an analogous action on <em>categorical</em> variables as PCA performs upon <em>numeric</em> variables. To perform an MCA, one must construct a Complete Disjunctive Table, which is effectively a one-hot encoded matrix. One takes the source categorical columns and transforms them to a column per category, and for the new column, the value is set to 1 if the current row is a member of the category, and zero otherwise. This is repeated for all columns and categories until the dataset is fully expanded.</p>
+<div id="dd2294a1" class="cell" data-execution_count="2">
+<div class="cell-output cell-output-display">
+<style type="text/css">
+</style>
+
+<table id="T_29c9b" data-quarto-postprocess="true" class="table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th id="T_29c9b_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">a</th>
+<th id="T_29c9b_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">b</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td id="T_29c9b_row0_col0" class="data row0 col0">s</td>
+<td id="T_29c9b_row0_col1" class="data row0 col1">f</td>
+</tr>
+<tr class="even">
+<td id="T_29c9b_row1_col0" class="data row1 col0">m</td>
+<td id="T_29c9b_row1_col1" class="data row1 col1">w</td>
+</tr>
+<tr class="odd">
+<td id="T_29c9b_row2_col0" class="data row2 col0">s</td>
+<td id="T_29c9b_row2_col1" class="data row2 col1">s</td>
+</tr>
+<tr class="even">
+<td id="T_29c9b_row3_col0" class="data row3 col0">s</td>
+<td id="T_29c9b_row3_col1" class="data row3 col1">f</td>
+</tr>
+<tr class="odd">
+<td id="T_29c9b_row4_col0" class="data row4 col0">m</td>
+<td id="T_29c9b_row4_col1" class="data row4 col1">f</td>
+</tr>
+<tr class="even">
+<td id="T_29c9b_row5_col0" class="data row5 col0">m</td>
+<td id="T_29c9b_row5_col1" class="data row5 col1">f</td>
+</tr>
+<tr class="odd">
+<td id="T_29c9b_row6_col0" class="data row6 col0">l</td>
+<td id="T_29c9b_row6_col1" class="data row6 col1">w</td>
+</tr>
+<tr class="even">
+<td id="T_29c9b_row7_col0" class="data row7 col0">l</td>
+<td id="T_29c9b_row7_col1" class="data row7 col1">s</td>
+</tr>
+<tr class="odd">
+<td id="T_29c9b_row8_col0" class="data row8 col0">l</td>
+<td id="T_29c9b_row8_col1" class="data row8 col1">f</td>
+</tr>
+<tr class="even">
+<td id="T_29c9b_row9_col0" class="data row9 col0">m</td>
+<td id="T_29c9b_row9_col1" class="data row9 col1">w</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Taking the above example table, one can transform it to a one-hot encoded table:</p>
+<div id="e9ec8d23" class="cell" data-execution_count="3">
+<div class="cell-output cell-output-display" data-execution_count="3">
+<style type="text/css">
+</style>
+
+<table id="T_adf34" data-quarto-postprocess="true" class="table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th id="T_adf34_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">a_l</th>
+<th id="T_adf34_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">a_m</th>
+<th id="T_adf34_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">a_s</th>
+<th id="T_adf34_level0_col3" class="col_heading level0 col3" data-quarto-table-cell-role="th">b_f</th>
+<th id="T_adf34_level0_col4" class="col_heading level0 col4" data-quarto-table-cell-role="th">b_s</th>
+<th id="T_adf34_level0_col5" class="col_heading level0 col5" data-quarto-table-cell-role="th">b_w</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td id="T_adf34_row0_col0" class="data row0 col0">0</td>
+<td id="T_adf34_row0_col1" class="data row0 col1">0</td>
+<td id="T_adf34_row0_col2" class="data row0 col2">1</td>
+<td id="T_adf34_row0_col3" class="data row0 col3">1</td>
+<td id="T_adf34_row0_col4" class="data row0 col4">0</td>
+<td id="T_adf34_row0_col5" class="data row0 col5">0</td>
+</tr>
+<tr class="even">
+<td id="T_adf34_row1_col0" class="data row1 col0">0</td>
+<td id="T_adf34_row1_col1" class="data row1 col1">1</td>
+<td id="T_adf34_row1_col2" class="data row1 col2">0</td>
+<td id="T_adf34_row1_col3" class="data row1 col3">0</td>
+<td id="T_adf34_row1_col4" class="data row1 col4">0</td>
+<td id="T_adf34_row1_col5" class="data row1 col5">1</td>
+</tr>
+<tr class="odd">
+<td id="T_adf34_row2_col0" class="data row2 col0">0</td>
+<td id="T_adf34_row2_col1" class="data row2 col1">0</td>
+<td id="T_adf34_row2_col2" class="data row2 col2">1</td>
+<td id="T_adf34_row2_col3" class="data row2 col3">0</td>
+<td id="T_adf34_row2_col4" class="data row2 col4">1</td>
+<td id="T_adf34_row2_col5" class="data row2 col5">0</td>
+</tr>
+<tr class="even">
+<td id="T_adf34_row3_col0" class="data row3 col0">0</td>
+<td id="T_adf34_row3_col1" class="data row3 col1">0</td>
+<td id="T_adf34_row3_col2" class="data row3 col2">1</td>
+<td id="T_adf34_row3_col3" class="data row3 col3">1</td>
+<td id="T_adf34_row3_col4" class="data row3 col4">0</td>
+<td id="T_adf34_row3_col5" class="data row3 col5">0</td>
+</tr>
+<tr class="odd">
+<td id="T_adf34_row4_col0" class="data row4 col0">0</td>
+<td id="T_adf34_row4_col1" class="data row4 col1">1</td>
+<td id="T_adf34_row4_col2" class="data row4 col2">0</td>
+<td id="T_adf34_row4_col3" class="data row4 col3">1</td>
+<td id="T_adf34_row4_col4" class="data row4 col4">0</td>
+<td id="T_adf34_row4_col5" class="data row4 col5">0</td>
+</tr>
+<tr class="even">
+<td id="T_adf34_row5_col0" class="data row5 col0">0</td>
+<td id="T_adf34_row5_col1" class="data row5 col1">1</td>
+<td id="T_adf34_row5_col2" class="data row5 col2">0</td>
+<td id="T_adf34_row5_col3" class="data row5 col3">1</td>
+<td id="T_adf34_row5_col4" class="data row5 col4">0</td>
+<td id="T_adf34_row5_col5" class="data row5 col5">0</td>
+</tr>
+<tr class="odd">
+<td id="T_adf34_row6_col0" class="data row6 col0">1</td>
+<td id="T_adf34_row6_col1" class="data row6 col1">0</td>
+<td id="T_adf34_row6_col2" class="data row6 col2">0</td>
+<td id="T_adf34_row6_col3" class="data row6 col3">0</td>
+<td id="T_adf34_row6_col4" class="data row6 col4">0</td>
+<td id="T_adf34_row6_col5" class="data row6 col5">1</td>
+</tr>
+<tr class="even">
+<td id="T_adf34_row7_col0" class="data row7 col0">1</td>
+<td id="T_adf34_row7_col1" class="data row7 col1">0</td>
+<td id="T_adf34_row7_col2" class="data row7 col2">0</td>
+<td id="T_adf34_row7_col3" class="data row7 col3">0</td>
+<td id="T_adf34_row7_col4" class="data row7 col4">1</td>
+<td id="T_adf34_row7_col5" class="data row7 col5">0</td>
+</tr>
+<tr class="odd">
+<td id="T_adf34_row8_col0" class="data row8 col0">1</td>
+<td id="T_adf34_row8_col1" class="data row8 col1">0</td>
+<td id="T_adf34_row8_col2" class="data row8 col2">0</td>
+<td id="T_adf34_row8_col3" class="data row8 col3">1</td>
+<td id="T_adf34_row8_col4" class="data row8 col4">0</td>
+<td id="T_adf34_row8_col5" class="data row8 col5">0</td>
+</tr>
+<tr class="even">
+<td id="T_adf34_row9_col0" class="data row9 col0">0</td>
+<td id="T_adf34_row9_col1" class="data row9 col1">1</td>
+<td id="T_adf34_row9_col2" class="data row9 col2">0</td>
+<td id="T_adf34_row9_col3" class="data row9 col3">0</td>
+<td id="T_adf34_row9_col4" class="data row9 col4">0</td>
+<td id="T_adf34_row9_col5" class="data row9 col5">1</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Notice that there are now have 6 columns from the original 2 columns. This is because column ‘a’ had 3 categories - s/m/l, as did column ‘b’ - s/w/f.&nbsp;A column is created for each combination of individual columns and their respective categories, hence 6 columns in this case.</p>
+<p>After performing this transformation, the following mathematical operations are applied:</p>
+<ul>
+<li><p>Calculate the sum of all values (0s and 1s) from the CDT as value <span class="math inline">\(N\)</span></p></li>
+<li><p>Calculate matrix <span class="math inline">\(Z = \frac{CDT}{N}\)</span></p></li>
+</ul>
+<div id="2371fb3f" class="cell" data-execution_count="5">
+<div class="cell-output cell-output-display" data-execution_count="5">
+<pre><code>array([[0.  , 0.  , 0.05, 0.05, 0.  , 0.  ],
+       [0.  , 0.05, 0.  , 0.  , 0.  , 0.05],
+       [0.  , 0.  , 0.05, 0.  , 0.05, 0.  ],
+       [0.  , 0.  , 0.05, 0.05, 0.  , 0.  ],
+       [0.  , 0.05, 0.  , 0.05, 0.  , 0.  ],
+       [0.  , 0.05, 0.  , 0.05, 0.  , 0.  ],
+       [0.05, 0.  , 0.  , 0.  , 0.  , 0.05],
+       [0.05, 0.  , 0.  , 0.  , 0.05, 0.  ],
+       [0.05, 0.  , 0.  , 0.05, 0.  , 0.  ],
+       [0.  , 0.05, 0.  , 0.  , 0.  , 0.05]])</code></pre>
+</div>
+</div>
+<ul>
+<li>Calculate the column-wise sum as matrix <span class="math inline">\(c\)</span>. Transform to a diagonal matrix <span class="math inline">\(D_c\)</span></li>
+</ul>
+<div id="e4d448fe" class="cell" data-execution_count="6">
+<div class="cell-output cell-output-stdout">
+<pre><code>c:
+[[0.15 0.2  0.15 0.25 0.1  0.15]]
+Dc: [[0.15 0.   0.   0.   0.   0.  ]
+ [0.   0.2  0.   0.   0.   0.  ]
+ [0.   0.   0.15 0.   0.   0.  ]
+ [0.   0.   0.   0.25 0.   0.  ]
+ [0.   0.   0.   0.   0.1  0.  ]
+ [0.   0.   0.   0.   0.   0.15]]</code></pre>
+</div>
+</div>
+<ul>
+<li>Calculate the row-wise sum as matrix <span class="math inline">\(r\)</span>. Transform to a diagonal matrix <span class="math inline">\(D_r\)</span></li>
+</ul>
+<div id="2ce2f537" class="cell" data-execution_count="7">
+<div class="cell-output cell-output-stdout">
+<pre><code>r:
+[[0.1]
+ [0.1]
+ [0.1]
+ [0.1]
+ [0.1]
+ [0.1]
+ [0.1]
+ [0.1]
+ [0.1]
+ [0.1]]
+Dr: [[0.1 0.  0.  0.  0.  0.  0.  0.  0.  0. ]
+ [0.  0.1 0.  0.  0.  0.  0.  0.  0.  0. ]
+ [0.  0.  0.1 0.  0.  0.  0.  0.  0.  0. ]
+ [0.  0.  0.  0.1 0.  0.  0.  0.  0.  0. ]
+ [0.  0.  0.  0.  0.1 0.  0.  0.  0.  0. ]
+ [0.  0.  0.  0.  0.  0.1 0.  0.  0.  0. ]
+ [0.  0.  0.  0.  0.  0.  0.1 0.  0.  0. ]
+ [0.  0.  0.  0.  0.  0.  0.  0.1 0.  0. ]
+ [0.  0.  0.  0.  0.  0.  0.  0.  0.1 0. ]
+ [0.  0.  0.  0.  0.  0.  0.  0.  0.  0.1]]</code></pre>
+</div>
+</div>
+<ul>
+<li>Calculate matrix <span class="math inline">\(M = D_r^{-\frac{1}{2}}(Z-rc^T)D_c^{-\frac{1}{2}}\)</span></li>
+</ul>
+<div id="573f0b4f" class="cell" data-execution_count="8">
+<div class="cell-output cell-output-display">
+<pre><code>matrix([[-0.12247449, -0.14142136,  0.2857738 ,  0.15811388, -0.1       ,
+         -0.12247449],
+        [-0.12247449,  0.21213203, -0.12247449, -0.15811388, -0.1       ,
+          0.2857738 ],
+        [-0.12247449, -0.14142136,  0.2857738 , -0.15811388,  0.4       ,
+         -0.12247449],
+        [-0.12247449, -0.14142136,  0.2857738 ,  0.15811388, -0.1       ,
+         -0.12247449],
+        [-0.12247449,  0.21213203, -0.12247449,  0.15811388, -0.1       ,
+         -0.12247449],
+        [-0.12247449,  0.21213203, -0.12247449,  0.15811388, -0.1       ,
+         -0.12247449],
+        [ 0.2857738 , -0.14142136, -0.12247449, -0.15811388, -0.1       ,
+          0.2857738 ],
+        [ 0.2857738 , -0.14142136, -0.12247449, -0.15811388,  0.4       ,
+         -0.12247449],
+        [ 0.2857738 , -0.14142136, -0.12247449,  0.15811388, -0.1       ,
+         -0.12247449],
+        [-0.12247449,  0.21213203, -0.12247449, -0.15811388, -0.1       ,
+          0.2857738 ]])</code></pre>
+</div>
+</div>
+<ul>
+<li><p>Perform Matrix decomposition on <span class="math inline">\(M\)</span>:</p></li>
+<li><p>seek two unitary matrices (e.g.&nbsp;of total length 1), P and Q, and the generalized diagonal matrix of singular values <span class="math inline">\(\Delta\)</span> such that <span class="math inline">\(M=P\Delta Q^T\)</span></p></li>
+</ul>
+<div id="c032ba14" class="cell" data-execution_count="9">
+<div class="cell-output cell-output-display">
+<pre><code>matrix([[ 0.2668487 , -0.36973681, -0.02965527, -0.33505172,  0.40790586,
+          0.05256851],
+        [-0.44855833,  0.05243584,  0.3155619 , -0.06604041, -0.61898123,
+          0.17517594],
+        [ 0.5022207 ,  0.09366613,  0.5636881 ,  0.07394102, -0.17747711,
+         -0.43474836],
+        [ 0.2668487 , -0.36973681, -0.02965527, -0.33505172, -0.44893205,
+         -0.20433625],
+        [-0.16826172, -0.2934583 , -0.12732264,  0.42101532, -0.00278799,
+         -0.40682761],
+        [-0.16826172, -0.2934583 , -0.12732264,  0.42101532, -0.00278799,
+         -0.40682761],
+        [-0.1994144 ,  0.45207925, -0.19614346, -0.49896387,  0.06725846,
+         -0.61814986],
+        [ 0.31625419,  0.56958804, -0.04568462,  0.39708461,  0.03180824,
+          0.04373763],
+        [ 0.0808822 ,  0.1061851 , -0.639028  , -0.01190814, -0.31757   ,
+         -0.01210386],
+        [-0.44855833,  0.05243584,  0.3155619 , -0.06604041,  0.33321947,
+         -0.14354217]])</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<pre><code>matrix([[ 0.09313213, -0.50322667,  0.48794398,  0.10145015,  0.47216689,
+         -0.51649423],
+        [ 0.58423147, -0.21624736, -0.33453053, -0.4895997 ,  0.42078311,
+          0.28850252],
+        [-0.58423147,  0.21624736,  0.33453053, -0.4895997 ,  0.42078311,
+          0.28850252],
+        [-0.09313213,  0.50322667, -0.48794398,  0.10145015,  0.47216689,
+         -0.51649423],
+        [ 0.5451003 ,  0.62942762,  0.5451003 , -0.06910931, -0.04370857,
+         -0.05353184],
+        [ 0.05353184,  0.06181325,  0.05353184,  0.70372147,  0.44507253,
+          0.5451003 ]])</code></pre>
+</div>
+</div>
+<ul>
+<li><span class="math inline">\(\Delta^2\)</span> provides the eigenvalues of the target matrix.</li>
+</ul>
+<div id="76b4d249" class="cell" data-execution_count="10">
+<div class="cell-output cell-output-display" data-execution_count="10">
+<pre><code>array([7.51207074e-01, 6.21131266e-01, 3.78868734e-01, 2.48792926e-01,
+       1.95441618e-32, 3.22830823e-33])</code></pre>
+</div>
+</div>
+<ul>
+<li>Use the eigenvalues to apply transformations of the input data into a new the new eigenbasis.</li>
+</ul>
+<p>To maximize the use of variables within the dataset and to support the answering of various research questions, performing MCA on transformations of the data is necessary.</p>
+</section>
+<section id="data-code" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="data-code"><span class="header-section-number">4.2</span> Data &amp; Code</h2>
+<p>The data used the source data for this effort, converted into a one-hot encoded / sparse matrix format of the data. The code and applied transformations can be seen in <a href="app8-mca.html" class="quarto-xref"><span>Appendix G</span></a>.</p>
+<p>The completed transformed data has two forms. One of these forms is a transformation that includes all protected class variables (age, gender, and race), and the second form does not contain these variables. These two different forms allow exploration of the research questions for this effort.</p>
+<p>(add notes on how numerics were converted to categories).</p>
+<ul>
+<li><p><a href="https://drive.google.com/file/d/1dL3PqH21TRA9PMhIbUJ3KuNuvWrtGPeh/view?usp=drive_link">Source Data for Transformation</a></p></li>
+<li><p><a href="https://drive.google.com/file/d/1RPhKt5ZOlPsxo9bD8skxXjqH9rnMDpXR/view?usp=drive_link">MCA with protected class features - transformed data</a></p></li>
+<li><p><a href="https://drive.google.com/file/d/1r7iZ3Wtt4Pzc8X8ou3o0HAST1yo_CVrR/view?usp=drive_link">MCA with protected class features - Eigenvalue Summary</a></p></li>
+<li><p><a href="https://drive.google.com/file/d/1s_yZ57hfe8RvZ_C9ehEEcAHQ_HjLzOsF/view?usp=drive_link">MCA with protected class features - Column Contributions</a></p></li>
+<li><p><a href="https://drive.google.com/file/d/1KZ6PmBicp02w8iphzMZxf0m29O5L2o0i/view?usp=drive_link">MCA without protected class features</a></p></li>
+<li><p><a href="https://drive.google.com/file/d/19RdPpLR1xIpP_gvbTfd0bqHYFkroVD2G/view?usp=drive_link">MCA without protected class features - Eigenvalue Summary</a></p></li>
+<li><p><a href="https://drive.google.com/file/d/1JMlE_ugZe3LwuVVMVmbY0BlmTSX3X75A/view?usp=drive_link">MCA without protected class features - Column Contributions</a></p></li>
+</ul>
+</section>
+<section id="results" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="results"><span class="header-section-number">4.3</span> Results</h2>
+<div class="cell" data-execution_count="12">
+<div id="mca-nd-eig-top" class="cell-output cell-output-display" data-execution_count="12">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<caption>MCA Summary of Eigenvalues (with protected class information) - Top 5 {#cell-mca-nd-eig-top}</caption>
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">eigenvalue</th>
+<th data-quarto-table-cell-role="th">% of variance</th>
+<th data-quarto-table-cell-role="th">% of variance (cumulative)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>0.215</td>
+<td>4.69%</td>
+<td>4.69%</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>0.167</td>
+<td>3.63%</td>
+<td>8.32%</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>0.166</td>
+<td>3.62%</td>
+<td>11.93%</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>0.115</td>
+<td>2.49%</td>
+<td>14.43%</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>0.102</td>
+<td>2.21%</td>
+<td>16.64%</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div class="cell" data-execution_count="13">
+<div id="mca-nd-eig-bot" class="cell-output cell-output-display" data-execution_count="13">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<caption>MCA Summary of Eigenvalues (with protected class information) - Bottom 5 {#cell-mca-nd-eig-bot}</caption>
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">eigenvalue</th>
+<th data-quarto-table-cell-role="th">% of variance</th>
+<th data-quarto-table-cell-role="th">% of variance (cumulative)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">176</td>
+<td>0.001</td>
+<td>0.02%</td>
+<td>99.96%</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">177</td>
+<td>0.001</td>
+<td>0.01%</td>
+<td>99.97%</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">178</td>
+<td>0.000</td>
+<td>0.01%</td>
+<td>99.98%</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">179</td>
+<td>0.000</td>
+<td>0.01%</td>
+<td>99.99%</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">180</td>
+<td>0.000</td>
+<td>0.01%</td>
+<td>100.00%</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div class="cell" data-execution_count="14">
+<div id="mca-nd-npc-eig-top" class="cell-output cell-output-display" data-execution_count="14">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<caption>MCA Summary of Eigenvalues (without protected class information) - Top 5 {#cell-mca-nd-npc-eig-top}</caption>
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">eigenvalue</th>
+<th data-quarto-table-cell-role="th">% of variance</th>
+<th data-quarto-table-cell-role="th">% of variance (cumulative)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>0.124</td>
+<td>3.21%</td>
+<td>3.21%</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>0.116</td>
+<td>3.01%</td>
+<td>6.23%</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>0.100</td>
+<td>2.61%</td>
+<td>8.83%</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>0.086</td>
+<td>2.23%</td>
+<td>11.06%</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>0.085</td>
+<td>2.22%</td>
+<td>13.28%</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div class="cell" data-execution_count="15">
+<div id="mca-nd-npc-eig-bot" class="cell-output cell-output-display" data-execution_count="15">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<caption>MCA Summary of Eigenvalues (without protected class information) - Bottom 5 {#cell-mca-nd-npc-eig-bot}</caption>
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">eigenvalue</th>
+<th data-quarto-table-cell-role="th">% of variance</th>
+<th data-quarto-table-cell-role="th">% of variance (cumulative)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">95</td>
+<td>0.009</td>
+<td>0.24%</td>
+<td>99.52%</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">96</td>
+<td>0.007</td>
+<td>0.17%</td>
+<td>99.69%</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">97</td>
+<td>0.007</td>
+<td>0.17%</td>
+<td>99.86%</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">98</td>
+<td>0.004</td>
+<td>0.11%</td>
+<td>99.97%</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">99</td>
+<td>0.001</td>
+<td>0.03%</td>
+<td>100.00%</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p>MCA doesn’t necessarily provide direct dimensionality reduction, but does enable one to reduce dimensions from a sparse matrix. Instead it enables use of more variables while also (potentially) increasing the data’s dimensionality. The sparse matrices to produce the transformations had 243 columns (with protected) and 179 columns (without protected).</p>
+<p>The outcomes of the transformations allow substantial dimensionality reduction from these sparse matrices. With 181 components, the data containing protected class information achieved (99.99%) explained variance in the source data (reduction of 62 features). Similarly, with 100 components, the data excluding protected class information achieved 99.99% explained variance (reduction of 79 features).</p>
+<p>MCA also provides us with insight as to which columns provide the greatest contributions to each primary component in the output data. Exploring some of these provides interesting insights. To explore these, we’ll look at the first 3 components, sorted in descending order, and examine which columns from the source data provide the strongest contributions to the transformation:</p>
+<section id="with-protected-classes" class="level3" data-number="4.3.1">
+<h3 data-number="4.3.1" class="anchored" data-anchor-id="with-protected-classes"><span class="header-section-number">4.3.1</span> With Protected Classes</h3>
+<div class="cell" data-execution_count="16">
+<div id="mca-col-conts1" class="cell-output cell-output-display" data-execution_count="16">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<caption>MC1 (with protected class information) - Top 10 Column Contributors {#cell-mca-col-conts1}</caption>
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Column</th>
+<th data-quarto-table-cell-role="th">MC1</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">121</td>
+<td>co-applicant_sex_observed_2</td>
+<td>0.061418</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">96</td>
+<td>co-applicant_ethnicity_observed_2</td>
+<td>0.061381</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">103</td>
+<td>co-applicant_race_observed_2</td>
+<td>0.061369</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>derived_sex_Joint</td>
+<td>0.053307</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">90</td>
+<td>co-applicant_credit_score_type_9</td>
+<td>0.047954</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">229</td>
+<td>co-applicant_ethnicity_Not Hispanic/Latino</td>
+<td>0.046580</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">98</td>
+<td>co-applicant_ethnicity_observed_4</td>
+<td>0.045165</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">140</td>
+<td>co-applicant_age_8.0</td>
+<td>0.045165</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">105</td>
+<td>co-applicant_race_observed_4</td>
+<td>0.045165</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">123</td>
+<td>co-applicant_sex_observed_4</td>
+<td>0.045165</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div class="cell" data-execution_count="17">
+<div id="mca-col-conts2" class="cell-output cell-output-display" data-execution_count="17">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<caption>MC2 (with protected class information) - Top 10 Column Contributors {#cell-mca-col-conts2}</caption>
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Column</th>
+<th data-quarto-table-cell-role="th">MC2</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">196</td>
+<td>applicant_race_Not Applicable</td>
+<td>0.141186</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">131</td>
+<td>applicant_age_7.0</td>
+<td>0.141186</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">109</td>
+<td>applicant_sex_4</td>
+<td>0.141186</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">101</td>
+<td>applicant_race_observed_3</td>
+<td>0.141186</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">94</td>
+<td>applicant_ethnicity_observed_3</td>
+<td>0.141186</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">119</td>
+<td>applicant_sex_observed_3</td>
+<td>0.141186</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">223</td>
+<td>applicant_ethnicity_Not Applicable</td>
+<td>0.141186</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">231</td>
+<td>co-applicant_ethnicity_Not Applicable</td>
+<td>0.001395</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">214</td>
+<td>co-applicant_race_Not Applicable</td>
+<td>0.001395</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">139</td>
+<td>co-applicant_age_7.0</td>
+<td>0.001395</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div class="cell" data-execution_count="18">
+<div id="mca-col-conts3" class="cell-output cell-output-display" data-execution_count="18">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<caption>MC3 (with protected class information) - Top 10 Column Contributors {#cell-mca-col-conts3}</caption>
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Column</th>
+<th data-quarto-table-cell-role="th">MC3</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">231</td>
+<td>co-applicant_ethnicity_Not Applicable</td>
+<td>0.141338</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">214</td>
+<td>co-applicant_race_Not Applicable</td>
+<td>0.141338</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">139</td>
+<td>co-applicant_age_7.0</td>
+<td>0.141338</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">122</td>
+<td>co-applicant_sex_observed_3</td>
+<td>0.141338</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">114</td>
+<td>co-applicant_sex_4</td>
+<td>0.141338</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">104</td>
+<td>co-applicant_race_observed_3</td>
+<td>0.141338</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">97</td>
+<td>co-applicant_ethnicity_observed_3</td>
+<td>0.141338</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">119</td>
+<td>applicant_sex_observed_3</td>
+<td>0.001412</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">223</td>
+<td>applicant_ethnicity_Not Applicable</td>
+<td>0.001412</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">94</td>
+<td>applicant_ethnicity_observed_3</td>
+<td>0.001412</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p>Examining the above three tables, it is evident that features revolving around protected class information contribute substantially to each Multiple Correspondence Component (MC). For each of the MCs, much of the contributions come from feature values revolving around all protected classes of age, sex, race, and ethnicity. Using data of this nature could easily produce predictive outcomes of models trained with with biases (either for or against) testing data that fits within these categories.</p>
+</section>
+<section id="without-protected-classes" class="level3" data-number="4.3.2">
+<h3 data-number="4.3.2" class="anchored" data-anchor-id="without-protected-classes"><span class="header-section-number">4.3.2</span> Without Protected Classes</h3>
+<div class="cell" data-execution_count="19">
+<div id="mca-npc-col-conts1" class="cell-output cell-output-display" data-execution_count="19">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<caption>MC1 (without protected class information) - Top 10 Column Contributors {#cell-mca-npc-col-conts1}</caption>
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Column</th>
+<th data-quarto-table-cell-role="th">MC1</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">29</td>
+<td>origination_charges_H</td>
+<td>0.088933</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">25</td>
+<td>total_loan_costs_H</td>
+<td>0.084998</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">32</td>
+<td>discount_points_H</td>
+<td>0.076381</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">14</td>
+<td>loan_amount_ML</td>
+<td>0.054607</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">27</td>
+<td>total_loan_costs_MH</td>
+<td>0.049097</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">31</td>
+<td>origination_charges_MH</td>
+<td>0.047695</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">50</td>
+<td>property_value_ML</td>
+<td>0.043231</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">34</td>
+<td>discount_points_MH</td>
+<td>0.033078</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>purchaser_type_0</td>
+<td>0.032864</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">9</td>
+<td>open-end_line_of_credit_1</td>
+<td>0.030098</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div class="cell" data-execution_count="20">
+<div id="mca-npc-col-conts2" class="cell-output cell-output-display" data-execution_count="20">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<caption>MC2 (without protected class information) - Top 10 Column Contributors {#cell-mca-npc-col-conts2}</caption>
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Column</th>
+<th data-quarto-table-cell-role="th">MC2</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">47</td>
+<td>property_value_H</td>
+<td>0.078352</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">11</td>
+<td>loan_amount_H</td>
+<td>0.075937</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">81</td>
+<td>applicant_credit_score_type_9</td>
+<td>0.062141</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">56</td>
+<td>income_MH</td>
+<td>0.051055</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>purchaser_type_0</td>
+<td>0.051019</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">44</td>
+<td>intro_rate_period_H</td>
+<td>0.042191</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">121</td>
+<td>company_Bank of America</td>
+<td>0.040706</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">9</td>
+<td>open-end_line_of_credit_1</td>
+<td>0.034975</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">124</td>
+<td>company_Rocket Mortgage</td>
+<td>0.034505</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">49</td>
+<td>property_value_MH</td>
+<td>0.031335</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div class="cell" data-execution_count="21">
+<div id="mca-npc-col-conts3" class="cell-output cell-output-display" data-execution_count="21">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<caption>MC3 (without protected class information) - Top 10 Column Contributors {#cell-mca-npc-col-conts3}</caption>
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Column</th>
+<th data-quarto-table-cell-role="th">MC3</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">107</td>
+<td>tract_owner_occupied_units_H</td>
+<td>0.089676</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">112</td>
+<td>tract_one_to_four_family_homes_H</td>
+<td>0.080570</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">111</td>
+<td>tract_owner_occupied_units_ML</td>
+<td>0.077914</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">88</td>
+<td>tract_population_H</td>
+<td>0.073417</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">115</td>
+<td>tract_one_to_four_family_homes_MH</td>
+<td>0.056009</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">110</td>
+<td>tract_owner_occupied_units_MH</td>
+<td>0.051876</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">116</td>
+<td>tract_one_to_four_family_homes_ML</td>
+<td>0.049923</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">106</td>
+<td>tract_to_msa_income_percentage_ML</td>
+<td>0.044282</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">92</td>
+<td>tract_population_ML</td>
+<td>0.037601</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">91</td>
+<td>tract_population_MH</td>
+<td>0.037590</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p>Examining the MCs for data that exludes protected class information, we immediately see that each holds data that is likely highly relevant to making a decision of whether or not to approve a loan. The _H and _MH in MC1 column contributions signify that the loan is between 1 and 2 standard deviations, or over 2 standard deviations from the mean. With high loan costs, high origination charges, high discount points and so forth all are likely candidates to impact the decision making process of whether or not to grant a loan.</p>
+<p>It’s also interesting to see that in MC2, two banks stand out - Bank of America and Rocket Mortgage, apparently having a higher influence on the loan outcome in the 2nd MC.</p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation column-body">
+  <div class="nav-page nav-page-previous">
+      <a href="./pca.html" class="pagination-link  aria-label=" &lt;span="" component="" analysis&lt;="" span&gt;"="">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Principal Component Analysis</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./clustering.html" class="pagination-link" aria-label="<span class='chapter-number'>5</span>&nbsp; <span class='chapter-title'>Data Clustering</span>">
+        <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Data Clustering</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+<script src="site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>

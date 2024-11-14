@@ -1,2 +1,583 @@
-# Decision Tree Code {#sec-App5 .appendix}
+# Decision Tree Code {#app-DT-code .appendix}
+```{python}
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import classification_report
+from sklearn.metrics import (
+    accuracy_score,roc_auc_score,
+    precision_score, recall_score, 
+    f1_score, confusion_matrix,
+    ConfusionMatrixDisplay
+)
+import pandas as pd, numpy as np, seaborn as sns
+from sklearn.tree import DecisionTreeClassifier
 
+from sklearn.tree import plot_tree
+```
+
+## Label Encoded Data
+
+```{python}
+clean = pd.read_csv('../data/cnb_pc.csv')
+clean_npc = pd.read_csv('../data/cnb_npc.csv')
+labels = pd.read_csv('../data/final_clean_r2.csv')['outcome']
+```
+
+```{python}
+#| echo: true
+#| eval: true
+
+#build the training and test data
+X_train,X_test,y_train,y_test = train_test_split(
+    clean,
+    labels,
+    stratify=labels,
+    test_size=0.2,
+    random_state=9999
+)
+
+X_train_npc,X_test_npc,y_train,y_test = train_test_split(
+    clean_npc,
+    labels,
+    stratify=labels,
+    test_size=0.2,
+    random_state=9999
+)
+
+```
+
+```{python}
+display(X_train.head(10))
+display(X_train_npc.head(10))
+```
+
+```{python}
+#| echo: true
+#| eval: true
+dt_pc,dt_npc = DecisionTreeClassifier(max_depth=4),DecisionTreeClassifier(max_depth=4)
+# re-fit using the new data on the previous models
+dt_pc.fit(X_train,y_train)
+dt_npc.fit(X_train_npc,y_train)
+#generate predictions
+y_pred = dt_pc.predict(X_test)
+y_pred_npc = dt_npc.predict(X_test_npc)
+```
+
+```{python}
+#| echo: true
+#| eval: true
+
+import graphviz
+from sklearn import tree
+dot_data = tree.export_graphviz(
+    dt_npc, 
+    class_names = ['deny','approve'], #labels.unique(), #
+    feature_names = X_test_npc.columns, #the columns
+    out_file=None
+)
+graph = graphviz.Source(dot_data)
+graph
+```
+
+
+```{python}
+dot_data = tree.export_graphviz(
+    dt_pc, 
+    class_names = ['deny','approve'], #labels.unique(), #
+    feature_names = X_test.columns, #the columns
+    out_file=None
+)
+graph = graphviz.Source(dot_data)
+graph
+```
+
+
+```{python}
+#| echo: true
+#| eval: true
+
+#display summarized classification results
+results = pd.DataFrame({
+    'Model':[],
+    'Data':[],
+    'Accuracy':[],
+    'Precision':[],
+    'Recall':[],
+    'F1':[],
+    'ROC-AUC':[]
+})
+results.loc[len(results)] = {
+    'Model':'Decision Tree',
+    'Data':'With Protected Classes',
+    'Accuracy':accuracy_score(y_test,y_pred),
+    'Precision':precision_score(y_test,y_pred),
+    'Recall':recall_score(y_test,y_pred),
+    'F1':f1_score(y_test,y_pred),
+    'ROC-AUC':roc_auc_score(y_test,y_pred)
+}
+results.loc[len(results)] = {
+    'Model':'Decision Tree',
+    'Data':'Without Protected Classes',
+    'Accuracy':accuracy_score(y_test,y_pred_npc),
+    'Precision':precision_score(y_test,y_pred_npc),
+    'Recall':recall_score(y_test,y_pred_npc),
+    'F1':f1_score(y_test,y_pred_npc),
+    'ROC-AUC':roc_auc_score(y_test,y_pred_npc)
+}
+
+display(results)
+```
+
+```{python}
+#| echo: true
+#| eval: true
+
+#display summarized classification results - confusion matrices
+
+import matplotlib.pyplot as plt
+fig,axes=plt.subplots(nrows=1,ncols=2)
+
+ConfusionMatrixDisplay(
+    confusion_matrix(
+        y_pred=y_pred,y_true=y_test
+    ),
+        display_labels=['Deny','Approve']
+).plot(ax=axes[0])
+ConfusionMatrixDisplay(
+    confusion_matrix(
+        y_pred=y_pred_npc,y_true=y_test
+    ),
+        display_labels=['Deny','Approve']
+).plot(ax=axes[1])
+axes[0].set_title('With Protected\nClasses')
+axes[1].set_title('Without Protected\nClasses')
+plt.suptitle("Confusion Matrices - Decision Trees")
+plt.tight_layout()
+plt.show()
+```
+
+### Dropping debt to income ratio
+
+```{python}
+clean.drop(columns=['debt_to_income_ratio'],inplace=True,axis=1)
+clean_npc.drop(columns=['debt_to_income_ratio'],inplace=True,axis=1)
+X_train,X_test,y_train,y_test = train_test_split(
+    clean,
+    labels,
+    stratify=labels,
+    test_size=0.2,
+    random_state=9999
+)
+
+X_train_npc,X_test_npc,y_train,y_test = train_test_split(
+    clean_npc,
+    labels,
+    stratify=labels,
+    test_size=0.2,
+    random_state=9999
+)
+dt_pc.fit(X_train,y_train)
+dt_npc.fit(X_train_npc,y_train)
+y_pred = dt_pc.predict(X_test)
+y_pred_npc = dt_npc.predict(X_test_npc)
+```
+
+```{python}
+#| echo: true
+#| eval: true
+
+import graphviz
+from sklearn import tree
+dot_data = tree.export_graphviz(
+    dt_npc, 
+    class_names = ['deny','approve'], #labels.unique(), #
+    feature_names = X_test_npc.columns, #the columns
+    out_file=None
+)
+graph = graphviz.Source(dot_data)
+graph
+```
+
+```{python}
+graph.render('./imgs/dt1npc',format='png')
+```
+
+```{python}
+dot_data = tree.export_graphviz(
+    dt_pc, 
+    class_names = ['deny','approve'], #labels.unique(), #
+    feature_names = X_test.columns, #the columns
+    out_file=None
+)
+graph = graphviz.Source(dot_data)
+graph
+```
+
+```{python}
+graph.render('./imgs/dt1pc',format='png')
+```
+
+```{python}
+#| echo: true
+#| eval: true
+
+#display summarized classification results
+results = pd.DataFrame({
+    'Model':[],
+    'Data':[],
+    'Accuracy':[],
+    'Precision':[],
+    'Recall':[],
+    'F1':[],
+    'ROC-AUC':[]
+})
+results.loc[len(results)] = {
+    'Model':'Decision Tree',
+    'Data':'With Protected Classes',
+    'Accuracy':accuracy_score(y_test,y_pred),
+    'Precision':precision_score(y_test,y_pred),
+    'Recall':recall_score(y_test,y_pred),
+    'F1':f1_score(y_test,y_pred),
+    'ROC-AUC':roc_auc_score(y_test,y_pred)
+}
+results.loc[len(results)] = {
+    'Model':'Decision Tree',
+    'Data':'Without Protected Classes',
+    'Accuracy':accuracy_score(y_test,y_pred_npc),
+    'Precision':precision_score(y_test,y_pred_npc),
+    'Recall':recall_score(y_test,y_pred_npc),
+    'F1':f1_score(y_test,y_pred_npc),
+    'ROC-AUC':roc_auc_score(y_test,y_pred_npc)
+}
+
+display(results)
+```
+
+```{python}
+#| echo: true
+#| eval: true
+
+#display summarized classification results - confusion matrices
+
+import matplotlib.pyplot as plt
+fig,axes=plt.subplots(nrows=1,ncols=2)
+
+ConfusionMatrixDisplay(
+    confusion_matrix(
+        y_pred=y_pred,y_true=y_test
+    ),
+        display_labels=['Deny','Approve']
+).plot(ax=axes[0])
+ConfusionMatrixDisplay(
+    confusion_matrix(
+        y_pred=y_pred_npc,y_true=y_test
+    ),
+        display_labels=['Deny','Approve']
+).plot(ax=axes[1])
+axes[0].set_title('With Protected\nClasses')
+axes[1].set_title('Without Protected\nClasses')
+plt.suptitle("Confusion Matrices - Decision Trees")
+plt.tight_layout()
+plt.show()
+```
+
+
+### Dropping automated underwriting system columns...
+
+```{python}
+to_drop = []
+for col in clean_npc.columns:
+    if col.startswith('aus_'):
+        to_drop.append(col)
+
+clean.drop(columns=to_drop,inplace=True,axis=1)
+clean_npc.drop(columns=to_drop,inplace=True,axis=1)
+X_train,X_test,y_train,y_test = train_test_split(
+    clean,
+    labels,
+    stratify=labels,
+    test_size=0.2,
+    random_state=9999
+)
+
+X_train_npc,X_test_npc,y_train,y_test = train_test_split(
+    clean_npc,
+    labels,
+    stratify=labels,
+    test_size=0.2,
+    random_state=9999
+)
+dt_pc.fit(X_train,y_train)
+dt_npc.fit(X_train_npc,y_train)
+y_pred = dt_pc.predict(X_test)
+y_pred_npc = dt_npc.predict(X_test_npc)
+```
+
+```{python}
+#| echo: true
+#| eval: true
+
+import graphviz
+from sklearn import tree
+dot_data = tree.export_graphviz(
+    dt_npc, 
+    class_names = ['deny','approve'], #labels.unique(), #
+    feature_names = X_test_npc.columns, #the columns
+    out_file=None
+)
+graph = graphviz.Source(dot_data)
+graph
+```
+
+```{python}
+dot_data = tree.export_graphviz(
+    dt_pc, 
+    class_names = ['deny','approve'], #labels.unique(), #
+    feature_names = X_test.columns, #the columns
+    out_file=None
+)
+graph = graphviz.Source(dot_data)
+graph
+```
+
+
+```{python}
+#| echo: true
+#| eval: true
+
+#display summarized classification results
+results = pd.DataFrame({
+    'Model':[],
+    'Data':[],
+    'Accuracy':[],
+    'Precision':[],
+    'Recall':[],
+    'F1':[],
+    'ROC-AUC':[]
+})
+results.loc[len(results)] = {
+    'Model':'Decision Tree',
+    'Data':'With Protected Classes',
+    'Accuracy':accuracy_score(y_test,y_pred),
+    'Precision':precision_score(y_test,y_pred),
+    'Recall':recall_score(y_test,y_pred),
+    'F1':f1_score(y_test,y_pred),
+    'ROC-AUC':roc_auc_score(y_test,y_pred)
+}
+results.loc[len(results)] = {
+    'Model':'Decision Tree',
+    'Data':'Without Protected Classes',
+    'Accuracy':accuracy_score(y_test,y_pred_npc),
+    'Precision':precision_score(y_test,y_pred_npc),
+    'Recall':recall_score(y_test,y_pred_npc),
+    'F1':f1_score(y_test,y_pred_npc),
+    'ROC-AUC':roc_auc_score(y_test,y_pred_npc)
+}
+
+display(results)
+```
+
+```{python}
+#| echo: true
+#| eval: true
+
+#display summarized classification results - confusion matrices
+
+import matplotlib.pyplot as plt
+fig,axes=plt.subplots(nrows=1,ncols=2)
+
+ConfusionMatrixDisplay(
+    confusion_matrix(
+        y_pred=y_pred,y_true=y_test
+    ),
+        display_labels=['Deny','Approve']
+).plot(ax=axes[0])
+ConfusionMatrixDisplay(
+    confusion_matrix(
+        y_pred=y_pred_npc,y_true=y_test
+    ),
+        display_labels=['Deny','Approve']
+).plot(ax=axes[1])
+axes[0].set_title('With Protected\nClasses')
+axes[1].set_title('Without Protected\nClasses')
+plt.suptitle("Confusion Matrices - Decision Trees")
+plt.tight_layout()
+plt.show()
+```
+
+```{python}
+#| echo: true
+#| eval: true
+
+import graphviz
+from sklearn import tree
+dot_data = tree.export_graphviz(
+    dt_npc, 
+    class_names = ['deny','approve'], #labels.unique(), #
+    feature_names = X_test_npc.columns, #the columns
+    out_file=None
+)
+graph = graphviz.Source(dot_data)
+graph
+```
+
+```{python}
+#| echo: true
+#| eval: true
+dot_data = tree.export_graphviz(
+    dt_pc, 
+    class_names = ['deny','approve'], #labels.unique(), #
+    feature_names = X_test.columns, #the columns
+    out_file=None
+)
+graph = graphviz.Source(dot_data)
+graph
+```
+
+
+```{python}
+#| echo: true
+#| eval: false
+#randomization testing...
+clean = pd.read_csv('../data/cnb_pc.csv')
+clean_npc = pd.read_csv('../data/cnb_npc.csv')
+
+np.random.seed(5505)
+results = pd.DataFrame({
+    'Model':[],
+    'Data':[],
+    'Accuracy':[],
+    'Precision':[],
+    'Recall':[],
+    'F1':[],
+    'ROC-AUC':[]
+})
+for i in range(500):
+    r = np.random.randint(1,5000,1)[0]
+
+    X_train,X_test,y_train,y_test = train_test_split(
+        clean,
+        labels,
+        stratify=labels,
+        test_size=0.2,
+        random_state=r
+    )
+
+    X_train_npc,X_test_npc,y_train,y_test = train_test_split(
+        clean_npc,
+        labels,
+        stratify=labels,
+        test_size=0.2,
+        random_state=r
+    )
+    dt_pc.fit(X_train,y_train)
+    dt_npc.fit(X_train_npc,y_train)
+    y_pred = dt_pc.predict(X_test)
+    y_pred_npc = dt_npc.predict(X_test_npc)
+    results.loc[len(results)] = {
+        'Model':'Decision Tree (D=4)',
+        'Data':'With Protected Classes',
+        'Accuracy':accuracy_score(y_test,y_pred),
+        'Precision':precision_score(y_test,y_pred),
+        'Recall':recall_score(y_test,y_pred),
+        'F1':f1_score(y_test,y_pred),
+        'ROC-AUC':roc_auc_score(y_test,y_pred)
+    }
+    results.loc[len(results)] = {
+        'Model':'Decision Tree (D=4)',
+        'Data':'Without Protected Classes',
+        'Accuracy':accuracy_score(y_test,y_pred_npc),
+        'Precision':precision_score(y_test,y_pred_npc),
+        'Recall':recall_score(y_test,y_pred_npc),
+        'F1':f1_score(y_test,y_pred_npc),
+        'ROC-AUC':roc_auc_score(y_test,y_pred_npc)
+    }
+
+```
+
+```{python}
+#| echo: true
+#| eval: false
+results.to_csv('../data/dtRandTest.csv',index=False)
+```
+
+```{python}
+#| echo: false
+#| eval: true
+results = pd.read_csv('../data/dtRandTest.csv')
+```
+
+```{python}
+#| echo: true
+#| eval: true
+
+#check for statistically significant differences in model performance
+from statsmodels.stats.weightstats import ztest
+tbl_pc = results[results['Data']=='With Protected Classes'].describe().T.reset_index()
+tbl_npc = results[results['Data']=='Without Protected Classes'].describe().T.reset_index()
+
+from scipy import stats
+sig = pd.DataFrame({
+    'Stat':[],
+    'z-score':[],
+    'p-value':[],
+    'top performer':[],
+    'top mean':[],
+    'difference in means':[]
+})
+
+z_stat,p_value = ztest(
+    results.loc[results['Data']=='With Protected Classes']['Accuracy'],
+    results.loc[results['Data']=='Without Protected Classes']['Accuracy'],
+)
+scores = tbl_pc['index'].unique()
+for score in scores: 
+    z_stat,p_value = ztest(
+        results.loc[results['Data']=='With Protected Classes'][score],
+        results.loc[results['Data']=='Without Protected Classes'][score],
+    )
+    mu_pc, mu_npc = (
+        tbl_pc.loc[tbl_pc['index']==score,'mean'].iloc[0],
+        tbl_npc.loc[tbl_npc['index']==score,'mean'].iloc[0]
+    )
+    winner = np.select(
+        [
+            mu_pc < mu_npc,
+            mu_npc < mu_pc
+        ],
+        [
+            'Without Protected Classes',
+            'With Protected Classes'
+        ],
+        default='tie'
+    )
+    diff = np.abs(mu_pc-mu_npc)
+    m = max(mu_pc,mu_npc)
+    sig.loc[len(sig)] = {
+        'Stat':score,
+        'z-score':z_stat,
+        'p-value':p_value,
+        'top performer':winner,
+        'top mean':m,
+        'difference in means':diff
+    }
+
+display(sig.style.hide(axis='index'))
+```
+
+```{python}
+#| echo: true
+#| eval: true
+
+#visualize the output distributions
+res = results.copy()
+res = res.melt(id_vars=['Model','Data'],var_name='Metric',value_name='Score')
+g = sns.FacetGrid(data=res,col='Metric',hue='Data',col_wrap=3)
+g.map_dataframe(
+    sns.kdeplot,
+    x='Score'
+)
+g.add_legend(loc='lower right')
+plt.suptitle("Distributions for Randomization of Training/Testing Data\nDecision Trees")
+plt.tight_layout()
+plt.show()
+```

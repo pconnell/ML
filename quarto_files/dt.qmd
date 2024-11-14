@@ -1,18 +1,631 @@
 # Decision Tree Modeling {#sec-DT}
 
 ```{python importBlock}
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import classification_report
+from sklearn.metrics import (
+    accuracy_score,roc_auc_score,
+    precision_score, recall_score, 
+    f1_score, confusion_matrix,
+    ConfusionMatrixDisplay
+)
+import pandas as pd, numpy as np, seaborn as sns
+from sklearn.tree import DecisionTreeClassifier
 
-```
-
-```{python dataImport}
-
+from sklearn.tree import plot_tree
 ```
 
 ## Overview
 
-## Data
+Decision trees, when constructed and visualized are one of the machine learning models that are most easily understood by humans on direct examination.  A decision tree provides a root node, multiple decision nodes, and branches to follow based upon the current decision node.  Each node provides some sort of decision based upon a feature or variable for an input record. 
 
-## Code
+The decision tree is, then, quite akin to a flowchart.  Employers around the globe use flowcharts to explain processes and procedures to their employees to simplify workflows and provide a frame of reference to get things done.  As such, decision tree machine learning modeling is user-friendly, easily-understood, and readily consumed.  Decision trees are be high-utitlity, both to human users as well as well as for computers with their very simple branching logic. 
+
+### How Does One Build a Decision Tree?
+
+The process of building a decision tree has some math behind it, but is fairly simple to explain without the math.  To proceed in processing, one needs data in the appropriate format (in Python, the requirement is numeric data only, using available packages).  Once the data is in hand, it must be split into a training and testing dataset.  From here, we can use the following step(s) to proceed building the tree.
+
+1. Select a *heuristic* that will measure the how impure the current state of the data is, at the current node.
+
+1. Select a *maximum depth* to which your tree will grow, so as to prevent over-fitting.  Too small a value can result in under-fitting (poor model performance)
+
+1. While we haven't reached the maximum depth: 
+
+    a. for each feature in the current partition of the dataset (starting with the full dataset):
+
+        i. calculate the heuristic for each value of the current feature if it were to be split on the value
+
+            1. using the heuristic, calculate the information gain if the data were to be split on the feature 
+
+    a. for the feature value with the highest information gain, split the data on the feature's value for instance, if the feature were "cost", the condition could be "cost <= 100?", and divide the data into two pieces, one where the condtion is true, the and the other where it is false.  Increment the depth of our tree.
+
+    a. repeat process for the two new partitions if the heuristic is greater than zero
+
+        i. if it is zero, then the partition is considered pure.  This signifies that all records in the partition are members of the same class, and this node can be used to clearly make a decision of the class of a future input object.
+
+This is all fine and good in terms of understanding steps to produce the tree - but what are heuristics and information gain?  How can one calculate them and leverage them to execute this process?
+
+### Heuristics
+
+Common heuristics for measuring the current state of a data partition include Gini indexing and Entropy measures.  These values give a sense of how *impure* the current state of the data is.  These heuristics support the splitting of the data at nodes in the tree to reduce the impurity.
+
+#### Gini Indexing
+$$
+\text{Gini} =1-\sum\limits_{i=1}^{n} p_i^2
+$$ {#eq-gini}
+
+For calculating gini, one iterates over the current split of the data and calculates the sum total members in each class for the current node out of the total number of records in the current node, squares them, and takes the sum total thereof, and subtracts it from one.
+
+Gini being 0 signifies that the node is pure and the algorithm can stop executing on this branch.  Mathematically speaking, this is only possible when the records in the current node all belong to one class (e.g. pure). One seeks with each split to reduce the Gini index by the maximum value possible with each node split.
+
+#### Entropy
+$$
+\text{Entropy} = -\sum\limits_{1}^{n}p\cdot \text{log}_2(p_i)
+$$ {#eq-entrpoy}
+
+Entropy takes the same calculation as done in gini - the number of records in the current data split of a specific class out of the total number of records in the split.  What entropy does differently is that it multiplies that value by it's base 2 logarithm, sums the total values, and takes the negative (which must be done as logarithms with fractional inputs produce negative numbers).  Calculating by hand gets hairy if you're not paying attention.  Technically speaking, a logarithm with an input of 0 is undefined.  However, when the input to the log is zero, so is its external multiplier.  The external multiplier is used as the discriminating factor and the result is set to zero.
+
+Entropy being 0 signifies that the node is pure and the algorithm can stop executing on this branch.  One seeks with each split to reduce the entropy by the maximum value possible with each node split.
+
+For both metrics, the best case scenario is a pure node with heuristic = 0.  The worst case, mathematically, is 0.5 for Gini and 1 for Entropy.
+
+### Information Gain
+
+The following equation outlines the calculation for information gain at each split of a decision tree:
+
+$$
+G_i = h_{i-1} - \sum\limits_{j=1}^{N}\text{len}(D_j)\cdot h_i
+$$ {#eq-info-gain}
+
+$h_{i-1}$ is the heuristic (Gini or Entropy) of the previous node (i.e. impurity).  $h_i$ is the current proposed split, $N$ is the number of available splits to perform with the current data, $D_j$ is a proposed split of the data for building a new node on column $j\in N$, and $G_i$ is the information gain for the current proposed split.
+
+The algorithm selects the highest $G_i$ as the winner for where and how to split the current state of the data, and repeats to a certain specified depth, or until the algorithm has pure nodes as leaves.
+
+### Summary of Metrics
+
+Using a heuristic like gini or entropy provides a measure of pureness for the current state of the dataset.  When leveraging information gain, it tells one how much a proposed split would reduce the impurity in the data (or conversly, how much additional information one would have available in the data if one were to split on the current feature value).  By choosing the maximum value for information gain we are selecting the option which most greatly reduces the impurities present in the data.
+
+### *What challenges exist with decision trees?*
+
+There are several considerations when building a decision tree.  The intent as discussed in the overview of this section is to provide an easily understood and accessible model that delivers reasonably good peformance.  As such, a decision tree should be *readable* and not overwhelming.  To meet this need, the tuning of the tree's maximum depth is necessary so as to ensure the resulting tree is reasonably sized and can be followed by its users.
+
+Similarly, tree depth also assists one in overcoming a decision tree's challenges with over and underfitting.  Higher depth will improve the accuracy of future predictions by the tree, but at the cost of readability.  Having too high of a depth is problematic as well.  Since the algorithm seeks to have all leaf nodes at the base of the tree be as pure as possible, an unconstrained algorithm will continue splitting the data until this condition is met.  This can result in leaves on the tree containing single node outcomes, which is an overfitting condition.  Having too small of a depth can provide a simple tree, but at the cost of performative accuracy.
+
+Decision trees can be fast, however, building the tree when using a large volume of training data can be computationally expensive.
+
+Trees can also have challenges with performing updates.  The trees are pre-trained, and as new records are added to training data, the addition thereof *changes the hueristic value* from what it was previously for each variable value under consideration.  As such, the tree would need to be reconstructed when new data is made available for training.
+
+Decision trees also, in nearly every case, can have infinitely many possible tree outcomes.  Specifically, any dataset that contains numeric data (continuous), the possibilities are endless.
+
+## Data and Code
+
+Multiple data formats were leveraged to produced multiple decision trees, with and without protected class information.
+
+One version of the tree production leveraged the multiple correspondence analysis outputs produced within @sec-MCA-app, with and without protected class information.
+
+Another version of tree production leveraged label encoded data that was previously produced in @sec-App6-NB.  Since label-encoded data was necessary to perform Categorical Naive Bayes, this same data, as a numeric, has utility for decision tree building.
+
+* [Source data (pre-transformation)](https://drive.google.com/file/d/1dL3PqH21TRA9PMhIbUJ3KuNuvWrtGPeh/view?usp=drive_link)
+
+* [Label Encoded Data - With Protected Classes](https://drive.google.com/file/d/1Nj2P23ZMlQCzdnMdvJVKH_dufNl_tmrr/view?usp=drive_link)
+
+* [Label Encoded Data - Without Protected Classes](https://drive.google.com/file/d/1ybGEqiSdRsqu0j9O1KJXZgyJrSlX7JNl/view?usp=drive_link)
+
+* [Randomization Test Results](https://drive.google.com/file/d/1tvDdo09t30VtosQ1zvX2BDQskRW-aYKp/view?usp=drive_link)
+
+Summarized views for the training and testing data are in the below tables:
+
+```{python data-import}
+#| label: data-import 
+final = pd.read_csv('../data/final_clean_r2.csv')
+labels = final['outcome'].copy()
+clean = pd.read_csv('../data/cnb_pc.csv')
+clean_npc = pd.read_csv('../data/cnb_npc.csv')
+dt_pc,dt_npc=DecisionTreeClassifier(max_depth=4),DecisionTreeClassifier(max_depth=4)
+X_train,X_test,y_train,y_test = train_test_split(
+    clean,
+    labels,
+    stratify=labels,
+    test_size=0.2,
+    random_state=9999
+)
+
+X_train_npc,X_test_npc,y_train,y_test = train_test_split(
+    clean_npc,
+    labels,
+    stratify=labels,
+    test_size=0.2,
+    random_state=9999
+)
+dt_pc.fit(X_train,y_train)
+dt_npc.fit(X_train_npc,y_train)
+y_pred = dt_pc.predict(X_test)
+y_pred_npc = dt_npc.predict(X_test_npc)
+```
+
+```{python tbl-dt-pc-trn}
+#| label: tbl-dt-pc-trn
+#| tbl-cap: Decision Tree Training Data (With Protected Class)
+display(
+    pd.concat([X_train,y_train],axis=1).head(10)
+)
+```
+
+```{python tbl-dt-pc-tst}
+#| label: tbl-dt-pc-tst
+#| tbl-cap: Decision Tree Testing Data (With Protected Class)
+display(
+    pd.concat([X_test,y_test],axis=1).head(10)
+)
+```
+
+```{python tbl-dt-npc-trn}
+#| label: tbl-dt-npc-trn
+#| tbl-cap: Decision Tree Training Data (Without Protected Class)
+display(
+    pd.concat([X_train_npc,y_train],axis=1).head(10)
+)
+```
+
+```{python tbl-dt-npc-tst}
+#| label: tbl-dt-npc-tst
+#| tbl-cap: Decision Tree Testing Data (Without Protected Class)
+display(
+    pd.concat([X_test_npc,y_test],axis=1).head(10)
+)
+```
+
+As done in @sec-NB for train test splits - the indexes are disjoint between training and testing datasets for each parent dataset (with and without protected classes), and each model is trained with the same records for comparison and evaluation against one another (same records for training and testing allow for direct comparison of the models).  
+
+By achieving these splits, the two models evaluated with and without protected class information will avoid unnecessary biases in the results.  When a model is tested on data with which it has already been trained, the model has already optimized to the best of its ability to correctly classify the training data.  As such, the outcome of an evaluation of a model using the same data in training and testing will artificially inflate its performance metrics (accuracy, precision, recall, F1, ROC-AUC).  As such, it is paramount to have a disjoint training and testing dataset.
 
 ## Results
 
+```{python fit-predict}
+#| label: fit-predict
+
+dt_pc.fit(X_train,y_train)
+dt_npc.fit(X_train_npc,y_train)
+#generate predictions
+y_pred = dt_pc.predict(X_test)
+y_pred_npc = dt_npc.predict(X_test_npc)
+```
+
+```{python fig-dt1-pc}
+#| label: fig-dt1-pc
+#| fig-cap: Decision Tree (With Protected Classes)
+import graphviz
+from sklearn import tree
+dot_data = tree.export_graphviz(
+    dt_pc, 
+    class_names = ['deny','approve'], #labels.unique(), #
+    feature_names = X_test.columns, #the columns
+    out_file=None
+)
+graph = graphviz.Source(dot_data)
+display(graph)
+```
+
+```{python fig-dt1-npc}
+#| label: fig-dt1-npc
+#| fig-cap: Decision Tree (Without Protected Classes)
+dot_data = tree.export_graphviz(
+    dt_npc, 
+    class_names = ['deny','approve'], #labels.unique(), #
+    feature_names = X_test_npc.columns, #the columns
+    out_file=None
+)
+graph = graphviz.Source(dot_data)
+display(graph)
+```
+
+```{python tbl-dt-metrics1}
+#| label: tbl-dt-metrics1
+#| tbl-cap: Model Performance Scores (Single Run; D=4)
+
+#display summarized classification results
+results = pd.DataFrame({
+    'Model':[],
+    'Data':[],
+    'Accuracy':[],
+    'Precision':[],
+    'Recall':[],
+    'F1':[],
+    'ROC-AUC':[]
+})
+results.loc[len(results)] = {
+    'Model':'Decision Tree',
+    'Data':'With Protected Classes',
+    'Accuracy':accuracy_score(y_test,y_pred),
+    'Precision':precision_score(y_test,y_pred),
+    'Recall':recall_score(y_test,y_pred),
+    'F1':f1_score(y_test,y_pred),
+    'ROC-AUC':roc_auc_score(y_test,y_pred)
+}
+results.loc[len(results)] = {
+    'Model':'Decision Tree',
+    'Data':'Without Protected Classes',
+    'Accuracy':accuracy_score(y_test,y_pred_npc),
+    'Precision':precision_score(y_test,y_pred_npc),
+    'Recall':recall_score(y_test,y_pred_npc),
+    'F1':f1_score(y_test,y_pred_npc),
+    'ROC-AUC':roc_auc_score(y_test,y_pred_npc)
+}
+
+display(results.style.hide(axis='index'))
+```
+
+```{python fig-cm-dt1-pc}
+#| label: fig-cm-dt1-pc
+#| fig-cap: Decision Tree Confusion Matrices (With Protected Class Information; D=4)
+
+#display summarized classification results - confusion matrices
+
+import matplotlib.pyplot as plt
+fig,axes=plt.subplots(nrows=1,ncols=2)
+
+ConfusionMatrixDisplay(
+    confusion_matrix(
+        y_pred=y_pred,y_true=y_test
+    ),
+        display_labels=['Deny','Approve']
+).plot(ax=axes[0])
+ConfusionMatrixDisplay(
+    confusion_matrix(
+        y_pred=y_pred_npc,y_true=y_test
+    ),
+        display_labels=['Deny','Approve']
+).plot(ax=axes[1])
+axes[0].set_title('With Protected\nClasses')
+axes[1].set_title('Without Protected\nClasses')
+plt.suptitle("Confusion Matrices - Decision Trees")
+plt.tight_layout()
+plt.show()
+```
+
+By far and large, the most interesting result from this research are the decision trees produced for the data with and without protected classes 
+
+<!-- ![](./imgs/SameTree.jpg) -->
+
+One can clearly see that the initially crafted trees are *identical*.  While the numbers in terms of the value of each variable may not be clear (as they are a re-mapping of the source data from categories to integers), the *gini index* of each variable, and the variable names leveraged in decision making for building each tree, are incredibly clear.
+
+The decision tree models for both datasets came to a concensus on how loan decisions could / should be made based upon *highly relevant variables*.  Factors such as debt to income ratio, the loan's proposed interest rate, the loan term, the automated underwriting system type, income, and whether or not the loan's purpose was for an open end line of credit were the factors that most greatly partitioned each dataset so as to minimize the Gini index.
+
+Many of the leaf nodes (where the decisions are made for classification) had remarkably low values for Gini index, within a tree depth of 6.  The worst amongst these was with regard to the leaf nodes connected to automated underwriting systems, with Gini nearing the worst case scenario of 0.5.  Separate of those, the decision trees were able to, fairly substantially, reduce the index closer to zero.  An additional 1 or two layers to these trees may improve upon the result, but could also potentially render a decision-making process for loan approval or denial more complex. 
+
+Regardless, the result is astounding - for machine learning using decision trees, there is absolutely no impact to performance of the models when protected classes are included or excluded.  These features do not provide sufficient enough information gain over other options to partition the dataset in a for the purpose of classification.
+
+Furthermore - the performance of the decision tree is reasonably accurate as well, at or above 90%.  If using ROC-AUC as a discriminating factor, however, this model could certainly benefit from additional tuning and adaptations.  That being said, the other scores - depending on metric importance for decision making, all exceed the 90% watermark and are fairly good in terms of performance.
+
+What if we prune some of the higher echelon features within the tree?  What changes then?
+
+First - let's look at the tree by removing the root node.  One can do this by removing the feature from the dataset and reconstructing the tree with the pruned data.  In this case, that feature will be the debt to income ratio on the application.
+
+```{python}
+clean.drop(columns=['debt_to_income_ratio'],inplace=True,axis=1)
+clean_npc.drop(columns=['debt_to_income_ratio'],inplace=True,axis=1)
+X_train,X_test,y_train,y_test = train_test_split(
+    clean,
+    labels,
+    stratify=labels,
+    test_size=0.2,
+    random_state=9999
+)
+
+X_train_npc,X_test_npc,y_train,y_test = train_test_split(
+    clean_npc,
+    labels,
+    stratify=labels,
+    test_size=0.2,
+    random_state=9999
+)
+dt_pc.fit(X_train,y_train)
+dt_npc.fit(X_train_npc,y_train)
+y_pred = dt_pc.predict(X_test)
+y_pred_npc = dt_npc.predict(X_test_npc)
+```
+
+```{python fig-dt2-pc}
+#| label: fig-dt2-pc
+#| fig-cap: Decision Tree (With Protected Class Information; Feature Removed; D=4)
+
+import graphviz
+from sklearn import tree
+dot_data = tree.export_graphviz(
+    dt_pc, 
+    class_names = ['deny','approve'], #labels.unique(), #
+    feature_names = X_test.columns, #the columns
+    out_file=None
+)
+graph = graphviz.Source(dot_data)
+graph
+```
+
+```{python fig-dt2-npc}
+#| label: fig-dt2-npc
+#| fig-cap: Decision Tree (Without Protected Class Information; Feature Removed; D=4)
+dot_data = tree.export_graphviz(
+    dt_npc, 
+    class_names = ['deny','approve'], #labels.unique(), #
+    feature_names = X_test_npc.columns, #the columns
+    out_file=None
+)
+graph = graphviz.Source(dot_data)
+graph
+```
+
+```{python tbl-dt-metrics2}
+#| label: tbl-dt-metrics2
+#| tbl-cap: Model Performance Scores (Single Run; Features Removed; D=4)
+
+#display summarized classification results
+results = pd.DataFrame({
+    'Model':[],
+    'Data':[],
+    'Accuracy':[],
+    'Precision':[],
+    'Recall':[],
+    'F1':[],
+    'ROC-AUC':[]
+})
+results.loc[len(results)] = {
+    'Model':'Decision Tree',
+    'Data':'With Protected Classes',
+    'Accuracy':accuracy_score(y_test,y_pred),
+    'Precision':precision_score(y_test,y_pred),
+    'Recall':recall_score(y_test,y_pred),
+    'F1':f1_score(y_test,y_pred),
+    'ROC-AUC':roc_auc_score(y_test,y_pred)
+}
+results.loc[len(results)] = {
+    'Model':'Decision Tree',
+    'Data':'Without Protected Classes',
+    'Accuracy':accuracy_score(y_test,y_pred_npc),
+    'Precision':precision_score(y_test,y_pred_npc),
+    'Recall':recall_score(y_test,y_pred_npc),
+    'F1':f1_score(y_test,y_pred_npc),
+    'ROC-AUC':roc_auc_score(y_test,y_pred_npc)
+}
+
+display(results)
+```
+
+```{python fig-cm-dt2-pc}
+#| label: fig-cm-dt2-pc
+#| fig-cap: Decision Tree Confusion Matrices (With Protected Class Information; Feature Removed; D=4)
+
+#display summarized classification results - confusion matrices
+
+import matplotlib.pyplot as plt
+fig,axes=plt.subplots(nrows=1,ncols=2)
+
+ConfusionMatrixDisplay(
+    confusion_matrix(
+        y_pred=y_pred,y_true=y_test
+    )
+).plot(ax=axes[0])
+ConfusionMatrixDisplay(
+    confusion_matrix(
+        y_pred=y_pred_npc,y_true=y_test
+    )
+).plot(ax=axes[1])
+axes[0].set_title('With Protected\nClasses')
+axes[1].set_title('Without Protected\nClasses')
+plt.suptitle("Confusion Matrices - Decision Trees")
+plt.tight_layout()
+plt.show()
+```
+
+We can see that after removing the debt_to_income_ratio feature from the data, that the decision tree *with* protected classes to begin including race and ethnic information as part of the decision making process.  This includes Filipino co-applicants, and when co-applicant ethnicity is not provided on the application.
+
+Despite that fact, however, the predicted outcomes (metric scores) are equivalent for each model.
+
+Does this change any further when dropping automated underwriting systems from the training datasets (e.g. the root node of these new trees)?
+
+```{python}
+to_drop = []
+for col in clean_npc.columns:
+    if col.startswith('aus_'):
+        to_drop.append(col)
+
+clean.drop(columns=to_drop,inplace=True,axis=1)
+clean_npc.drop(columns=to_drop,inplace=True,axis=1)
+X_train,X_test,y_train,y_test = train_test_split(
+    clean,
+    labels,
+    stratify=labels,
+    test_size=0.2,
+    random_state=9999
+)
+
+X_train_npc,X_test_npc,y_train,y_test = train_test_split(
+    clean_npc,
+    labels,
+    stratify=labels,
+    test_size=0.2,
+    random_state=9999
+)
+dt_pc.fit(X_train,y_train)
+dt_npc.fit(X_train_npc,y_train)
+y_pred = dt_pc.predict(X_test)
+y_pred_npc = dt_npc.predict(X_test_npc)
+```
+
+```{python fig-dt3-pc}
+#| label: fig-dt3-pc
+#| fig-cap: Decision Tree (With Protected Class Information; Features Removed; D=4)
+import graphviz
+from sklearn import tree
+dot_data = tree.export_graphviz(
+    dt_pc, 
+    class_names = ['deny','approve'], #labels.unique(), #
+    feature_names = X_test.columns, #the columns
+    out_file=None
+)
+graph = graphviz.Source(dot_data)
+graph
+```
+
+```{python fig-dt3-npc}
+#| label: fig-dt3-npc
+#| fig-cap: Decision Tree (Without Protected Class Information; Features Removed; D=4)
+dot_data = tree.export_graphviz(
+    dt_npc, 
+    class_names = ['deny','approve'], #labels.unique(), #
+    feature_names = X_test_npc.columns, #the columns
+    out_file=None
+)
+graph = graphviz.Source(dot_data)
+graph
+```
+
+
+```{python tbl-dt-metrics3}
+#| label: tbl-dt-metrics3
+#| tbl-cap: Model Performance Scores (Single Run; Features Removed; D=4)
+
+#display summarized classification results
+results = pd.DataFrame({
+    'Model':[],
+    'Data':[],
+    'Accuracy':[],
+    'Precision':[],
+    'Recall':[],
+    'F1':[],
+    'ROC-AUC':[]
+})
+results.loc[len(results)] = {
+    'Model':'Decision Tree',
+    'Data':'With Protected Classes',
+    'Accuracy':accuracy_score(y_test,y_pred),
+    'Precision':precision_score(y_test,y_pred),
+    'Recall':recall_score(y_test,y_pred),
+    'F1':f1_score(y_test,y_pred),
+    'ROC-AUC':roc_auc_score(y_test,y_pred)
+}
+results.loc[len(results)] = {
+    'Model':'Decision Tree',
+    'Data':'Without Protected Classes',
+    'Accuracy':accuracy_score(y_test,y_pred_npc),
+    'Precision':precision_score(y_test,y_pred_npc),
+    'Recall':recall_score(y_test,y_pred_npc),
+    'F1':f1_score(y_test,y_pred_npc),
+    'ROC-AUC':roc_auc_score(y_test,y_pred_npc)
+}
+
+display(results)
+```
+
+```{python fig-cm-dt3-pc}
+#| label: fig-cm-dt3-pc
+#| fig-cap: Decision Tree Confusion Matrices (With Protected Class Information; Features Removed; D=4)
+
+#display summarized classification results - confusion matrices
+
+import matplotlib.pyplot as plt
+fig,axes=plt.subplots(nrows=1,ncols=2)
+
+ConfusionMatrixDisplay(
+    confusion_matrix(
+        y_pred=y_pred,y_true=y_test
+    )
+).plot(ax=axes[0])
+ConfusionMatrixDisplay(
+    confusion_matrix(
+        y_pred=y_pred_npc,y_true=y_test
+    )
+).plot(ax=axes[1])
+axes[0].set_title('With Protected\nClasses')
+axes[1].set_title('Without Protected\nClasses')
+plt.suptitle("Confusion Matrices - Decision Trees")
+plt.tight_layout()
+plt.show()
+```
+
+Here, we can see that the decision tree including protected class information picked up another deciding factor for race, substituting for the non-provided ethnic information.  In this case, it has selected applicant race information unavailable as a splitting point in the tree.  Examining the model performance metrics, we see that the decision tree *without protected classes* has improved performance over that of the tree that includes them.
+
+These trees were built off of a single iteration of training and testing splits.  How do the performances of the two tree types (with and without protected class information) compare when performing the hypothesis testing outlined in @sec-NB.
+
+```{python}
+results = pd.read_csv('../data/dtRandTest.csv')
+```
+
+```{python}
+
+#check for statistically significant differences in model performance
+from statsmodels.stats.weightstats import ztest
+tbl_pc = results[results['Data']=='With Protected Classes'].describe().T.reset_index()
+tbl_npc = results[results['Data']=='Without Protected Classes'].describe().T.reset_index()
+
+from scipy import stats
+sig = pd.DataFrame({
+    'Stat':[],
+    'z-score':[],
+    'p-value':[],
+    'top performer':[],
+    'top mean':[],
+    'difference in means':[]
+})
+
+z_stat,p_value = ztest(
+    results.loc[results['Data']=='With Protected Classes']['Accuracy'],
+    results.loc[results['Data']=='Without Protected Classes']['Accuracy'],
+)
+scores = tbl_pc['index'].unique()
+for score in scores: 
+    z_stat,p_value = ztest(
+        results.loc[results['Data']=='With Protected Classes'][score],
+        results.loc[results['Data']=='Without Protected Classes'][score],
+    )
+    mu_pc, mu_npc = (
+        tbl_pc.loc[tbl_pc['index']==score,'mean'].iloc[0],
+        tbl_npc.loc[tbl_npc['index']==score,'mean'].iloc[0]
+    )
+    winner = np.select(
+        [
+            mu_pc < mu_npc,
+            mu_npc < mu_pc
+        ],
+        [
+            'Without Protected Classes',
+            'With Protected Classes'
+        ],
+        default='tie'
+    )
+    diff = np.abs(mu_pc-mu_npc)
+    m = max(mu_pc,mu_npc)
+    sig.loc[len(sig)] = {
+        'Stat':score,
+        'z-score':z_stat,
+        'p-value':p_value,
+        'top performer':winner,
+        'top mean':m,
+        'difference in means':diff
+    }
+
+display(sig.style.hide(axis='index'))
+```
+
+```{python}
+
+#visualize the output distributions
+res = results.copy()
+res = res.melt(id_vars=['Model','Data'],var_name='Metric',value_name='Score')
+g = sns.FacetGrid(data=res,col='Metric',hue='Data',col_wrap=3)
+g.map_dataframe(
+    sns.kdeplot,
+    x='Score'
+)
+g.add_legend(loc='lower right')
+plt.suptitle("Distributions for Randomization of Training/Testing Data\nDecision Trees")
+plt.tight_layout()
+plt.show()
+```
+
+```{python}
+
+```
+
+Over 500 randomizations, there isn't sufficient evidence to reject $H_0$ - there is no significant difference between the two models.  Surprisingly, the higher mean amongst all these insignificant test results had an insignificantly higher mean for each metric when protected class information was *excluded*.  The p-values are incredibly high in these models, signifying a near total overlap in the mean and the variance of the data for both models' performance metrics.
+
+It appears the initial finding of the first two trees trained on the full dataset is clear:  it is ideal to exclude protected class information of any kind when constructing decision tree models for mortgage application predictions.  The accuracy of the decision tree without hyperparameter tuning is not a strong as what was found for Bernoulli Naive Bayes.

@@ -1,18 +1,1241 @@
 # Naive Bayes {#sec-NB}
 
 ```{python importBlock}
-
+import pandas as pd, numpy as np, matplotlib.pyplot as plt, seaborn as sns
+from sklearn.naive_bayes import MultinomialNB,CategoricalNB,BernoulliNB
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import (
+    accuracy_score,roc_auc_score,
+    precision_score, recall_score, 
+    f1_score, confusion_matrix,
+    ConfusionMatrixDisplay
+)
 ```
 
-```{python dataImport}
+<!-- 
+Rubric Items
+* Naïve Bayes’ (NB) overview
+The Multinomial NB algorithm is explained well enough that a novice can get a good idea of how the model is trained and makes predictions. Goes into why smoothing is required for NB models. Also defines and describes Bernoulli NB. Images that you think explain the model are included.
 
-```
+* Link and image of the sample train and test data to be used. Another image of cleaned data, if the sample data needs to be cleaned further before feeding it to the NB algo. Explains how test train split was created and why it is important to create a disjoint split. Link to code for all of this.
+
+* Discuss and visualize results, including confusion matrix and accuracy. What did you learn about your topic from the results.
+-->
 
 ## Overview
 
-## Data
+The Naive Bayes method of classification provides a fairly simple and accessible framework under which to estimate the probability that a subject is a member of a certain class, given prior evidence within one's dataset. The methodology is commonly used in recommendation systems (e.g. streaming services, online gaming services, e-commerce, and many more) to quickly identify and suggest new actions, items, or activity to a user based on their past actions or activity.  
+<!-- What does NB do in general? When is it used and why?  -->
+The simplicity of the algorithm makes it an excellent candidate for assessing categorical data (in the case of multinomial Naive Bayes), as well as normally-distributed numerical data (for Gaussian Naive Bayes), and Bernoulli distributed or binary data (as for Bernoulli Naive Bayes).  The assumptions made in the algorithm render it simple to implement, and to produce models with a reliable degree of performance.
 
-## Code
+### *What makes it Naive?*
+
+The following equations outline different formulations of Bayes' Rule.  In these formulations, let X represent the Data, and Y represent the Outcome or Label for the data.
+
+$$
+P(X|Y) = \frac{P(Y|X)\cdot P(X)}{P(Y)}
+$$ {#eq-bayes1}
+
+$$
+P(X|Y) = \frac{P(X\cap Y)}{P(Y)}
+$$ {#eq-bayes2}
+
+$$
+P(Y|X) = \frac{P(X|Y)\cdot P(X)}{P(Y)}
+$$ {#eq-bayes3}
+
+$$
+P(Y|X) = \frac{P(X\cap Y)}{P(X)}
+$$ {#eq-bayes4}
+
+Bayes' rule has no stipulation that X and Y be independent from one another in the source data.  The requirement is that the input probability for $P(X)$, $P(Y)$, and $P(X\cap Y)$ be the *actual* probability for each variable or combination thereof.
+
+The algorithm is Naive because it *assumes* all features or input variables are *independent* of one another, or that each features' probability does not directly impact one another.  In this assumption, it means one can leverage the probability rule for independence between two variables:
+
+$$
+P(X\cap Y) = P(X)\cdot P(Y)\iff \text{X,Y are independent}
+$$ {#eq-indep}
+
+In the world of statistics, it can be quite rare to encounter a collected dataset in which all features are truly independent of one another.  
+
+Many novice, introductory statistics students sometimes make the assumption that variables are independent while working out problems in their homeworks, quizzes, or exams.  This leads to incorrect responses, but makes the problem doable in relatively short order.  In doing so, those students demonstrate their naivety.  Since it makes the same assumption and performs no work to confirm or refute the claim, Naive Bayes is similarly naive.
+
+This allows for the transformation of @eq-bayes3, @eq-bayes4, and @eq-indep to calculate probabilites when fitting data to a model and predicting the class of a new record:
+
+$$
+P(Y|X) = \frac{P(X_1|Y)\cdot P(X_2|Y)\cdot ...\cdot P(X_n|Y)}{P(Y)}
+$$ {#eq-naive1}
+
+$$
+P(Y|X) = \frac{P(X_1\cap Y)\cdot P(X_2 \cap Y)\cdot ...\cdot P(X_n\cap Y)}{P(Y)}
+$$ {#eq-naive2}
+
+$$
+P(Y|X) = \frac{\prod\limits_{i=1}^n P(X_i\cap Y)}{P(X)}
+$$ {#eq-naive3}
+
+In @eq-naive3, one can see that the probability of belonging to a certain class, given an input record, is the product of the probabilities of each individual feature holding the same category for $X_j$ when the class is $Y$.
+
+Because of the product formulation in @eq-naive3 above, it can be benefical to represent the equation using logarithms, rendering a simpler and more easily calculated implementation:
+
+$$
+\text{log}(P(Y|X)) = \frac{\text{log}\sum\limits_{i=1}^n P(X_i\cap Y)}{P(X)}
+$$ {#eq-naive4}
+
+### *How does it work?*
+
+In short, prior probabilities are calculated as follows from a training dataset:
+
+$$
+P(X|Y) = \frac{P(X\cap Y)}{P(Y)}
+$$
+
+The above is calculated for all features $X_i$ in $X$.
+
+From there, these probabilities are applied in @eq-naive3 for every possible class outcome $y_i$.  The maximum amongst these probabilites is selected as the predicted class.
+
+A simple way to understand Naive Bayes is as a calculation of the combined relative frequency for all features or variables in consideration when records belong to a specific class.  These relative frequencies are treated as overall probabities, and are pre-calculated for a Naive Bayes model using a training dataset.  When new records are introduced to the model for classification, Naive Bayes outputs the class that has the greatest probability using the pre-computed prior probabilites in conjunction with the new records' feature data.
+
+Consider the below example:
+
+```{python}
+class_choices = ['R','G','Y','B']
+size_choices = ['S','M','L']
+cost_choices = ['free','low','medium','high']
+test_choices = [True,False]
+
+np.random.seed(202)
+cl = ['R']*75 + ['G']*115 + ['Y']*85 + ['B']*125
+sz = [size_choices[i] for i in np.random.randint(0,3,400)]
+co = [cost_choices[i] for i in np.random.randint(0,4,400)]
+te = [test_choices[i] for i in np.random.randint(0,2,400)]
+
+fr = pd.DataFrame({
+    'class':cl,
+    'size':sz,
+    'cost': co,
+    'tested':te
+})
+```
+
+For this example, a dummy dataset is generated with 400 records.  There are 4 classifications - R, G, Y, and B.  There are 3 features for evaluation: 
+
+* size, which takes on possible values of "S", "M", or "L"
+
+* cost, which takes on possible values of "free","low",'medium', or 'high'
+
+* tested, which is a boolean - True/False value
+
+Below are the first 10 records of this dummy dataset:
+
+```{python tbl-rnd-data}
+#| label: tbl-rnd-data
+#| tbl-cap: randomly generated dataset, first 10 records
+
+fr.head(10).style.hide(axis='index')
+```
+```{python}
+import pandas as pd, numpy as np
+class naive_bayes():
+    
+    def __init__(self,df:pd.DataFrame=None,target:str=None,verbose:bool=False):
+        self.data=df
+        self.target=target
+        self.prior = None
+        self.verbose = verbose
+        self.feature_probs = {}
+
+    def fit(self):
+        self.prior = pd.DataFrame(
+            self.data.value_counts(subset=[self.target],normalize=True)
+        ).reset_index()
+        self.prior.columns = ['target','prob']
+        if self.verbose:
+            display(self.prior)
+        if isinstance(self.data,pd.DataFrame):
+            for col in self.data.columns:
+                if col != self.target:
+                    curr = []
+                    for v in self.data[col].unique():
+                        curr.append(
+                            self.data[self.data[col]==v].value_counts(
+                                subset=[col,self.target]).reset_index()
+                        )
+                    fr = pd.concat(curr)
+                    fr['prob'] = 0
+                    for label in fr[self.target].unique():
+                        total = fr.loc[fr[self.target]==label]['count'].sum()
+                        fr.loc[fr[self.target]==label,'prob'] = fr.loc[fr[self.target]==label,'count']/total
+
+                    out = list(set((x,y) for x in fr[col] for y in fr[self.target]))
+                    out=[{col:x,self.target:y} for x,y in out]
+                    for val in out:
+                        pres = len(fr.loc[(fr[col]==val[col])&(fr[self.target]==val[self.target])])
+                        #handle absence / zeros...
+                        if pres == 0:
+                            fr.loc[len(fr)] = {col:val[col],self.target:val[self.target],'count':0,'prob':0}
+                    self.feature_probs[col] = fr
+            if self.verbose:
+                for p in self.feature_probs.values():
+                    display(p)
+
+    def predict(self,df):
+        df['prediction'] = ''
+        for i,item in enumerate(df.to_dict(orient='records')):
+            df.loc[i,'prediction'] = self._predict(item)
+        return df
+
+    def _predict(self,record):
+        results = self._predict_proba(record)
+        if self.verbose:
+            print(results)
+        return max(results,key=results.get)
+        # pass
+
+    def predict_proba(self,df):
+        df['prob'] = 0
+        df['prediction'] = ''
+        # print(df)
+        for i,item in enumerate(df.to_dict(orient='records')):
+            out = self._predict_proba(item)
+            df.loc[i,'prediction'] = max(k for k, v in out.items() if v != 0)
+            df.loc[i,'prob'] = out.get(df.loc[i,'prediction'])
+        return df
+
+    def _predict_proba(self,record):
+        probs = {}
+        for t in self.data[self.target].unique():
+            probs[t] = 1
+            for k,v in self.feature_probs.items():
+                curr_prob = v.loc[(v[k]==record[k])&(v[self.target]==t),'prob'].iloc[0]
+                probs[t]*= curr_prob
+            p = self.prior.loc[self.prior['target']==t,'prob'].iloc[0]
+            probs[t]*=p
+        return probs
+```
+
+To produce the probability tables, we must first calculate the prior probabilities for each of the classes in our label column, classes.
+
+```{python}
+nb = naive_bayes(fr,'class')
+nb.fit()
+record = {
+    'size':'L',
+    'cost':'medium',
+    'tested':True
+}
+```
+
+```{python}
+# import numpy as np
+# rng = np.random.RandomState(1)
+# X = rng.randint(5, size=(6, 100))
+# y = np.array([1, 2, 3, 4, 5, 6])
+# from sklearn.naive_bayes import MultinomialNB
+# clf = MultinomialNB()
+# clf.fit(X, y)
+# MultinomialNB()
+# print(clf.predict(X[2:3]))
+```
+
+From here, we can iterate on the remaining columns with respect to the label column.  In our case, we have the columns of cost, size, and tested.
+
+The general process is as follows:
+
+* select the feature column 
+
+* for each unique value within the feature column, $X_j$:
+
+    * for each unique class in our labels:
+
+        * get the raw count of the number of records where the feature column is equal to the unique value *and* the class is equal to the current class.  This is a proxy for $P(X_i|Y)$
+
+        * calculate the total raw of each class in the resulting filter, analogous to $P(Y)$
+
+        * use the above calulations to calculate $P(Y_i|X)$ as listed in @eq-bayes2
+
+        * select the highest value for $P(Y_i|X)$ to select the class prediction
+
+
+Using this, we can precompute relative frequencies and probabilities $P(Y|X_i)$ for each value, given that the record is a member of the target class:
+
+```{python tbl-size-freqs}
+#| label: tbl-size-freqs
+#| tbl-cap: relative frequency of size, given class
+
+#relative frequencies -
+s_prob = nb.feature_probs['size']
+s_prob.sort_values(by='class').style.hide(axis='index')
+```
+
+```{python tbl-cost-freqs}
+#| label: tbl-cost-freqs
+#| tbl-cap: relative frequency of cost, given class
+c_prob = nb.feature_probs['cost']
+c_prob.sort_values(by='class').style.hide(axis='index')
+```
+
+```{python tbl-test-freqs}
+#| label: tbl-test-freqs
+#| tbl-cap: relative frequency of tested, given class
+t_prob = nb.feature_probs['tested']
+t_prob.sort_values(by='class').style.hide(axis='index')
+```
+
+These probability tables are pre-computed and used for future classification tasks.  We directly treat these as *independent probabilities* and on introduction of a new record, we simply perform the following tasks:
+
+* For every possible result classification, $y_i$ (in our case, G, B, Y, and R):
+
+    * Take the new input record
+
+    * Start with prob = prior probability for each class (the relative frequency of each class $y_i$ in the source data)
+
+    * Iterate through the pre-computed probability tables for size, cost, and tested:
+
+        * get the value of the probability column where the class is the current possible result classification $y_i$ *and* the record feature value is equal to the table feature value.
+
+        * multiply the current value for prob by the selected value.  This is analogous to @eq-naive3 for the current class $y_i$
+
+    * after completion we have $P(Y=y_i|X)$
+
+* now that we've collected all $P(Y|X)$ for every $y_i$, one selects the maximum value amongst all $P(Y=y_i|X)$ and set the predicted class as $y_i$
+
+Examining this process for the below example record:
+
+```{python tbl-record-examp}
+#| label: tbl-record-examp
+#| tbl-cap: New Record for Testing the Model
+
+r = pd.DataFrame(record,index=[0]).style.hide(axis='index')
+r
+```
+
+To perform the calculation, one can initialize the data with the prior probability $P(Y)$ for each potential output class.
+
+```{python tbl-init-alg-examp}
+#| label: tbl-init-alg-examp
+#| tbl-cap: Prior probabilites (P(Y))
+
+temp_p = nb.prior.T
+h = temp_p.iloc[0]
+temp_p = temp_p[1:]
+temp_p.columns=h
+temp_p.style.hide(axis='index')
+```
+
+From here, one must examine the values in each table, where the column in @tbl-record-examp column is equal to the same column in each of our pre-computed tables, @tbl-size-freqs,
+
+```{python tbl-size-examp}
+#| label: tbl-size-examp
+#| tbl-cap: Probabilites from Size Frequencies where size=L
+
+temp_s = s_prob.loc[s_prob['size']==record['size']][['class','prob']].T
+h = temp_s.iloc[0]
+temp_s = temp_s[1:]
+temp_s.columns=h 
+temp_s.style.hide(axis='index')
+```
+
+for @tbl-cost-freqs, 
+
+```{python tbl-cost-examp}
+#| label: tbl-cost-examp
+#| tbl-cap: Probabilites from Size Frequencies where cost=medium
+temp_c = c_prob.loc[c_prob['cost']==record['cost']][['class','prob']].T
+h = temp_c.iloc[0]
+temp_c = temp_c[1:]
+temp_c.columns=h 
+temp_c.style.hide(axis='index')
+```
+
+and for @tbl-test-freqs
+
+```{python tbl-tested-examp}
+#| label: tbl-tested-examp
+#| tbl-cap: Probabilites from Tested Frequencies where tested=True
+
+temp_t = t_prob.loc[t_prob['tested']==record['tested']][['class','prob']].T
+h = temp_t.iloc[0]
+temp_t = temp_t[1:]
+temp_t.columns=h 
+temp_t.style.hide(axis='index')
+```
+
+Taking each of these (the prior probabilities and the extracted probabilities), one can calculate the probability $P(Y_i|X))$ for the input record
+
+```{python tbl-product}
+#| label: tbl-product
+#| tbl-cap: Calculation of P(Y|X) 
+
+temp_t * temp_s * temp_c * temp_p
+```
+
+The final result, one can see, is that the classification of the record will be "B", as it has the highest probability amongst all the potential classes.
+
+### The Zero-Frequency Problem
+
+One challenge with the Naive Bayes algorithm is when one or more of the feature spaces has zero occurences within a given output class.  When this occurs, it sets the probability for a record being a member of that class to zero, meaning that no newly introduced data or records can **ever** be classified as a member of that class by the algorithm.  Without additional data and training, the model will never adapt to these new inputs, because the calculation is a running product of the relative frequencies.  Thus, a single relative frequency of zero will result in an overall probability of zero, and the output class will not be predicted.
+
+<!-- Simple example:  in @tbl-size-freqs, the proportion value for class=Y and size=L is replaced with zero, because in the training dataset the relative frequency of class Y having size L never occurs.   -->
+
+What if no records of class Y in the source data were ever tested?  
+
+```{python}
+len(fr.loc[(fr['tested']==True)&(fr['class']=='Y')])
+fr.loc[(fr['tested']==True)&(fr['class']=='Y'),'tested'] = False
+nb = naive_bayes(fr,target='class')
+nb.fit()
+```
+
+```{python}
+t_prob = nb.feature_probs['tested']
+t_prob.sort_values(by='class').style.hide(axis='index')
+```
+
+```{python}
+# from sklearn.preprocessing import LabelEncoder
+# mnb = MultinomialNB(alpha=0,force_alpha=True)
+# dat = fr.copy()
+# maps = {}
+# le = LabelEncoder()
+# for col in dat.columns:
+#     le.fit(dat[col])
+#     d = dict(zip(le.classes_,le.transform(le.classes_)))
+#     dat[col]=le.transform(dat[col])
+#     maps[col] = d 
+# mnb.fit(dat[dat.columns[1:]],dat[dat.columns[0]])
+
+# r2fr = None
+# record = {'size': 'L', 'cost': 'medium', 'tested': True}
+# r2 = {}
+# for k,v in record.items():
+#     r2[k] = maps[k][v]
+# r2fr = pd.DataFrame(r2,index=[0])
+# r2fr
+# mnb.predict_proba(r2fr)
+# # mnb.classes_
+```
+
+One can see that the change of all records where class=Y and tested=True have a probability of zero.
+
+This has a substatial impact on predictions, namely - whenever a record has tested=True, the trained model will produce a zero probability result for the class of a new record belonging to Y, and thus no new records will ever be classified as Y.  Here's the predicted outcome for the record in the previous example:
+
+```{python}
+
+pd.DataFrame(record,index=[0]).style.hide(axis='index')
+
+```
+
+We see the record has tested = True, so the outcome will never be class Y:
+
+```{python}
+
+pd.DataFrame(nb._predict_proba(record),index=[0]).style.hide(axis='index')
+
+```
+
+The absence of a probability is, well, problematic.  If the new record truly did belong to class Y, the model can never predict it as belonging to the class, due to the absence of data.  There are methods and means of handling this issue, however.
+
+One option includes updating an existing Naive Bayes model in relatively short order with new records, new training set information, and recomputing the prior probabilities for classification of future records.  Without such additional data and retraining/updating, however, the classification challenge will remain.
+
+Another option to rectify the zero-frequency issue is via smoothing methods.  These methods allow for any possibility to occur, and assign minute, non-zero probabilities to any cases which have zero frequency within the training dataset.  In doing this it ensures that, for every value of every considered feature, there is some probability $p$ strictly greater than zero assigned, thus allowing potential predictions into the appropriate class for any new input tuple.
+
+A common smoothing technique for Multinomial Naive Bayes is Laplace smoothing.  The technique adapts the calculation of the probabilites for each feature $P(X_i|Y)$ in the following manner:
+
+$$
+P(X|Y) = \frac{P(Y|X) + \alpha}{P(Y)+\alpha n}
+$$ {#eq-laplace-smooth}
+
+Where $\alpha$ is equal to 1, and n is the number of total categories $Y$ in the dataset.  There are   The additive non-zero values to the numerator $\alpha$ and the denominator $\alpha n$ ensures that the probabilities for all $P(X_i|Y)$ are greater than zero, thus enabling them to (potentially) be predicted by the model.  It's possible that a single, and potentially less important, feature could be the difference between whether or not the correct class can be predicted absent such smoothing, but the inclusion of Laplace or other smoothing techniques can support better modeling.
+
+Thus far, everything explained above examines *Categorical* naive bayes.  There are several other versions of the Naive Bayes algorithm that operate under the same independence assumption, but algorithmic performance differs from what has been explained thus far.
+
+### Bernoulli Naive Bayes
+
+This algorithm performs similarly to the Multinomial Naive Bayes algorithm, but on binary encoded (0/1) data.  Every category in each feature needs to be transferred into a column, and then each column is set to a zero if a record does not have the specified category value for that feature, and a one otherwise.
+
+However, the probabilities are calculated differently from that of the Multinomial Naive Bayes Algorithm.  For calculating the values of the prior probabilities in the training data, the formula is repaced as follows:
+
+$$
+P(x_i|y) = P(x_i=1|y)\cdot x_i + (1-P(x_i=1|y))\cdot(1-x_i)
+$$
+
+This is similar to the construct of the binomial distribution (chance for k successes in n trials), and is repeated for each feature value $x_i$ in the dataset.  This is of benefit to Bernoulli naive bayes over Multinomial, as it will include and penalize non-occuring combinations of $x_i$ and $y$ together in the dataset.
+
+Some advantages of Bernoulli naive bayes are that it is relatively simple (for small datasets) to implement and that it performs well on tasks such as task classification (e.g. detecting spam emails, for instance).  However, it is only able to categorize or predict on a binary outcome, similar to logistic regression.  This is applicable for this research, but may not fit all use cases.  
+
+## Data and Code
+
+* [MultinomialNB (With Protected Classes)](https://drive.google.com/file/d/1Br4X_FhYl673QKQo5PlDkyEs6FjjvFzn/view?usp=drive_link)
+
+* [MultinomialNB (Without Protected Classes)](https://drive.google.com/file/d/1TefbM2T1AcnLxcyHkgSelqNEoDDGKBrn/view?usp=drive_link)
+
+* [CategoricalNB (With Protected Classes)](https://drive.google.com/file/d/1Nj2P23ZMlQCzdnMdvJVKH_dufNl_tmrr/view?usp=drive_link)
+
+* [CategoricalNB (Without Protected Classes)](https://drive.google.com/file/d/1ybGEqiSdRsqu0j9O1KJXZgyJrSlX7JNl/view?usp=drive_link)
+
+* [BernoulliNB (With Protected Classes)](https://drive.google.com/file/d/1Br4X_FhYl673QKQo5PlDkyEs6FjjvFzn/view?usp=drive_link)
+
+* [BernoulliNB (Without Protected Classes)](https://drive.google.com/file/d/1TefbM2T1AcnLxcyHkgSelqNEoDDGKBrn/view?usp=drive_link)
+
+To prepare the data, several steps were necessary.  Namely, the data for this research effort is of mixed (categorical and quantitative) types. Different data transformation techniques and algorithms were required for application to source data to place it in a usable format for each Naive Bayes algorithm.
+
+For all model code, in addition to building 2 models with and without protected class information, an exploration into statistically significant differences in model performance was performed.  The experiment is constructed under the following parameters:
+
+* For each naive bayes model type, repeat the following steps, 500 times: 
+
+    * initialize a random seed
+
+    * sample the records from both datasets (with and without protected class information) using the same random seed so as to pull the same records, on an 80/20 train/test split.  This ensures the same subjects are present in the training and testing data for each random sampling.
+
+    * train two models using the training data
+
+        * in the event of an error in fitting or predicting under the current train/test split, decrement the loop counter so that we ensure 500 measurements and restart the loop.
+
+    * predict the outcomes using the testing data
+
+    * capture model performance metrics (accuracy, precision, recall, F1, ROC-AUC) for the two models trained with and without protected class information (age/gender/race).
+
+* After metrics for 500 models are captured:
+
+    * Construct a paired-t test for difference in means between the two models' performance metrics, on a per-metric basis.
+
+        * $H_0$: There is no difference in the mean performance metric for models when trained with and without protected class information
+
+        * $H_A$: One of the models has a higher mean performance metric when protected class information is included
+
+        * $\alpha=0.003$ or a $3\sigma$ confidence
+
+    * Visualize the distribution of performance metrics for each model
+
+    * Conclude on any statistically significant differences between the models' performance
+
+The output for these tests are located as follows:
+
+* [MultinomialNB Randomization Testing](https://drive.google.com/file/d/1wWfVUvsEVQSAlQrKQnu-PplhcUnmJ9Ar/view?usp=drive_link)
+
+* [CategoricalNB Randomization Testing](https://drive.google.com/file/d/1x5LhOlydQIymZCYtn3RgcVtdZkKeojHr/view?usp=drive_link)
+
+* [BernoulliNB Randomization Testing](https://drive.google.com/file/d/1iF4UCojUO7N9a7wcj3oWZteg5gY-mjhX/view?usp=drive_link)
+
+### Multinomial Naive Bayes
+
+The data prepration and code were executed natively in @sec-MCA-app, sourcing from the final clean dataset.
+
+Multinomial Naive Bayes requires count data.  Since the native format of the initially cleaned dataset is purely record data, there are challenges to convert this to count information.  Namely, each feature and feature value either occurs, or it doesn't.  As such, the data had to be transformed into a one-hot encoded dataset with either 1 if the feature value occurred in the record, and 0 otherwise.  This same data is leveraged in Bernoulli Naive Bayes for this portion of the research.
+
+```{python}
+mnb_pc_data = pd.read_csv('../data/data-one-hot.csv')
+mnb_npc_data = pd.read_csv('../data/data-one-hot-npc.csv')
+mnb_rand_test = pd.read_csv('../data/mnbRandTest.csv')
+bnb_rand_test = pd.read_csv('../data/bnbRandTest.csv')
+clean = pd.read_csv('../data/final_clean_r2.csv') #['outcome']
+labels = clean['outcome'].copy()
+```
+
+```{python tbl-init-data}
+#| label: tbl-init-data
+#| tbl-cap: Initial Data Used
+clean.head(10)
+```
+
+```{python tbl-mnb-pc-data}
+#| label: tbl-mnb-pc-data
+#| tbl-cap: MultinomialNB Data (With protected classes)
+# mnb_pc_data.head(10) ##train test split here, too.
+data,data_nr = mnb_pc_data,mnb_npc_data
+X_train,X_test,y_train,y_test = train_test_split(
+    data,
+    labels,
+    stratify=labels,
+    test_size=0.2,
+    random_state=8808
+)
+X_train_npc,X_test_npc,y_train,y_test = train_test_split(
+    data_nr,
+    labels,
+    stratify=labels,
+    test_size=0.2,
+    random_state=8808
+)
+# display(pd.concat[X_train,y_train])
+```
+
+```{python tbl-mnb-pc-trn-data}
+#| label: tbl-mnb-pc-trn-data
+#| tbl-cap: MultinomialNB Training Data (With protected classes)
+display(pd.concat([X_train,y_train],axis=1).head(10))
+```
+
+```{python tbl-mnb-pc-tst-data}
+#| label: tbl-mnb-pc-tst-data
+#| tbl-cap: MultinomialNB Testing Data (With protected classes)
+mnb_npc_data.head(10)
+display(pd.concat([X_test,y_test],axis=1).head(10))
+```
+
+```{python tbl-mnb-npc-trn-data}
+#| label: tbl-mnb-npc-trn-data
+#| tbl-cap: MultinomialNB Training Data (No protected classes)
+# cnb_npc_data.head(10)
+display(pd.concat([X_train_npc,y_train],axis=1).head(10))
+```
+
+```{python tbl-mnb-npc-tst-data}
+#| label: tbl-mnb-npc-tst-data
+#| tbl-cap: MultinomialNB Training Data (No protected classes)
+# cnb_npc_data.head(10)
+display(pd.concat([X_test_npc,y_test],axis=1).head(10))
+```
+
+Also of note: the record indexes in @tbl-mnb-pc-trn-data and @tbl-mnb-npc-trn-data match one another, meaning that the two models are trained on the same subjects.  Similarly, the indexes between @tbl-mnb-pc-tst-data and @tbl-mnb-npc-tst-data match, so they are tested on the same subjects between the two models. 
+
+Also note that the indexes between @tbl-mnb-pc-trn-data and @tbl-mnb-pc-tst-data are disjoint - that means that the model has disjoint training and testing data.  Similarly, @tbl-mnb-npc-trn-data and @tbl-mnb-npc-tst-data are disjoint.
+
+By achieving these splits, the two models evaluated with and without protected class information will avoid unnecessary biases in the results.  When a model is tested on data with which it has already been trained, the model has already optimized to the best of its ability to correctly classify the training data.  As such, the outcome of an evaluation of a model using the same data in training and testing will artificially inflate its performance metrics (accuracy, precision, recall, F1, ROC-AUC).  As such, it is paramount to have a disjoint training and testing dataset.
+
+### Bernoulli Naive Bayes
+
+The data preparation was executed in @sec-MCA-app, sourced from the final clean dataset.  To prepare the data for two different models, 2 copies were made.  The second copy dropped all columns that included protected class information, and the first retained all source columns. 
+
+To perform an MCA, the data must be in a one-hot-encoded (or binary 0/1) format per category and feature.  Since this work was previously done, the steps were seamless to include for this purpose.
+
+Examples of the two dataset samples used for Bernoulli Naive Bayes are summarized in @tbl-mnb-pc-trn-data, @tbl-mnb-pc-tst-data, @tbl-mnb-npc-trn-data, and @tbl-mnb-npc-tst-data.
+
+### Categorical Naive Bayes
+
+The data for categorical naive bayes was sourced from the final clean dataset.
+
+In @sec-App6-NB, the data is transformed into label-encoded format to perform the categorical naive bayes analysis.  In some cases, binary data was captured (mostly in terms of protected class information).  These binary caputred data was parsed back out into featurename:featurevalue columns with a 1 if the record met the condition, and zero otherwise.  This format still meets the needs of categorical naive bayes.  
+
+```{python}
+cnb_pc_data = pd.read_csv('../data/cnb_pc.csv')
+cnb_npc_data = pd.read_csv('../data/cnb_npc.csv')
+cnb_rand_test = pd.read_csv('../data/cnbRandTest.csv')
+```
+
+```{python tbl-cnb-pc-data}
+#| label: tbl-cnb-pc-data
+#| tbl-cap: CategoricalNB Data (With protected classes)
+cnb_pc_data.head(10)  ##train test split here, too.
+data,data_nr = cnb_pc_data,cnb_npc_data
+X_train,X_test,y_train,y_test = train_test_split(
+    data,
+    labels,
+    stratify=labels,
+    test_size=0.2,
+    random_state=8808
+)
+X_train_npc,X_test_npc,y_train,y_test = train_test_split(
+    data_nr,
+    labels,
+    stratify=labels,
+    test_size=0.2,
+    random_state=8808
+)
+# display(pd.concat([X_train_npc,y_train],axis=1).head(10))
+```
+
+```{python tbl-cnb-pc-trn-data}
+#| label: tbl-cnb-pc-trn-data
+#| tbl-cap: CategoricalNB Training Data (With protected classes)
+# cnb_npc_data.head(10)
+display(pd.concat([X_train,y_train],axis=1).head(10))
+```
+
+```{python tbl-cnb-pc-tst-data}
+#| label: tbl-cnb-pc-tst-data
+#| tbl-cap: CategoricalNB Training Data (With protected classes)
+# cnb_npc_data.head(10)
+display(pd.concat([X_test,y_test],axis=1).head(10))
+```
+
+```{python tbl-cnb-npc-trn-data}
+#| label: tbl-cnb-npc-trn-data
+#| tbl-cap: CategoricalNB Training Data (No protected classes)
+# cnb_npc_data.head(10)
+display(pd.concat([X_train_npc,y_train],axis=1).head(10))
+```
+
+```{python tbl-cnb-npc-tst-data}
+#| label: tbl-cnb-npc-tst-data
+#| tbl-cap: CategoricalNB Training Data (No protected classes)
+# cnb_npc_data.head(10)
+display(pd.concat([X_test_npc,y_test],axis=1).head(10))
+```
+
+Just as for MultinomialNB, the data for CategoricalNB has the similar combination of same indexes (between datasets) and disjoint indexes (between train test splits).
 
 ## Results
 
+### Categorical Naive Bayes
+
+```{python}
+final_results = pd.DataFrame({
+    'Model':[],
+    'Data':[],
+    'Accuracy':[],
+    'Precision':[],
+    'Recall':[],
+    'F1':[],
+    'ROC-AUC':[]
+})
+final_stats = pd.DataFrame({
+    'Model':[],
+    'Stat':[],
+    'z-score':[],
+    'p-value':[],
+    'top performer':[],
+    'top mean':[],
+    'difference in means':[]
+})
+```
+
+```{python fig-cnb-1}
+#| label: fig-cnb-1
+#| fig-cap: Confusion Matrices (CategoricalNB, Single-Run)
+
+#confusion matrices
+# from sklearn.naive_bayes import CategoricalNB
+data,data_nr = cnb_pc_data,cnb_npc_data
+cnb_pc = CategoricalNB()
+cnb_npc = CategoricalNB()
+X_train,X_test,y_train,y_test = train_test_split(
+    data,
+    labels,
+    stratify=labels,
+    test_size=0.2,
+    random_state=8808
+)
+X_train_npc,X_test_npc,y_train,y_test = train_test_split(
+    data_nr,
+    labels,
+    stratify=labels,
+    test_size=0.2,
+    random_state=8808
+)
+cnb_pc.fit(X_train,y_train)
+cnb_npc.fit(X_train_npc,y_train)
+y_pred = cnb_pc.predict(X_test)
+y_pred_npc = cnb_npc.predict(X_test_npc)
+results = pd.DataFrame({
+    'Model':[],
+    'Data':[],
+    'Accuracy':[],
+    'Precision':[],
+    'Recall':[],
+    'F1':[],
+    'ROC-AUC':[]
+})
+results.loc[len(results)] = {
+    'Model':'CategoricalNB',
+    'Data':'With Protected Classes',
+    'Accuracy':accuracy_score(y_test,y_pred),
+    'Precision':precision_score(y_test,y_pred),
+    'Recall':recall_score(y_test,y_pred),
+    'F1':f1_score(y_test,y_pred),
+    'ROC-AUC':roc_auc_score(y_test,y_pred)
+}
+results.loc[len(results)] = {
+    'Model':'CategoricalNB',
+    'Data':'Without Protected Classes',
+    'Accuracy':accuracy_score(y_test,y_pred_npc),
+    'Precision':precision_score(y_test,y_pred_npc),
+    'Recall':recall_score(y_test,y_pred_npc),
+    'F1':f1_score(y_test,y_pred_npc),
+    'ROC-AUC':roc_auc_score(y_test,y_pred_npc)
+}
+import matplotlib.pyplot as plt
+fig,axes=plt.subplots(nrows=1,ncols=2)
+ConfusionMatrixDisplay(
+    confusion_matrix(
+        y_pred=y_pred,y_true=y_test
+    ),
+    display_labels=['Deny','Approve']
+).plot(ax=axes[0])
+ConfusionMatrixDisplay(
+    confusion_matrix(
+        y_pred=y_pred_npc,y_true=y_test
+    ),
+    display_labels=['Deny','Approve']
+).plot(ax=axes[1])
+axes[0].set_title('With Protected\nClasses')
+axes[1].set_title('Without Protected\nClasses')
+plt.suptitle("Confusion Matrices - Categorical Naive Bayes")
+plt.tight_layout()
+plt.show()
+```
+
+```{python tbl-cnb-1}
+#| label: tbl-cnb-1
+#| tbl-cap: Model Performance Metrics (CategoricalNB, Single Run)
+
+# performance results - one test
+display(results.style.hide(axis='index'))
+final_results = pd.concat([final_results,results])
+```
+
+```{python fig-cnb-2}
+#| label: fig-cnb-2
+#| fig-cap: Metric Kernel Density Estimates (500 randomizations, CategoricalNB)
+#score distribution of 500 tests
+results = cnb_rand_test
+res = results.copy()
+res = res.melt(id_vars=['Model','Data'],var_name='Metric',value_name='Score')
+g = sns.FacetGrid(data=res,col='Metric',hue='Data',col_wrap=3)
+g.map_dataframe(
+    sns.kdeplot,
+    x='Score'#,
+    # hue='Data'
+)
+g.add_legend(loc='lower right')
+plt.suptitle("Distributions for Randomization of Training/Testing Data\nCategorical Naive Bayes")
+plt.tight_layout()
+plt.show()
+```
+
+```{python tbl-cnb-2}
+#| label: tbl-cnb-2
+#| tbl-cap: Statistical Significance Tests (Model Performance Metrics, CategoricalNB)
+
+#statistically significant differences
+from statsmodels.stats.weightstats import ztest
+tbl_pc = results[results['Data']=='With Protected Classes'].describe().T.reset_index()
+tbl_npc = results[results['Data']=='Without Protected Classes'].describe().T.reset_index()
+
+from scipy import stats
+sig = pd.DataFrame({
+    'Model':[],
+    'Stat':[],
+    'z-score':[],
+    'p-value':[],
+    'top performer':[],
+    'top mean':[],
+    'difference in means':[]
+})
+
+z_stat,p_value = ztest(
+    results.loc[results['Data']=='With Protected Classes']['Accuracy'],
+    results.loc[results['Data']=='Without Protected Classes']['Accuracy'],
+)
+scores = tbl_pc['index'].unique()
+for score in scores: 
+    z_stat,p_value = ztest(
+        results.loc[results['Data']=='With Protected Classes'][score],
+        results.loc[results['Data']=='Without Protected Classes'][score],
+    )
+    mu_pc, mu_npc = (
+        tbl_pc.loc[tbl_pc['index']==score,'mean'].iloc[0],
+        tbl_npc.loc[tbl_npc['index']==score,'mean'].iloc[0]
+    )
+    winner = np.select(
+        [
+            mu_pc < mu_npc,
+            mu_npc < mu_pc
+        ],
+        [
+            'Without Protected Classes',
+            'With Protected Classes'
+        ],
+        default='tie'
+    )
+    diff = np.abs(mu_pc-mu_npc)
+    m = max(mu_pc,mu_npc)
+    sig.loc[len(sig)] = {
+        'Model':'CategoricalNB',
+        'Stat':score,
+        'z-score':z_stat,
+        'p-value':p_value,
+        'top performer':winner,
+        'top mean':m,
+        'difference in means':diff
+    }
+
+display(sig.style.hide(axis='index'))
+final_stats=pd.concat([final_stats,sig])
+```
+
+### Multinomial Naive Bayes
+
+```{python fig-mnb-1}
+#| label: fig-mnb-1
+#| fig-cap: Confusion Matrices (MultinomialNB, Single-Run)
+
+#confusion matrices
+
+data,data_nr = mnb_pc_data,mnb_npc_data
+mnb_pc=MultinomialNB()
+mnb_npc=MultinomialNB()
+X_train, X_test, y_train, y_test = train_test_split(
+    data,
+    labels,
+    stratify=labels,
+    test_size=0.2,
+    random_state=8808
+)
+
+X_train_npc, X_test_npc, y_train, y_test = train_test_split(
+    data_nr,
+    labels,
+    stratify=labels,
+    test_size=0.2,
+    random_state=8808
+)
+results = pd.DataFrame({
+    'Model':[],
+    'Data':[],
+    'Accuracy':[],
+    'Precision':[],
+    'Recall':[],
+    'F1':[],
+    'ROC-AUC':[]
+})
+
+mnb_pc.fit(X_train,y_train)
+y_pred = mnb_pc.predict(X_test)
+mnb_npc.fit(X_train_npc,y_train)
+y_pred_npc=mnb_npc.predict(X_test_npc)
+
+results.loc[len(results)] = {
+    'Model':'MultinomialNB',
+    'Data':'With Protected Classes',
+    'Accuracy':accuracy_score(y_test,y_pred),
+    'Precision':precision_score(y_test,y_pred),
+    'Recall':recall_score(y_test,y_pred),
+    'F1':f1_score(y_test,y_pred),
+    'ROC-AUC':roc_auc_score(y_test,y_pred)
+}
+
+results.loc[len(results)] = {
+    'Model':'MultinomialNB',
+    'Data':'Without Protected Classes',
+    'Accuracy':accuracy_score(y_test,y_pred_npc),
+    'Precision':precision_score(y_test,y_pred_npc),
+    'Recall':recall_score(y_test,y_pred_npc),
+    'F1':f1_score(y_test,y_pred_npc),
+    'ROC-AUC':roc_auc_score(y_test,y_pred_npc)
+}
+fig,axes=plt.subplots(nrows=1,ncols=2)
+ConfusionMatrixDisplay(
+    confusion_matrix(
+        y_pred=y_pred,y_true=y_test
+    ),
+    display_labels=['Deny','Approve']
+).plot(ax=axes[0])
+ConfusionMatrixDisplay(
+    confusion_matrix(
+        y_pred=y_pred_npc,y_true=y_test
+    ),
+    display_labels=['Deny','Approve']
+).plot(ax=axes[1])
+axes[0].set_title('With Protected\nClasses')
+axes[1].set_title('Without Protected\nClasses')
+plt.suptitle("Confusion Matrices - Multinomial Naive Bayes")
+plt.tight_layout()
+plt.show()
+```
+
+```{python tbl-mnb-1}
+#| label: tbl-mnb-1
+#| tbl-cap: Model Performance Metrics (MultinomialNB, Single Run)
+
+# performance results - one test
+display(results.style.hide(axis='index'))
+final_results = pd.concat([final_results,results])
+```
+
+```{python fig-mnb-2}
+#| label: fig-mnb-2
+#| fig-cap: Metric Kernel Density Estimates (500 randomizations, MultinomialNB)
+
+#score distribution of 500 tests
+results = mnb_rand_test
+res = results.copy()
+res = res.melt(id_vars=['Model','Data'],var_name='Metric',value_name='Score')
+g = sns.FacetGrid(data=res,col='Metric',hue='Data',col_wrap=3)
+g.map_dataframe(
+    sns.kdeplot,
+    x='Score'#,
+    # hue='Data'
+)
+g.add_legend(loc='lower right')
+plt.suptitle("Distributions for Randomization of Training/Testing Data\nMultinomial Naive Bayes")
+plt.legend(loc='lower right')
+plt.tight_layout()
+plt.show()
+```
+
+```{python tbl-mnb-2}
+#| label: tbl-mnb-2
+#| tbl-cap: Statistical Significance Tests (Model Performance Metrics, MultinomialNB)
+
+#statistically significant differences
+from statsmodels.stats.weightstats import ztest
+tbl_pc = results[results['Data']=='With Protected Classes'].describe().T.reset_index()
+tbl_npc = results[results['Data']=='Without Protected Classes'].describe().T.reset_index()
+
+from scipy import stats
+sig = pd.DataFrame({
+    'Model':[],
+    'Stat':[],
+    'z-score':[],
+    'p-value':[],
+    'top performer':[],
+    'top mean':[],
+    'difference in means':[]
+})
+
+z_stat,p_value = ztest(
+    results.loc[results['Data']=='With Protected Classes']['Accuracy'],
+    results.loc[results['Data']=='Without Protected Classes']['Accuracy'],
+)
+scores = tbl_pc['index'].unique()
+for score in scores: 
+    z_stat,p_value = ztest(
+        results.loc[results['Data']=='With Protected Classes'][score],
+        results.loc[results['Data']=='Without Protected Classes'][score],
+    )
+    mu_pc, mu_npc = (
+        tbl_pc.loc[tbl_pc['index']==score,'mean'].iloc[0],
+        tbl_npc.loc[tbl_npc['index']==score,'mean'].iloc[0]
+    )
+    winner = np.select(
+        [
+            mu_pc < mu_npc,
+            mu_npc < mu_pc
+        ],
+        [
+            'Without Protected Classes',
+            'With Protected Classes'
+        ],
+        default='tie'
+    )
+    diff = np.abs(mu_pc-mu_npc)
+    m = max(mu_pc,mu_npc)
+    sig.loc[len(sig)] = {
+        'Model':'MultinomialNB',
+        'Stat':score,
+        'z-score':z_stat,
+        'p-value':p_value,
+        'top performer':winner,
+        'top mean':m,
+        'difference in means':diff
+    }
+
+display(sig.style.hide(axis='index'))
+final_stats=pd.concat([final_stats,sig])
+```
+
+### Bernoulli Naive Bayes
+
+```{python fig-bnb-1}
+#| label: fig-bnb-1
+#| fig-cap: Confusion Matrices (BernoulliNB, Single-Run)
+#confusion matrices
+data, data_nr = mnb_pc_data, mnb_npc_data
+bnb=BernoulliNB()
+bnb_nr=BernoulliNB()
+X_train, X_test, y_train, y_test = train_test_split(
+    data,
+    labels,
+    stratify=labels,
+    test_size=0.2,
+    random_state=8808
+)
+
+X_train_npc, X_test_npc, y_train, y_test = train_test_split(
+    data_nr,
+    labels,
+    stratify=labels,
+    test_size=0.2,
+    random_state=8808
+)
+
+bnb.fit(X_train,y_train)
+y_pred = bnb.predict(X_test)
+bnb_nr.fit(X_train_npc,y_train)
+y_pred_npc=bnb_nr.predict(X_test_npc)
+
+results = pd.DataFrame({
+    'Model':[],
+    'Data':[],
+    'Accuracy':[],
+    'Precision':[],
+    'Recall':[],
+    'F1':[],
+    'ROC-AUC':[]
+})
+
+results.loc[len(results)] = {
+    'Model':'BernoulliNB',
+    'Data':'With Protected Classes',
+    'Accuracy':accuracy_score(y_test,y_pred),
+    'Precision':precision_score(y_test,y_pred),
+    'Recall':recall_score(y_test,y_pred),
+    'F1':f1_score(y_test,y_pred),
+    'ROC-AUC':roc_auc_score(y_test,y_pred)
+}
+
+results.loc[len(results)] = {
+    'Model':'BernoulliNB',
+    'Data':'Without Protected Classes',
+    'Accuracy':accuracy_score(y_test,y_pred_npc),
+    'Precision':precision_score(y_test,y_pred_npc),
+    'Recall':recall_score(y_test,y_pred_npc),
+    'F1':f1_score(y_test,y_pred_npc),
+    'ROC-AUC':roc_auc_score(y_test,y_pred_npc)
+}
+fig,axes=plt.subplots(nrows=1,ncols=2)
+ConfusionMatrixDisplay(
+    confusion_matrix(
+        y_pred=y_pred,y_true=y_test
+    ),
+    display_labels=['Deny','Approve']
+).plot(ax=axes[0])
+ConfusionMatrixDisplay(
+    confusion_matrix(
+        y_pred=y_pred_npc,y_true=y_test
+    ),
+    display_labels=['Deny','Approve']
+).plot(ax=axes[1])
+axes[0].set_title('With Protected\nClasses')
+axes[1].set_title('Without Protected\nClasses')
+plt.suptitle("Confusion Matrices - Bernoulli Naive Bayes")
+plt.tight_layout()
+plt.show()
+```
+
+```{python tbl-bnb-1}
+#| label: tbl-bnb-1
+#| tbl-cap: Model Performance Metrics (BernoulliNB, Single Run)
+
+# performance results - one test
+display(results.style.hide(axis='index'))
+final_results = pd.concat([final_results,results])
+```
+
+```{python fig-bnb-2}
+#| label: fig-bnb-2
+#| fig-cap: Metric Kernel Density Estimates (500 randomizations, BernoulliNB)
+
+#score distribution of 500 tests
+results = bnb_rand_test
+res = results.copy()
+res = res.melt(id_vars=['Model','Data'],var_name='Metric',value_name='Score')
+g = sns.FacetGrid(data=res,col='Metric',hue='Data',col_wrap=3)
+g.map_dataframe(
+    sns.kdeplot,
+    x='Score'#,
+    # hue='Data'
+)
+g.add_legend(loc='lower right')
+plt.suptitle("Distributions for Randomization of Training/Testing Data\nBernoulli Naive Bayes")
+plt.tight_layout()
+plt.show()
+```
+
+```{python tbl-bnb-2}
+#| label: tbl-bnb-2
+#| tbl-cap: Statistical Significance Tests (Model Performance Metrics, BernoulliNB)
+
+#statistically significant differences
+from statsmodels.stats.weightstats import ztest
+tbl_pc = results[results['Data']=='With Protected Classes'].describe().T.reset_index()
+tbl_npc = results[results['Data']=='Without Protected Classes'].describe().T.reset_index()
+
+from scipy import stats
+sig = pd.DataFrame({
+    'Model':[],
+    'Stat':[],
+    'z-score':[],
+    'p-value':[],
+    'top performer':[],
+    'top mean':[],
+    'difference in means':[]
+})
+
+z_stat,p_value = ztest(
+    results.loc[results['Data']=='With Protected Classes']['Accuracy'],
+    results.loc[results['Data']=='Without Protected Classes']['Accuracy'],
+)
+scores = tbl_pc['index'].unique()
+for score in scores: 
+    z_stat,p_value = ztest(
+        results.loc[results['Data']=='With Protected Classes'][score],
+        results.loc[results['Data']=='Without Protected Classes'][score],
+    )
+    mu_pc, mu_npc = (
+        tbl_pc.loc[tbl_pc['index']==score,'mean'].iloc[0],
+        tbl_npc.loc[tbl_npc['index']==score,'mean'].iloc[0]
+    )
+    winner = np.select(
+        [
+            mu_pc < mu_npc,
+            mu_npc < mu_pc
+        ],
+        [
+            'Without Protected Classes',
+            'With Protected Classes'
+        ],
+        default='tie'
+    )
+    diff = np.abs(mu_pc-mu_npc)
+    m = max(mu_pc,mu_npc)
+    sig.loc[len(sig)] = {
+        'Model':'BernoulliNB',
+        'Stat':score,
+        'z-score':z_stat,
+        'p-value':p_value,
+        'top performer':winner,
+        'top mean':m,
+        'difference in means':diff
+    }
+
+display(sig.style.hide(axis='index'))
+final_stats=pd.concat([final_stats,sig])
+```
+
+### Overall
+
+```{python tbl-summary-results}
+#| label: tbl-summary-results
+#| tbl-cap: Summary of single-run model performance outcomes
+
+display(final_results.style.hide(axis='index'))
+```
+
+```{python tbl-summary-stats}
+#| label: tbl-summary-stats
+#| tbl-cap: Summary of 500 Randomization Test Outcomes (All Model Types)
+
+display(final_stats.sort_values(by='top mean',ascending=False).style.hide(axis='index'))
+```
+
+Examining the above figures and tables for each model type, performance metrics, and the distribution of performance metrics across 500 random trials, several findings are evident:
+
+* Bernoulli Naive Bayes is the best performing across all performance metrics at 89.1-96.5% as the mean metric score.  In @tbl-summary-stats, the performance is sorted by the top mean metric in descending order.  For all stats, BernoulliNB outperforms Categorical and Multinomial naive bayes models.
+
+* There are statistically significant differences in model performance for nearly all performance metrics, across all naive bayes model types (exceptions: CategoricalNB Precision, CategoricalNB ROC-AUC)
+
+* The difference in mean performance metrics, where significant, is less than 4% across all hypothesis tests.
+
+These findings are revealing. First and foremost, if a naive bayes model were to be employed, it should be the Bernoulli format, regardless of what data is included.  This can be of use in future modeling efforts.  It effectively examines whether or not a record meets a specific set of conditions that support a conclusion of approval or denial of a loan.
+
+Furthermore, in the case of Bernoulli naive bayes, there is a statistically significant outcome in favor of the *exclusion* of protected class information to deliver higher model performance (with metrics ranging from 0.07%-1% higher).  
+
+Were a financial institution to instead employ CategoricalNB or MultinomialNB, they would be doing themselves a disservice in terms of model performance.  However, they do have access to additional variables and information not available to the general public, and may find that either of these models serve their predictive needs better than BernoulliNB.  
+
+That being the case - for each of these models, there are cases with statistically significant outcomes where the models perform better when protected class information is included in the training and testing data: 
+
+```{python tbl-cmnb-outcomes}
+final_stats.loc[(final_stats['Model'].isin(['MultinomialNB','CategoricalNB'])) & (final_stats['top performer']=='With Protected Classes')]
+```
+
+When the better performing model includes protected class information, one can clearly see that, while statistically significant, the difference in means between the models is *less than 1%*.  With such a slight difference, performance gain by incorporating these features is not justified, and from an operational standpoint, the features can be excluded from models with minimal impact to effective predictions.
+
+<!-- 
+The results across all naive bayes model types (Categorical, Multinomial, and Bernoulli) staggeringly favor the *exclusion* of protected class information in the prediction of whether or not a mortgage application should receive approval.  In all cases of a statistically significant difference in metrics (accuracy, precision, recall, F1, and ROC-AUC), the model trained with  -->
+
+```{python}
+
+```

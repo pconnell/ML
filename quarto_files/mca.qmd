@@ -1,0 +1,233 @@
+# Multiple Correspondence Analysis {#sec-MCA}
+```{python}
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import classification_report
+from sklearn.naive_bayes import BernoulliNB, MultinomialNB, GaussianNB
+from sklearn.metrics import (
+    accuracy_score,roc_auc_score,
+    precision_score, recall_score, 
+    f1_score, confusion_matrix,
+    ConfusionMatrixDisplay
+)
+import pandas as pd, numpy as np, seaborn as sns
+from sklearn.preprocessing import LabelEncoder
+```
+## Overview
+
+Many of the research questions within this effort are inherently linked to categorical factors in lieu of numeric factors.  Principal component analysis is only executable upon *numeric* data and not upon categorical data - even in the case of ordinal data.  As a simple example, consider a ordinal variable "size" with categories small, medium, large, and extra-large.  One could apply a simple encoding and assign small=1, medium=2, large=3, and extra-large=4.  This encoding, while apparently holding a degree of validity in terms of increasing size, does not match up mathematically to reality.  Consider getting a fountain drink at a fast-food restaurant and ask the question - is a large the same as 3 smalls?  Is an extra large the same as 1 medium and two smalls?  Rarely are either of these answers "yes".  One might have to add decimal places to the categories, and at that point, one may as well get the exact size measurements in terms of fluid ounces or liters, which may or may not be possible.  
+
+The additive and multiplicative challenges between these categories when assigning them a value produces challenges for ordinal variables.  These challenges are further confounded when pivoting away from an ordinal variables.  One runs the risk of making mathematical claims such as red is 4 times blue, or that sad is 3 less than happy.  Such statements are nonsensical, have no foundation in mathematics, and while they may produce results in a model post-transformation, do not hold validity, explainability, or generalizability.
+
+Enter Multiple Correspondence Analysis (or MCA).  MCA performs an analogous action on *categorical* variables as PCA performs upon *numeric* variables.  To perform an MCA, one must construct a Complete Disjunctive Table, which is effectively a one-hot encoded matrix.  One takes the source categorical columns and transforms them to a column per category, and for the new column, the value is set to 1 if the current row is a member of the category, and zero otherwise.  This is repeated for all columns and categories until the dataset is fully expanded.
+
+```{python}
+from sklearn.preprocessing import OneHotEncoder
+df = pd.DataFrame({
+    'a':['s','m','s','s','m','m','l','l','l','m'],
+    'b':['f','w','s','f','f','f','w','s','f','w']
+})
+display(df.style.hide(axis='index'))
+```
+
+Taking the above example table, one can transform it to a one-hot encoded table:
+
+```{python}
+df['a'] = df['a'].astype('category')
+df['b'] = df['b'].astype('category')
+
+ohe = OneHotEncoder()
+x = ohe.fit_transform(df)
+
+x = pd.DataFrame(x.toarray(),columns=ohe.get_feature_names_out().tolist())
+for col in x.columns:
+    x[col] = x[col].astype(int)
+
+x.style.hide(axis='index')
+```
+
+Notice that there are now have 6 columns from the original 2 columns.  This is because column 'a' had 3 categories - s/m/l, as did column 'b' - s/w/f.  A column is created for each combination of individual columns and their respective categories, hence 6 columns in this case.
+
+After performing this transformation, the following mathematical operations are applied:
+
+* Calculate the sum of all values (0s and 1s) from the CDT as value $N$
+
+```{python}
+N = np.sum(x).sum()
+```
+
+* Calculate matrix $Z = \frac{CDT}{N}$ 
+
+```{python}
+Z = np.array(x / N)
+Z
+```
+
+* Calculate the column-wise sum as matrix $c$.  Transform to a diagonal matrix $D_c$
+```{python}
+c = np.sum(Z,axis=0)
+Dc = np.diag(c)
+c = np.matrix(c)
+print('c:\n{}'.format(c))
+print('Dc: {}'.format(Dc))
+```
+
+* Calculate the row-wise sum as matrix $r$.  Transform to a diagonal matrix $D_r$
+```{python}
+r = np.sum(Z,axis=1)
+Dr = np.diag(r)
+r = np.matrix(r).T
+
+print('r:\n{}'.format(r))
+print('Dr: {}'.format(Dr))
+
+```
+
+* Calculate matrix $M = D_r^{-\frac{1}{2}}(Z-rc^T)D_c^{-\frac{1}{2}}$
+```{python}
+a = np.power(Dr,-.5)
+a[a==np.inf] = 0
+b = np.power(Dc,-.5)
+b[b==np.inf] = 0
+
+# M = np.power(Dr,-.5)@(Z-np.dot(r,c))@np.power(Dc,-.5)
+M = a @(Z-np.dot(r,c))@b
+display(M)
+```
+
+* Perform Matrix decomposition on $M$:
+
+* seek two unitary matrices (e.g. of total length 1), P and Q, and the generalized diagonal matrix of singular values $\Delta$ such that $M=P\Delta Q^T$
+```{python}
+# svd = np.linalg.svd(M)
+P,D,Q = np.linalg.svd(M,full_matrices=False)
+display(P,Q)
+eig = np.power(D,2)
+# eig = np.sum(np.power(np.diag(np.linalg.svd(M)[1]),2),axis=0)
+```
+
+* $\Delta^2$ provides the eigenvalues of the target matrix.
+```{python}
+eig
+```
+
+* Use the eigenvalues to apply transformations of the input data into a new the new eigenbasis.
+
+To maximize the use of variables within the dataset and to support the answering of various research questions, performing MCA on transformations of the data is necessary.
+
+## Data & Code
+
+The data used the source data for this effort, converted into a one-hot encoded / sparse matrix format of the data.  The code and applied transformations can be seen in @sec-MCA-app.
+
+The completed transformed data has two forms.  One of these forms is a transformation that includes all protected class variables (age, gender, and race), and the second form does not contain these variables.  These two different forms allow exploration of the research questions for this effort.
+
+(add notes on how numerics were converted to categories).
+
+* [Source Data for Transformation](https://drive.google.com/file/d/1dL3PqH21TRA9PMhIbUJ3KuNuvWrtGPeh/view?usp=drive_link)
+
+* [MCA with protected class features - transformed data](https://drive.google.com/file/d/1RPhKt5ZOlPsxo9bD8skxXjqH9rnMDpXR/view?usp=drive_link)
+
+* [MCA with protected class features - Eigenvalue Summary](https://drive.google.com/file/d/1r7iZ3Wtt4Pzc8X8ou3o0HAST1yo_CVrR/view?usp=drive_link)
+
+* [MCA with protected class features - Column Contributions](https://drive.google.com/file/d/1s_yZ57hfe8RvZ_C9ehEEcAHQ_HjLzOsF/view?usp=drive_link)
+
+* [MCA without protected class features](https://drive.google.com/file/d/1KZ6PmBicp02w8iphzMZxf0m29O5L2o0i/view?usp=drive_link)
+
+* [MCA without protected class features - Eigenvalue Summary](https://drive.google.com/file/d/19RdPpLR1xIpP_gvbTfd0bqHYFkroVD2G/view?usp=drive_link)
+
+* [MCA without protected class features - Column Contributions](https://drive.google.com/file/d/1JMlE_ugZe3LwuVVMVmbY0BlmTSX3X75A/view?usp=drive_link)
+
+## Results
+
+```{python}
+import pandas as pd, numpy as np
+mca_Nd_ColCont = pd.read_csv('../data/mca-Nd-ColCont.csv')
+mca_Nd_eig = pd.read_csv('../data/mca-Nd-eig.csv')
+mca_Nd_npc_ColCont = pd.read_csv('../data/mca-Nd-npc-ColCont.csv')
+mca_Nd_npc_eig = pd.read_csv('../data/mca-Nd-npc-eig.csv')
+```
+
+```{python mca-nd-eig-top}
+#| label: mca-nd-eig-top
+#| tbl-cap: MCA Summary of Eigenvalues (with protected class information) - Top 5
+
+mca_Nd_eig.head(5)
+```
+
+```{python mca-nd-eig-bot}
+#| label: mca-nd-eig-bot
+#| tbl-cap: MCA Summary of Eigenvalues (with protected class information) - Bottom 5
+
+mca_Nd_eig.tail(5)
+```
+
+```{python mca-nd-npc-eig-top}
+#| label: mca-nd-npc-eig-top
+#| tbl-cap: MCA Summary of Eigenvalues (without protected class information) - Top 5
+
+mca_Nd_npc_eig.head(5)
+```
+
+```{python mca-nd-npc-eig-bot}
+#| label: mca-nd-npc-eig-bot
+#| tbl-cap: MCA Summary of Eigenvalues (without protected class information) - Bottom 5
+
+mca_Nd_npc_eig.tail(5)
+```
+
+MCA doesn't necessarily provide direct dimensionality reduction, but does enable one to reduce dimensions from a sparse matrix.  Instead it enables use of more variables while also (potentially) increasing the data's dimensionality.  The sparse matrices to produce the transformations had 243 columns (with protected) and 179 columns (without protected).  
+
+The outcomes of the transformations allow substantial dimensionality reduction from these sparse matrices.  With 181 components, the data containing protected class information achieved (99.99%) explained variance in the source data (reduction of 62 features).  Similarly, with 100 components, the data excluding protected class information achieved 99.99% explained variance (reduction of 79 features).
+
+MCA also provides us with insight as to which columns provide the greatest contributions to each primary component in the output data.  Exploring some of these provides interesting insights.  To explore these, we'll look at the first 3 components, sorted in descending order, and examine which columns from the source data provide the strongest contributions to the transformation:
+
+### With Protected Classes
+
+```{python mca-col-conts1}
+#| label: mca-col-conts1
+#| tbl-cap: MC1 (with protected class information) - Top 10 Column Contributors
+cols = mca_Nd_ColCont.columns[[0,1]]
+mca_Nd_ColCont[cols].sort_values(by='MC1',ascending=False).head(10)
+```
+
+```{python mca-col-conts2}
+#| label: mca-col-conts2
+#| tbl-cap: MC2 (with protected class information) - Top 10 Column Contributors
+cols = mca_Nd_ColCont.columns[[0,2]]
+mca_Nd_ColCont[cols].sort_values(by='MC2',ascending=False).head(10)
+```
+
+```{python mca-col-conts3}
+#| label: mca-col-conts3
+#| tbl-cap: MC3 (with protected class information) - Top 10 Column Contributors
+cols = mca_Nd_ColCont.columns[[0,3]]
+mca_Nd_ColCont[cols].sort_values(by='MC3',ascending=False).head(10)
+```
+
+Examining the above three tables, it is evident that features revolving around protected class information contribute substantially to each Multiple Correspondence Component (MC).  For each of the MCs, much of the contributions come from feature values revolving around all protected classes of age, sex, race, and ethnicity.  Using data of this nature could easily produce predictive outcomes of models trained with with biases (either for or against) testing data that fits within these categories.
+
+### Without Protected Classes
+
+```{python mca-npc-col-conts1}
+#| label: mca-npc-col-conts1
+#| tbl-cap: MC1 (without protected class information) - Top 10 Column Contributors
+cols = mca_Nd_npc_ColCont.columns[[0,1]]
+mca_Nd_npc_ColCont[cols].sort_values(by='MC1',ascending=False).head(10)
+```
+
+```{python mca-npc-col-conts2}
+#| label: mca-npc-col-conts2
+#| tbl-cap: MC2 (without protected class information) - Top 10 Column Contributors
+cols = mca_Nd_npc_ColCont.columns[[0,2]]
+mca_Nd_npc_ColCont[cols].sort_values(by='MC2',ascending=False).head(10)
+```
+
+```{python mca-npc-col-conts3}
+#| label: mca-npc-col-conts3
+#| tbl-cap: MC3 (without protected class information) - Top 10 Column Contributors
+cols = mca_Nd_npc_ColCont.columns[[0,3]]
+mca_Nd_npc_ColCont[cols].sort_values(by='MC3',ascending=False).head(10)
+```
+
+Examining the MCs for data that exludes protected class information, we immediately see that each holds data that is likely highly relevant to making a decision of whether or not to approve a loan.  The _H and _MH in MC1 column contributions signify that the loan is between 1 and 2 standard deviations, or over 2 standard deviations from the mean.  With high loan costs, high origination charges, high discount points and so forth all are likely candidates to impact the decision making process of whether or not to grant a loan.
+
+It's also interesting to see that in MC2, two banks stand out - Bank of America and Rocket Mortgage, apparently having a higher influence on the loan outcome in the 2nd MC.

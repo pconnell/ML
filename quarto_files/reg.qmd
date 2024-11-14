@@ -1,18 +1,632 @@
 # Regression Modeling {#sec-reg}
 
 ```{python importBlock}
-
+import pandas as pd, numpy as np, seaborn as sns
+from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import classification_report
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.metrics import (
+    accuracy_score,roc_auc_score,
+    precision_score, recall_score, 
+    f1_score, confusion_matrix,
+    ConfusionMatrixDisplay
+)
+import matplotlib.pyplot as plt
+mca=pd.read_csv('../data/mcaNd.csv')
+mca_npc=pd.read_csv('../data/mcaNd-npc.csv')
+labels=pd.read_csv('../data/final_clean_r2.csv')['outcome']
 ```
 
-```{python dataImport}
+<!-- 
+Rubric Items
 
-```
+* Regression Questions and Overview
+Answer all five questions by keeping answers short and succinct and no more than 4 - 5 sentences. The Regression algorithm is explained well enough so that a novice can get a broad understanding of how the model is trained and how it makes predictions.
+
+* Regression Data Preparation and code
+Link and image of the sample train and test data to be used. Another image of cleaned data, if the sample data needs to be cleaned further before feeding it to the Regression algo. Perform both Logistic regression and Multinomial naive Bayes classification. Link to code for all of this.
+
+* Regression results and conclusions
+Discuss and visualize results, including confusion matrix and accuracy. What did you learn about your topic from the results?
+
+(a) Define and explain linear regression.
+
+(b) Define and explain logistic regression.
+
+(c) How are they similar and how are they different?
+
+(d) Does logistic regression use the Sigmoid function? Explain.
+
+(e) Explain how maximum likelihood is connected to logistic regression.
+--> 
 
 ## Overview
 
+### Linear Regression
+
+#### What is Linear Regression?
+
+Linear regression is a special case of generalized linear modeling that seeks to minimize the mean squared error on a continuous spectrum between each all datapoints in the dataset and the predicted output value.  It makes an assumption that the underlying data can be modeled using a weighted linear combination of sums:
+
+$$
+\hat{y}=w_1x_1+w_2x_2+...+w_kx_k + b
+$$ {#eq-linreg}
+
+The optimization function is the mean squared error, or the distance between each datapoint in the dataset and the prediction line:
+
+$$
+\text{MSE}_i = \frac{1}{n}\cdot\sum\limits_{i=1}^{n}(y_i-\hat{y}_i)^2
+$$ {#eq-linreg-2}
+
+The act of identifying the weights allows a user to make a prediction on the interval $(-\infty,\infty)$ to make a numeric prediction for an output or dependent variable $Y$, based upon a vector of input $X$.
+
+### Logistic Regression
+
+#### What is Logistic Regression? 
+
+Logistic regression is a method to predict a probability of a boolean outcome on the interval from $[0,1]$.  To perform this action, logistic regression uses linear regression in combination with the sigmoid function $\hat{y}=\frac{1}{1+e^{-z}}$ where $z = w_1x_1+w_2x_2+...+w_kx_k + b$, and gradient ascent (or descent, depending on implementation), to link the linear equation from all real numbers to the interval \[0,1\].  
+
+#### How do Logistic and Linear Regression Compare?
+
+The key similarity between linear and logisitic regression is the use of a linear combination of weighted sums as in @eq-linreg above, and each leverage an optimization problem to maximize performance of their predictive outcomes.  However, this is about where their similarities end.  The difference in the output space ($(-\infty,\infty)$ vs $[0,1]$), the type of optimization problem used (mean squared error minimization vs. maximum likelihood estimation), and their applications (continuous numeric prediction vs. probability prediction), truly set these two regression methods apart.
+
+#### How Does Logistic Regression Predict Probability?
+
+The sigmoid function is paramount in the implementation of logisitic regression as it remaps the output space of a linear regression to have limited bounds on the interval $[0,1]$.  Since linear regression has an infinite output space, it is less useful in the prediction of an outcome or a class.  The sigmoid function, and derivations from it, are used to train logistic regression models and to make predictions with them once they are trained.
+
+#### How is Logistic Regression Trained?
+
+Maximum likelihood estimation is used as part of the optimization effort for a logisitic regression.  Each weight $w_i$ in the equation for $z$ above needs to be adapted and adjusted so as to maximize the likelihood that the input dataset is correctly classified.  To calculate the change in probability, the algorithm leverages partial derivatives to calculate how each weight should be adjusted while pursuing a local maximum (gradient ascent) or minimum (gradient descent) using 
+
+* the log likelihood function 
+$$
+\text{log(p(y|x)} = \sum\limits_{i=1}^ny_i\cdot \text{log}(\hat{y}_i)+(1-y_i)\cdot\text{log}(1-\hat{y}_i)
+$$ {#eq-log-likelihood}
+
+* partial derivatives of the likelihood with respect to each feature
+$$
+\frac{\delta L}{\delta w_i} = (\hat{y_i}-y_i)x_i = \frac{\delta L}{\delta \hat{y}_i}\frac{\delta\hat{y}_i}{\delta z}\frac{\delta z}{\delta w_i}
+$$ {#eq-deriv}
+
+to iteratively move the needle in the right direction.
+
+#### How Is Maximum Likelihood Used in Logisitic Regression?
+
+Using the above, each iteration of a logistic regression seeks to increase the likelihood, or probability to that a given input vector $X$ will be classified as the appropriate category $Y$ by adjusting the weights to bring the output probability closer to zero when $X$ is not a member of $Y$, and closer to 1 when $X$ is a member of $Y$.  This method can enter the pitfall of solely achieving a local minimum or maximum vs. a global minimum or maximum, as one cannot directly know or infer a parametric equation for $\text{log(p(y|x))}$. 
+
 ## Data
+
+The data used for logistic regression is output from the multiple correspondence analysis (MCA) section.  The code will leverage two outputs - the MCA that includes the protected classes, and the MCA that does not.
+
+The process to generate these data is contained and described in @sec-MCA-app.
+
+* [Source Data](https://drive.google.com/file/d/1dL3PqH21TRA9PMhIbUJ3KuNuvWrtGPeh/view?usp=drive_link)
+
+* [Multiple Correspondence Analysis - With Protected Classes](https://drive.google.com/file/d/1RPhKt5ZOlPsxo9bD8skxXjqH9rnMDpXR/view?usp=drive_link)
+
+* [Multiple Correspondence Analysis - Without Protected Classes](https://drive.google.com/file/d/1KZ6PmBicp02w8iphzMZxf0m29O5L2o0i/view?usp=drive_link)
+
+* [MultinomialNB - With Protected Classes](https://drive.google.com/file/d/1Br4X_FhYl673QKQo5PlDkyEs6FjjvFzn/view?usp=drive_link)
+
+* [MultinomialNB - Without Protected Classes](https://drive.google.com/file/d/1TefbM2T1AcnLxcyHkgSelqNEoDDGKBrn/view?usp=drive_link)
+
+### Logistic Regression Data
+
+```{python setupBlock}
+X_train,X_test,y_train,y_test = train_test_split(
+    mca,#[mca.columns[:126]],
+    labels,
+    stratify=labels,
+    random_state=8808,
+    test_size=0.2
+)
+X_train_npc,X_test_npc,y_train,y_test = train_test_split(
+    mca_npc,#[mca_npc.columns[:86]],
+    labels,
+    stratify=labels,
+    random_state=8808,
+    test_size=0.2
+)
+results = pd.DataFrame({
+    'Model':[],
+    'Data':[],
+    'Accuracy':[],
+    'Precision':[],
+    'Recall':[],
+    'F1':[],
+    'ROC-AUC':[]
+})
+lr = LogisticRegression(max_iter=300)
+lr_npc = LogisticRegression(max_iter=300)
+```
+
+As done in @sec-NB for train test splits - the indexes are disjoint between training and testing datasets for each parent dataset (with and without protected classes), and each model is trained with the same records for comparison and evaluation against one another (same records for training and testing allow for direct comparison of the models).  
+
+By achieving these splits, the two models evaluated with and without protected class information will avoid unnecessary biases in the results.  When a model is tested on data with which it has already been trained, the model has already optimized to the best of its ability to correctly classify the training data.  As such, the outcome of an evaluation of a model using the same data in training and testing will artificially inflate its performance metrics (accuracy, precision, recall, F1, ROC-AUC).  As such, it is paramount to have a disjoint training and testing dataset.
+
+Here are the first few rows of the training and testing data (excluding protected classes):
+
+```{python tbl-mca-pc-trn}
+#| label: tbl-mca-pc-trn
+#| tbl-cap: MCA Training Data (With Protected Classes)
+
+display(
+    pd.concat([X_train,y_train],axis=1).head(10)
+)
+```
+
+```{python tbl-mca-pc-tst}
+#| label: tbl-mca-pc-tst
+#| tbl-cap: MCA Testing Data (With Protected Classes)
+
+display(
+    pd.concat([X_test,y_test],axis=1).head(10)
+)
+```
+
+```{python tbl-mca-npc-trn}
+#| label: tbl-mca-npc-trn
+#| tbl-cap: MCA Training Data (Without Protected Classes)
+
+display(
+    pd.concat([X_train_npc,y_train],axis=1).head(10)
+)
+```
+
+```{python tbl-mca-npc-tst}
+#| label: tbl-mca-npc-tst
+#| tbl-cap: MCA Testing Data (Without Protected Classes)
+display(
+    pd.concat([X_test_npc,y_test],axis=1).head(10)
+)
+```
+
+Notice that each has a different number of components.  Each is structured to a number of components required to explain at least approximately 99.99% of the variance in each dataset.
+
+Similarly as in @sec-NB and @sec-DT, a 500 iteration randomization of source data test was performed against both models to compare a difference in means.
+
+### Multinomial Naive Bayes
+
+The description for MultinomialNB data and code can be found in @sec-NB.
+
+```{python}
+mnb_pc_data = pd.read_csv('../data/data-one-hot.csv')
+mnb_npc_data = pd.read_csv('../data/data-one-hot-npc.csv')
+mnb_rand_test = pd.read_csv('../data/mnbRandTest.csv')
+clean = pd.read_csv('../data/final_clean_r2.csv') #['outcome']
+labels = clean['outcome'].copy()
+```
+
+```{python tbl-init-data}
+#| label: tbl-init-data
+#| tbl-cap: Initial Data Used
+clean.head(10)
+```
+
+```{python tbl-mnb-pc-data}
+#| label: tbl-mnb-pc-data
+#| tbl-cap: MultinomialNB Data (With protected classes)
+# mnb_pc_data.head(10) ##train test split here, too.
+data,data_nr = mnb_pc_data,mnb_npc_data
+X_train,X_test,y_train,y_test = train_test_split(
+    data,
+    labels,
+    stratify=labels,
+    test_size=0.2,
+    random_state=8808
+)
+X_train_npc,X_test_npc,y_train,y_test = train_test_split(
+    data_nr,
+    labels,
+    stratify=labels,
+    test_size=0.2,
+    random_state=8808
+)
+# display(pd.concat[X_train,y_train])
+```
+
+```{python tbl-mnb-pc-trn-data}
+#| label: tbl-mnb-pc-trn-data
+#| tbl-cap: MultinomialNB Training Data (With protected classes)
+display(pd.concat([X_train,y_train],axis=1).head(10))
+```
+
+```{python tbl-mnb-pc-tst-data}
+#| label: tbl-mnb-pc-tst-data
+#| tbl-cap: MultinomialNB Testing Data (With protected classes)
+mnb_npc_data.head(10)
+display(pd.concat([X_test,y_test],axis=1).head(10))
+```
+
+```{python tbl-mnb-npc-trn-data}
+#| label: tbl-mnb-npc-trn-data
+#| tbl-cap: MultinomialNB Training Data (No protected classes)
+# cnb_npc_data.head(10)
+display(pd.concat([X_train_npc,y_train],axis=1).head(10))
+```
+
+```{python tbl-mnb-npc-tst-data}
+#| label: tbl-mnb-npc-tst-data
+#| tbl-cap: MultinomialNB Training Data (No protected classes)
+# cnb_npc_data.head(10)
+display(pd.concat([X_test_npc,y_test],axis=1).head(10))
+```
 
 ## Code
 
+The code for both logistic regression can be found in @sec-App7 and multinomial naive bayes in @sec-App6-NB.
+
 ## Results
 
+### Logistic Regression 
+
+```{python}
+mca=pd.read_csv('../data/mcaNd.csv')
+mca_npc=pd.read_csv('../data/mcaNd-npc.csv')
+labels=pd.read_csv('../data/final_clean_r2.csv')['outcome']
+stats = pd.read_csv('../data/logRegRandTest.csv')
+```
+
+```{python fitPredictBlock}
+X_train,X_test,y_train,y_test = train_test_split(
+    mca, 
+    labels,
+    stratify=labels,
+    random_state=8808,
+    test_size=0.2
+)
+X_train_npc,X_test_npc,y_train,y_test = train_test_split(
+    mca_npc, 
+    labels,
+    stratify=labels,
+    random_state=8808,
+    test_size=0.2
+)
+y_train_copy = y_train.copy()
+
+results = pd.DataFrame({
+    'Model':[],
+    'Data':[],
+    'Accuracy':[],
+    'Precision':[],
+    'Recall':[],
+    'F1':[],
+    'ROC-AUC':[]
+})
+
+lr = LogisticRegression(max_iter=300)
+lr_npc = LogisticRegression(max_iter=300)
+lr.fit(X_train,y_train)
+y_pred = lr.predict(X_test)
+lr_npc.fit(X_train_npc,y_train)
+y_pred_npc = lr_npc.predict(X_test_npc)
+
+results.loc[len(results)] = {
+    'Model':'Logistic Regression',
+    'Data':'With Protected Classes',
+    'Accuracy':accuracy_score(y_test,y_pred),
+    'Precision':precision_score(y_test,y_pred),
+    'Recall':recall_score(y_test,y_pred),
+    'F1':f1_score(y_test,y_pred),
+    'ROC-AUC':roc_auc_score(y_test,y_pred)
+}
+results.loc[len(results)] = {
+    'Model':'Logistic Regression',
+    'Data':'Without Protected Classes',
+    'Accuracy':accuracy_score(y_test,y_pred_npc),
+    'Precision':precision_score(y_test,y_pred_npc),
+    'Recall':recall_score(y_test,y_pred_npc),
+    'F1':f1_score(y_test,y_pred_npc),
+    'ROC-AUC':roc_auc_score(y_test,y_pred_npc)
+}
+```
+
+```{python fig-conf-mat-lr}
+#| label: fig-conf-mat-lr
+#| fig-cap: Logistic Regression Modeling Results
+
+import matplotlib.pyplot as plt
+fig,axes=plt.subplots(nrows=1,ncols=2)
+
+ConfusionMatrixDisplay(
+    confusion_matrix(
+        y_pred=y_pred,y_true=y_test
+    ),
+    display_labels=['Deny','Approve']
+).plot(ax=axes[0])
+ConfusionMatrixDisplay(
+    confusion_matrix(
+        y_pred=y_pred_npc,y_true=y_test
+    ),
+    display_labels=['Deny','Approve']
+).plot(ax=axes[1])
+axes[0].set_title('With Protected\nClasses')
+axes[1].set_title('Without Protected\nClasses')
+plt.suptitle("Confusion Matrices - Logistic Regression")
+plt.tight_layout()
+plt.show()
+```
+
+```{python tbl-lr-metrics}
+#| label: tbl-lr-metrics
+#| tbl-cap: Logistic Regression Model Metrics
+display(results.style.hide(axis='index'))
+```
+
+There is a chance that the difference in performance of the models trained with and without protected class data could be due to random chance, namely the random splitting of training and testing data from the source datasets.
+
+To examine the potential for the difference (albeit minute) between both modeling methods, one can conduct a randomization test on the source data itself to examine for a statistically significant difference in means.
+
+To do so, one can shuffle the data multiple times into new training and testing datasets, re-train the models, and capture the performance scores of each model (one trained with, and one trained without, protected classes).  From here, one achieve's a distribution of the performance scores (such as Accuracy, Precision, Recall, F1, and ROC-AUC scores) of each model; when the number of randomizations increase, the distribution of each should approach a normal distribution.
+
+To perform the randomization, the data was shuffled 500 times, and two models were trained on each shuffle, capturing the aforementioned scores.  When these shuffles were executed, the following outcomes were achieved:
+
+```{python fig-dists-logreg}
+#| label: fig-dists-logreg
+#| tbl-cap: Per Metric Distribution (Logistic Regression, 500 Iterations)
+results = pd.read_csv('../data/logRegRandTest.csv')
+res = results.copy()
+res = res.melt(id_vars=['Model','Data'],var_name='Metric',value_name='Score')
+g = sns.FacetGrid(data=res,col='Metric',hue='Data',col_wrap=3)
+g.map_dataframe(
+    sns.kdeplot,
+    x='Score'#,hue='Data'
+)
+g.add_legend(loc='lower right')
+plt.suptitle("Distributions for Randomization of Training/Testing Data\nLogistic Regression")
+plt.tight_layout()
+plt.show()
+```
+
+```{python tbl-stat-performance}
+#| label: tbl-stat-performance
+#| tbl-cap: Per Metric Paired Z-test (Logistic Regression, 500 Iterations)
+from statsmodels.stats.weightstats import ztest
+
+tbl_pc = results[results['Data']=='With Protected Classes'].describe().T.reset_index()
+tbl_npc = results[results['Data']=='Without Protected Classes'].describe().T.reset_index()
+
+from scipy import stats
+sig = pd.DataFrame({
+    'Stat':[],
+    'z-score':[],
+    'p-value':[],
+    'top performer':[],
+    'top mean':[],
+    'difference in means':[]
+})
+
+z_stat,p_value = ztest(
+    results.loc[results['Data']=='With Protected Classes']['Accuracy'],
+    results.loc[results['Data']=='Without Protected Classes']['Accuracy'],
+)
+scores = tbl_pc['index'].unique()
+for score in scores: 
+    z_stat,p_value = ztest(
+        results.loc[results['Data']=='With Protected Classes'][score],
+        results.loc[results['Data']=='Without Protected Classes'][score],
+    )
+    mu_pc, mu_npc = (
+        tbl_pc.loc[tbl_pc['index']==score,'mean'].iloc[0],
+        tbl_npc.loc[tbl_npc['index']==score,'mean'].iloc[0]
+    )
+    winner = np.select(
+        [
+            mu_pc < mu_npc,
+            mu_npc < mu_pc
+        ],
+        [
+            'Without Protected Classes',
+            'With Protected Classes'
+        ],
+        default='tie'
+    )
+    diff = np.abs(mu_pc-mu_npc)
+    m = max(mu_pc,mu_npc)
+    sig.loc[len(sig)] = {
+        'Stat':score,
+        'z-score':z_stat,
+        'p-value':p_value,
+        'top performer':winner,
+        'top mean':m,
+        'difference in means':diff
+    }
+
+display(sig.style.hide(axis='index'))
+```
+
+One can see that over 500 iterations of shuffling nearly 200k records, that the model trained on the multiple correspondence analysis that *included* protected class information had statistically better performance across all metrics. 
+
+This is a substantial finding.  Namely, these significant difference signifies that including protected class information in logisitic regression confidently improves its predictive performance, better than if it were excluded as part of the model training data.
+
+Furthermore, in comparison to all Naive Bayes models and all decision tree models, including their randomization testing, the Logistic Regression model outperforms them all in every metric.  The most discerning factor is the fact that the ROC-AUC score for Logistic Regression is in the 90s, whereas few if any other ROC-AUCs for other models exceeded 89%.
+
+What does this mean?  It means that, if using logistic regression modeling to assess whether or not a loan should be approved, that a company could choose to include  protected class data when building a linear regression model if they're concerned about model performance.  
+
+Ethically speaking, however, it should be excluded outright.  This is further evidenced by the overall difference in performance between two models trained on the exact same data, less protected class variable presence.  The difference, while statistically significant, is not operationally significant, as the maximum difference in means for each performance metric is less than 0.6%.
+
+Leveraging that ethical perspective, while the difference is significantly different, from a mathematical standpoint, that models leveraging protected class information outperform those that exclude it, the cost is minimal.  Exclustion of protected class information still achieves incredibly high accuracy, precision, Recall, F1, and ROC-AUC, all ranging from 93%-98% to make predictions.  Such modeling can be leveraged to inform one as to the likely outcome of the loan application, and can be leveraged in conjunction with other available relevant information to make an informed decision.
+
+### Multinomial Naive Bayes
+
+The results here are the same as included and described within @sec-NB.  The findings are the same.
+
+```{python fig-mnb2-1}
+#| label: fig-mnb2-1
+#| fig-cap: Confusion Matrices (MultinomialNB, Single-Run)
+
+#confusion matrices
+
+data,data_nr = mnb_pc_data,mnb_npc_data
+mnb_pc=MultinomialNB()
+mnb_npc=MultinomialNB()
+X_train, X_test, y_train, y_test = train_test_split(
+    data,
+    labels,
+    stratify=labels,
+    test_size=0.2,
+    random_state=8808
+)
+
+X_train_npc, X_test_npc, y_train, y_test = train_test_split(
+    data_nr,
+    labels,
+    stratify=labels,
+    test_size=0.2,
+    random_state=8808
+)
+results = pd.DataFrame({
+    'Model':[],
+    'Data':[],
+    'Accuracy':[],
+    'Precision':[],
+    'Recall':[],
+    'F1':[],
+    'ROC-AUC':[]
+})
+
+mnb_pc.fit(X_train,y_train)
+y_pred = mnb_pc.predict(X_test)
+mnb_npc.fit(X_train_npc,y_train)
+y_pred_npc=mnb_npc.predict(X_test_npc)
+
+results.loc[len(results)] = {
+    'Model':'MultinomialNB',
+    'Data':'With Protected Classes',
+    'Accuracy':accuracy_score(y_test,y_pred),
+    'Precision':precision_score(y_test,y_pred),
+    'Recall':recall_score(y_test,y_pred),
+    'F1':f1_score(y_test,y_pred),
+    'ROC-AUC':roc_auc_score(y_test,y_pred)
+}
+
+results.loc[len(results)] = {
+    'Model':'MultinomialNB',
+    'Data':'Without Protected Classes',
+    'Accuracy':accuracy_score(y_test,y_pred_npc),
+    'Precision':precision_score(y_test,y_pred_npc),
+    'Recall':recall_score(y_test,y_pred_npc),
+    'F1':f1_score(y_test,y_pred_npc),
+    'ROC-AUC':roc_auc_score(y_test,y_pred_npc)
+}
+fig,axes=plt.subplots(nrows=1,ncols=2)
+ConfusionMatrixDisplay(
+    confusion_matrix(
+        y_pred=y_pred,y_true=y_test
+    ),
+    display_labels=['Deny','Approve']
+).plot(ax=axes[0])
+ConfusionMatrixDisplay(
+    confusion_matrix(
+        y_pred=y_pred_npc,y_true=y_test
+    ),
+    display_labels=['Deny','Approve']
+).plot(ax=axes[1])
+axes[0].set_title('With Protected\nClasses')
+axes[1].set_title('Without Protected\nClasses')
+plt.suptitle("Confusion Matrices - Multinomial Naive Bayes")
+plt.tight_layout()
+plt.show()
+```
+
+```{python tbl-mnb2-1}
+#| label: tbl-mnb2-1
+#| tbl-cap: Model Performance Metrics (MultinomialNB, Single Run)
+
+# performance results - one test
+display(results.style.hide(axis='index'))
+```
+
+```{python fig-mnb2-2}
+#| label: fig-mnb2-2
+#| fig-cap: Metric Kernel Density Estimates (500 randomizations, MultinomialNB)
+
+#score distribution of 500 tests
+results = mnb_rand_test
+res = results.copy()
+res = res.melt(id_vars=['Model','Data'],var_name='Metric',value_name='Score')
+g = sns.FacetGrid(data=res,col='Metric',hue='Data',col_wrap=3)
+g.map_dataframe(
+    sns.kdeplot,
+    x='Score'#,
+    # hue='Data'
+)
+g.add_legend(loc='lower right')
+plt.suptitle("Distributions for Randomization of Training/Testing Data\nMultinomial Naive Bayes")
+plt.legend(loc='lower right')
+plt.tight_layout()
+plt.show()
+```
+
+```{python tbl-mnb2-2}
+#| label: tbl-mnb2-2
+#| tbl-cap: Statistical Significance Tests (Model Performance Metrics, MultinomialNB)
+
+#statistically significant differences
+from statsmodels.stats.weightstats import ztest
+tbl_pc = results[results['Data']=='With Protected Classes'].describe().T.reset_index()
+tbl_npc = results[results['Data']=='Without Protected Classes'].describe().T.reset_index()
+
+from scipy import stats
+sig = pd.DataFrame({
+    'Model':[],
+    'Stat':[],
+    'z-score':[],
+    'p-value':[],
+    'top performer':[],
+    'top mean':[],
+    'difference in means':[]
+})
+
+z_stat,p_value = ztest(
+    results.loc[results['Data']=='With Protected Classes']['Accuracy'],
+    results.loc[results['Data']=='Without Protected Classes']['Accuracy'],
+)
+scores = tbl_pc['index'].unique()
+for score in scores: 
+    z_stat,p_value = ztest(
+        results.loc[results['Data']=='With Protected Classes'][score],
+        results.loc[results['Data']=='Without Protected Classes'][score],
+    )
+    mu_pc, mu_npc = (
+        tbl_pc.loc[tbl_pc['index']==score,'mean'].iloc[0],
+        tbl_npc.loc[tbl_npc['index']==score,'mean'].iloc[0]
+    )
+    winner = np.select(
+        [
+            mu_pc < mu_npc,
+            mu_npc < mu_pc
+        ],
+        [
+            'Without Protected Classes',
+            'With Protected Classes'
+        ],
+        default='tie'
+    )
+    diff = np.abs(mu_pc-mu_npc)
+    m = max(mu_pc,mu_npc)
+    sig.loc[len(sig)] = {
+        'Model':'MultinomialNB',
+        'Stat':score,
+        'z-score':z_stat,
+        'p-value':p_value,
+        'top performer':winner,
+        'top mean':m,
+        'difference in means':diff
+    }
+
+display(sig.style.hide(axis='index'))
+```
+
+Examining MultinomialNB's performance, it seems to have fairly low performance in terms of accuracy.  This is likely caused by the fact that it was provided with Bernoulli data, as it was the only way to obtain count data from the source records.  That being said, the performance is quite precise.
+
+Across 500 iterations of MultinomialNB, there was not a significant difference in accuracy or F1 score of the models when they were and when they weren't trained with protected class information.  For other cases, the difference, while statistically significant, was within 1 percentage point of the top performer.  Operationally speaking, there's not a substantial need for that level of performance.  The protected class information inclusion or exclusion makes a statistically significant, but not operationally impactful, difference in model performance.
+
+## Overall
+
+The performance of Logistic Regression, with and without protected classes, far outshined the performance of Multinomial Naive Bayes.  Multinomial Naive Bayes may have had better performance had the data provided the opportunity to better be count-vectorized, and as such is better suited for assessing document classification than individual record classification.  
+
+Another difference in the models is what they do and how they do it.  Logisitic Regression is discriminative, meaning that we know the potential output classes and one crafts the model to maximize the likelihood of predicting a correct probability for a class, given new input data.  MultinomialNB, however, is *generative* and seeks to identify the probability of the data, given a class.
+
+Thus far, Logistic Regression's accuracy (along with other metrics) makes it a top contender for modeling.  This, however, comes at the cost of substantial dimensionality to explain approximately 99.99% of the variance in the data with the MCA execution.  If dimensionality reduction, computational memory and time were a constraint, it may render the execution of future predictions with logisitic regression infeasible.  This especially becomes the case when the model needs to be refit with additional new data; the sheer volume of features and row vectors produces a tremendous amount of data (near 1 Gb), and the execution of gradient descent upon said data to produce a well-performing logisitic regression is also computationally expensive and time consuming.

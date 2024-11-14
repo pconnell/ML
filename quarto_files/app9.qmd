@@ -1,0 +1,103 @@
+# Research Question Exploration {#app-Research .appendix}
+
+```{python}
+import pandas as pd, numpy as np, matplotlib.pyplot as plt, seaborn as sns
+from sklearn.naive_bayes import MultinomialNB,CategoricalNB,BernoulliNB
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import (
+    accuracy_score,roc_auc_score,
+    precision_score, recall_score, 
+    f1_score, confusion_matrix,
+    ConfusionMatrixDisplay
+)
+```
+
+## Question 1
+1. Which factors within avaialble HMDA data are the greatest influencers in mortgage approvals?
+
+## Question 2
+1. Are protected classes of applicants and co-applicants strong predictors for determining loan approval?
+
+```{python data-import}
+#| echo: true
+#| eval: true
+data = pd.read_csv('../data/data-one-hot.csv')
+# data_npc = pd.read_csv('../data/data-one-hot-npc.csv')
+labels = pd.read_csv('../data/')['outcome']
+```
+
+```{python}
+#age
+```
+
+
+```{python}
+#gender
+```
+
+
+```{python}
+#race
+```
+
+    <!-- * Explore this with Bernoulli Naive Bayes -->
+
+## Question 3
+1. If protected classes are strong predictors for loan approval, is the predictive strength greater for one institution over another?
+
+    <!-- * Explore this with label encoded data, potentially with Bernoulli Naive Bayes -->
+
+```{python}
+#JP Morgan
+```
+
+
+```{python}
+#Navy Federal
+```
+
+
+```{python}
+#Rocket Mortgage
+```
+
+
+```{python}
+#Bank of America
+```
+
+
+```{python}
+#Wells Fargo
+```
+
+## Question 4
+1. If protected classes are strong predictors for loan approval, is the predictor's strength higher within a particular geographic region?
+
+    <!-- * Explore this with Bernoulli Naive Bayes -->
+
+## Question 4
+1. How is predictive model performance impacted when including or excluding protected class data in training and testing data? e.g. Does performance increase when including?  If so, by how much?
+
+    <!-- * for DT, MNB, CNB, BNB, LogReg - performance has significant differences.  None of them justify leveraging protected class information as a predictive variable. -->
+
+## Question 5
+1. How well do predictive models perform when trained using protected class information that was collected by a lender observationally (e.g. via inspection of surname or visually seeing the applicant)?
+
+## Question 6
+1. How do loan-specific or home-specific qualities and features, absent borrower features, impact predictions of approval or denial?
+
+## Question 7
+1. Are borrower features aside from race as or more associated with a result of loan denial? e.g. is being female or being under or over a certain age as associated with loan denial as being a certain race?
+
+## Question 8
+1. Can available HMDA data be leveraged to effectively predict mortgage borrower interest rates?
+
+## Question 9
+1. If effective mortgage rate predictions are possible, how do they change when including or controlling for protected class data in the model?
+
+## Question 10
+1. Can selected / identified features and outcome (e.g. debt-to-income-ratio, loan-to-value ratio, *and* decision for approval or denial of the loan) be used to predict the borrower's protected class features of race, gender, or age group?
+
+## Question 11
+1. As inferred by lenders, can various latent variables be identified as impactful within modeling, and can the degree or extent of their impact on the decision process be determined as it pertains to mortgage underwriting decisions?

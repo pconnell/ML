@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Exploring Predictive Power of Protected Classes in Mortgage Approvals - 6&nbsp; Decision Tree Modeling</title>
+<title>Exploring Protected Classes as Predictors in Mortgage Approval - 8&nbsp; Decision Tree Modeling</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -23,15 +23,15 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="site_libs/quarto-nav/headroom.min.js"></script>
 <script src="site_libs/clipboard/clipboard.min.js"></script>
 <script src="site_libs/quarto-search/autocomplete.umd.js"></script>
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./nb.html" rel="next">
-<link href="./arm.html" rel="prev">
+<link href="./reg.html" rel="next">
+<link href="./nb.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -69,7 +69,39 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 <style>html{ scroll-behavior: smooth; }</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
 
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -82,7 +114,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./dt.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Decision Tree Modeling</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./dt.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Decision Tree Modeling</span></a></li></ol></nav>
         <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -97,7 +129,7 @@ ul.task-list li input[type="checkbox"] {
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="./">Exploring Predictive Power of Protected Classes in Mortgage Approvals</a> 
+      <a href="./">Exploring Protected Classes as Predictors in Mortgage Approval</a> 
         <div class="sidebar-tools-main">
     <a href="https://github.com/pconnell/ML" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
     <a href="./ML-Final-Report.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
@@ -131,20 +163,20 @@ ul.task-list li input[type="checkbox"] {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="./mca.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Multiple Correspondence Analysis</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="./clustering.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Data Clustering</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Data Clustering</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./arm.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Association Rule Mining</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./dt.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Decision Tree Modeling</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Association Rule Mining</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -155,20 +187,14 @@ ul.task-list li input[type="checkbox"] {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="./dt.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Decision Tree Modeling</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="./reg.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Regression Modeling</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./svm.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Support Vector Machine Modeling</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./conclusion.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Conclusion</span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Regression Modeling</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -189,19 +215,43 @@ ul.task-list li input[type="checkbox"] {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./app1.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Appendix 1</span></span></a>
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Data Gathering/Cleaning Code</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./app2.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Appendix 2</span></span></a>
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Component Analysis Code (PCA and MCA)</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./app3.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Appendix 3</span></span></a>
+  <a href="./app4.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Association Rule Mining Code</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./app6.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">Naive Bayes Code</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./app5.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">E</span>&nbsp; <span class="chapter-title">Decision Tree Code</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./app7.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">F</span>&nbsp; <span class="chapter-title">Regression Code</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./app8-mca.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">G</span>&nbsp; <span class="chapter-title">Multiple Correspondence Analysis</span></span></a>
   </div>
 </li>
       </ul>
@@ -216,10 +266,16 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview"><span class="header-section-number">6.1</span> Overview</a></li>
-  <li><a href="#data" id="toc-data" class="nav-link" data-scroll-target="#data"><span class="header-section-number">6.2</span> Data</a></li>
-  <li><a href="#code" id="toc-code" class="nav-link" data-scroll-target="#code"><span class="header-section-number">6.3</span> Code</a></li>
-  <li><a href="#results" id="toc-results" class="nav-link" data-scroll-target="#results"><span class="header-section-number">6.4</span> Results</a></li>
+  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview"><span class="header-section-number">8.1</span> Overview</a>
+  <ul class="collapse">
+  <li><a href="#how-does-one-build-a-decision-tree" id="toc-how-does-one-build-a-decision-tree" class="nav-link" data-scroll-target="#how-does-one-build-a-decision-tree"><span class="header-section-number">8.1.1</span> How Does One Build a Decision Tree?</a></li>
+  <li><a href="#heuristics" id="toc-heuristics" class="nav-link" data-scroll-target="#heuristics"><span class="header-section-number">8.1.2</span> Heuristics</a></li>
+  <li><a href="#information-gain" id="toc-information-gain" class="nav-link" data-scroll-target="#information-gain"><span class="header-section-number">8.1.3</span> Information Gain</a></li>
+  <li><a href="#summary-of-metrics" id="toc-summary-of-metrics" class="nav-link" data-scroll-target="#summary-of-metrics"><span class="header-section-number">8.1.4</span> Summary of Metrics</a></li>
+  <li><a href="#what-challenges-exist-with-decision-trees" id="toc-what-challenges-exist-with-decision-trees" class="nav-link" data-scroll-target="#what-challenges-exist-with-decision-trees"><span class="header-section-number">8.1.5</span> <em>What challenges exist with decision trees?</em></a></li>
+  </ul></li>
+  <li><a href="#data-and-code" id="toc-data-and-code" class="nav-link" data-scroll-target="#data-and-code"><span class="header-section-number">8.2</span> Data and Code</a></li>
+  <li><a href="#results" id="toc-results" class="nav-link" data-scroll-target="#results"><span class="header-section-number">8.3</span> Results</a></li>
   </ul>
 </nav>
     </div>
@@ -228,7 +284,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span id="sec-DT" class="quarto-section-identifier"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Decision Tree Modeling</span></span></h1>
+<h1 class="title"><span id="sec-DT" class="quarto-section-identifier"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Decision Tree Modeling</span></span></h1>
 </div>
 
 
@@ -245,17 +301,1619 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="overview" class="level2" data-number="6.1">
-<h2 data-number="6.1" class="anchored" data-anchor-id="overview"><span class="header-section-number">6.1</span> Overview</h2>
+<section id="overview" class="level2" data-number="8.1">
+<h2 data-number="8.1" class="anchored" data-anchor-id="overview"><span class="header-section-number">8.1</span> Overview</h2>
+<p>Decision trees, when constructed and visualized are one of the machine learning models that are most easily understood by humans on direct examination. A decision tree provides a root node, multiple decision nodes, and branches to follow based upon the current decision node. Each node provides some sort of decision based upon a feature or variable for an input record.</p>
+<p>The decision tree is, then, quite akin to a flowchart. Employers around the globe use flowcharts to explain processes and procedures to their employees to simplify workflows and provide a frame of reference to get things done. As such, decision tree machine learning modeling is user-friendly, easily-understood, and readily consumed. Decision trees are be high-utitlity, both to human users as well as well as for computers with their very simple branching logic.</p>
+<section id="how-does-one-build-a-decision-tree" class="level3" data-number="8.1.1">
+<h3 data-number="8.1.1" class="anchored" data-anchor-id="how-does-one-build-a-decision-tree"><span class="header-section-number">8.1.1</span> How Does One Build a Decision Tree?</h3>
+<p>The process of building a decision tree has some math behind it, but is fairly simple to explain without the math. To proceed in processing, one needs data in the appropriate format (in Python, the requirement is numeric data only, using available packages). Once the data is in hand, it must be split into a training and testing dataset. From here, we can use the following step(s) to proceed building the tree.</p>
+<ol type="1">
+<li><p>Select a <em>heuristic</em> that will measure the how impure the current state of the data is, at the current node.</p></li>
+<li><p>Select a <em>maximum depth</em> to which your tree will grow, so as to prevent over-fitting. Too small a value can result in under-fitting (poor model performance)</p></li>
+<li><p>While we haven’t reached the maximum depth:</p>
+<ol type="a">
+<li><p>for each feature in the current partition of the dataset (starting with the full dataset):</p>
+<ol type="i">
+<li><p>calculate the heuristic for each value of the current feature if it were to be split on the value</p>
+<ol type="1">
+<li>using the heuristic, calculate the information gain if the data were to be split on the feature</li>
+</ol></li>
+</ol></li>
+<li><p>for the feature value with the highest information gain, split the data on the feature’s value for instance, if the feature were “cost”, the condition could be “cost &lt;= 100?”, and divide the data into two pieces, one where the condtion is true, the and the other where it is false. Increment the depth of our tree.</p></li>
+<li><p>repeat process for the two new partitions if the heuristic is greater than zero</p>
+<ol type="i">
+<li>if it is zero, then the partition is considered pure. This signifies that all records in the partition are members of the same class, and this node can be used to clearly make a decision of the class of a future input object.</li>
+</ol></li>
+</ol></li>
+</ol>
+<p>This is all fine and good in terms of understanding steps to produce the tree - but what are heuristics and information gain? How can one calculate them and leverage them to execute this process?</p>
 </section>
-<section id="data" class="level2" data-number="6.2">
-<h2 data-number="6.2" class="anchored" data-anchor-id="data"><span class="header-section-number">6.2</span> Data</h2>
+<section id="heuristics" class="level3" data-number="8.1.2">
+<h3 data-number="8.1.2" class="anchored" data-anchor-id="heuristics"><span class="header-section-number">8.1.2</span> Heuristics</h3>
+<p>Common heuristics for measuring the current state of a data partition include Gini indexing and Entropy measures. These values give a sense of how <em>impure</em> the current state of the data is. These heuristics support the splitting of the data at nodes in the tree to reduce the impurity.</p>
+<section id="gini-indexing" class="level4" data-number="8.1.2.1">
+<h4 data-number="8.1.2.1" class="anchored" data-anchor-id="gini-indexing"><span class="header-section-number">8.1.2.1</span> Gini Indexing</h4>
+<p><span id="eq-gini"><span class="math display">\[
+\text{Gini} =1-\sum\limits_{i=1}^{n} p_i^2
+\tag{8.1}\]</span></span></p>
+<p>For calculating gini, one iterates over the current split of the data and calculates the sum total members in each class for the current node out of the total number of records in the current node, squares them, and takes the sum total thereof, and subtracts it from one.</p>
+<p>Gini being 0 signifies that the node is pure and the algorithm can stop executing on this branch. Mathematically speaking, this is only possible when the records in the current node all belong to one class (e.g.&nbsp;pure). One seeks with each split to reduce the Gini index by the maximum value possible with each node split.</p>
 </section>
-<section id="code" class="level2" data-number="6.3">
-<h2 data-number="6.3" class="anchored" data-anchor-id="code"><span class="header-section-number">6.3</span> Code</h2>
+<section id="entropy" class="level4" data-number="8.1.2.2">
+<h4 data-number="8.1.2.2" class="anchored" data-anchor-id="entropy"><span class="header-section-number">8.1.2.2</span> Entropy</h4>
+<p><span id="eq-entrpoy"><span class="math display">\[
+\text{Entropy} = -\sum\limits_{1}^{n}p\cdot \text{log}_2(p_i)
+\tag{8.2}\]</span></span></p>
+<p>Entropy takes the same calculation as done in gini - the number of records in the current data split of a specific class out of the total number of records in the split. What entropy does differently is that it multiplies that value by it’s base 2 logarithm, sums the total values, and takes the negative (which must be done as logarithms with fractional inputs produce negative numbers). Calculating by hand gets hairy if you’re not paying attention. Technically speaking, a logarithm with an input of 0 is undefined. However, when the input to the log is zero, so is its external multiplier. The external multiplier is used as the discriminating factor and the result is set to zero.</p>
+<p>Entropy being 0 signifies that the node is pure and the algorithm can stop executing on this branch. One seeks with each split to reduce the entropy by the maximum value possible with each node split.</p>
+<p>For both metrics, the best case scenario is a pure node with heuristic = 0. The worst case, mathematically, is 0.5 for Gini and 1 for Entropy.</p>
 </section>
-<section id="results" class="level2" data-number="6.4">
-<h2 data-number="6.4" class="anchored" data-anchor-id="results"><span class="header-section-number">6.4</span> Results</h2>
+</section>
+<section id="information-gain" class="level3" data-number="8.1.3">
+<h3 data-number="8.1.3" class="anchored" data-anchor-id="information-gain"><span class="header-section-number">8.1.3</span> Information Gain</h3>
+<p>The following equation outlines the calculation for information gain at each split of a decision tree:</p>
+<p><span id="eq-info-gain"><span class="math display">\[
+G_i = h_{i-1} - \sum\limits_{j=1}^{N}\text{len}(D_j)\cdot h_i
+\tag{8.3}\]</span></span></p>
+<p><span class="math inline">\(h_{i-1}\)</span> is the heuristic (Gini or Entropy) of the previous node (i.e.&nbsp;impurity). <span class="math inline">\(h_i\)</span> is the current proposed split, <span class="math inline">\(N\)</span> is the number of available splits to perform with the current data, <span class="math inline">\(D_j\)</span> is a proposed split of the data for building a new node on column <span class="math inline">\(j\in N\)</span>, and <span class="math inline">\(G_i\)</span> is the information gain for the current proposed split.</p>
+<p>The algorithm selects the highest <span class="math inline">\(G_i\)</span> as the winner for where and how to split the current state of the data, and repeats to a certain specified depth, or until the algorithm has pure nodes as leaves.</p>
+</section>
+<section id="summary-of-metrics" class="level3" data-number="8.1.4">
+<h3 data-number="8.1.4" class="anchored" data-anchor-id="summary-of-metrics"><span class="header-section-number">8.1.4</span> Summary of Metrics</h3>
+<p>Using a heuristic like gini or entropy provides a measure of pureness for the current state of the dataset. When leveraging information gain, it tells one how much a proposed split would reduce the impurity in the data (or conversly, how much additional information one would have available in the data if one were to split on the current feature value). By choosing the maximum value for information gain we are selecting the option which most greatly reduces the impurities present in the data.</p>
+</section>
+<section id="what-challenges-exist-with-decision-trees" class="level3" data-number="8.1.5">
+<h3 data-number="8.1.5" class="anchored" data-anchor-id="what-challenges-exist-with-decision-trees"><span class="header-section-number">8.1.5</span> <em>What challenges exist with decision trees?</em></h3>
+<p>There are several considerations when building a decision tree. The intent as discussed in the overview of this section is to provide an easily understood and accessible model that delivers reasonably good peformance. As such, a decision tree should be <em>readable</em> and not overwhelming. To meet this need, the tuning of the tree’s maximum depth is necessary so as to ensure the resulting tree is reasonably sized and can be followed by its users.</p>
+<p>Similarly, tree depth also assists one in overcoming a decision tree’s challenges with over and underfitting. Higher depth will improve the accuracy of future predictions by the tree, but at the cost of readability. Having too high of a depth is problematic as well. Since the algorithm seeks to have all leaf nodes at the base of the tree be as pure as possible, an unconstrained algorithm will continue splitting the data until this condition is met. This can result in leaves on the tree containing single node outcomes, which is an overfitting condition. Having too small of a depth can provide a simple tree, but at the cost of performative accuracy.</p>
+<p>Decision trees can be fast, however, building the tree when using a large volume of training data can be computationally expensive.</p>
+<p>Trees can also have challenges with performing updates. The trees are pre-trained, and as new records are added to training data, the addition thereof <em>changes the hueristic value</em> from what it was previously for each variable value under consideration. As such, the tree would need to be reconstructed when new data is made available for training.</p>
+<p>Decision trees also, in nearly every case, can have infinitely many possible tree outcomes. Specifically, any dataset that contains numeric data (continuous), the possibilities are endless.</p>
+</section>
+</section>
+<section id="data-and-code" class="level2" data-number="8.2">
+<h2 data-number="8.2" class="anchored" data-anchor-id="data-and-code"><span class="header-section-number">8.2</span> Data and Code</h2>
+<p>Multiple data formats were leveraged to produced multiple decision trees, with and without protected class information.</p>
+<p>One version of the tree production leveraged the multiple correspondence analysis outputs produced within <a href="app8-mca.html" class="quarto-xref"><span>Appendix G</span></a>, with and without protected class information.</p>
+<p>Another version of tree production leveraged label encoded data that was previously produced in <a href="app6.html" class="quarto-xref"><span>Appendix D</span></a>. Since label-encoded data was necessary to perform Categorical Naive Bayes, this same data, as a numeric, has utility for decision tree building.</p>
+<ul>
+<li><p><a href="https://drive.google.com/file/d/1dL3PqH21TRA9PMhIbUJ3KuNuvWrtGPeh/view?usp=drive_link">Source data (pre-transformation)</a></p></li>
+<li><p><a href="https://drive.google.com/file/d/1Nj2P23ZMlQCzdnMdvJVKH_dufNl_tmrr/view?usp=drive_link">Label Encoded Data - With Protected Classes</a></p></li>
+<li><p><a href="https://drive.google.com/file/d/1ybGEqiSdRsqu0j9O1KJXZgyJrSlX7JNl/view?usp=drive_link">Label Encoded Data - Without Protected Classes</a></p></li>
+<li><p><a href="https://drive.google.com/file/d/1tvDdo09t30VtosQ1zvX2BDQskRW-aYKp/view?usp=drive_link">Randomization Test Results</a></p></li>
+</ul>
+<p>Summarized views for the training and testing data are in the below tables:</p>
+<div class="cell" data-execution_count="3">
+<div id="tbl-dt-pc-trn" class="cell quarto-float anchored" data-execution_count="3">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-dt-pc-trn-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;8.1: Decision Tree Training Data (With Protected Class)
+</figcaption>
+<div aria-describedby="tbl-dt-pc-trn-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display">
+<div>
+
+
+<table class="dataframe do-not-create-environment cell table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">derived_sex</th>
+<th data-quarto-table-cell-role="th">preapproval</th>
+<th data-quarto-table-cell-role="th">open-end_line_of_credit</th>
+<th data-quarto-table-cell-role="th">loan_amount</th>
+<th data-quarto-table-cell-role="th">loan_to_value_ratio</th>
+<th data-quarto-table-cell-role="th">interest_rate</th>
+<th data-quarto-table-cell-role="th">total_loan_costs</th>
+<th data-quarto-table-cell-role="th">origination_charges</th>
+<th data-quarto-table-cell-role="th">discount_points</th>
+<th data-quarto-table-cell-role="th">lender_credits</th>
+<th data-quarto-table-cell-role="th">...</th>
+<th data-quarto-table-cell-role="th">co-applicant_ethnicity_No Co-applicant</th>
+<th data-quarto-table-cell-role="th">aus_Desktop Underwriter</th>
+<th data-quarto-table-cell-role="th">aus_Loan Prospector/Product Advisor</th>
+<th data-quarto-table-cell-role="th">aus_TOTAL Scorecard</th>
+<th data-quarto-table-cell-role="th">aus_GUS</th>
+<th data-quarto-table-cell-role="th">aus_Other</th>
+<th data-quarto-table-cell-role="th">aus_Internal Proprietary</th>
+<th data-quarto-table-cell-role="th">aus_Not applicable</th>
+<th data-quarto-table-cell-role="th">aus_Exempt</th>
+<th data-quarto-table-cell-role="th">outcome</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">142289</td>
+<td>3</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>2</td>
+<td>3</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>...</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">174168</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>2</td>
+<td>2</td>
+<td>3</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>...</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1.0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">106229</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>2</td>
+<td>2</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>...</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">30766</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>3</td>
+<td>2</td>
+<td>2</td>
+<td>3</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>...</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1.0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">34556</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>2</td>
+<td>2</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>...</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">60130</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>2</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>...</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0.0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">114480</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>4</td>
+<td>2</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>...</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">61174</td>
+<td>2</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>2</td>
+<td>2</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>...</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0.0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">131619</td>
+<td>2</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>4</td>
+<td>2</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>...</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">77029</td>
+<td>2</td>
+<td>1</td>
+<td>1</td>
+<td>2</td>
+<td>2</td>
+<td>2</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>...</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0.0</td>
+</tr>
+</tbody>
+</table>
+
+<p>10 rows × 101 columns</p>
+</div>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<div class="cell" data-execution_count="4">
+<div id="tbl-dt-pc-tst" class="cell quarto-float anchored" data-execution_count="4">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-dt-pc-tst-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;8.2: Decision Tree Testing Data (With Protected Class)
+</figcaption>
+<div aria-describedby="tbl-dt-pc-tst-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display">
+<div>
+
+
+<table class="dataframe do-not-create-environment cell table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">derived_sex</th>
+<th data-quarto-table-cell-role="th">preapproval</th>
+<th data-quarto-table-cell-role="th">open-end_line_of_credit</th>
+<th data-quarto-table-cell-role="th">loan_amount</th>
+<th data-quarto-table-cell-role="th">loan_to_value_ratio</th>
+<th data-quarto-table-cell-role="th">interest_rate</th>
+<th data-quarto-table-cell-role="th">total_loan_costs</th>
+<th data-quarto-table-cell-role="th">origination_charges</th>
+<th data-quarto-table-cell-role="th">discount_points</th>
+<th data-quarto-table-cell-role="th">lender_credits</th>
+<th data-quarto-table-cell-role="th">...</th>
+<th data-quarto-table-cell-role="th">co-applicant_ethnicity_No Co-applicant</th>
+<th data-quarto-table-cell-role="th">aus_Desktop Underwriter</th>
+<th data-quarto-table-cell-role="th">aus_Loan Prospector/Product Advisor</th>
+<th data-quarto-table-cell-role="th">aus_TOTAL Scorecard</th>
+<th data-quarto-table-cell-role="th">aus_GUS</th>
+<th data-quarto-table-cell-role="th">aus_Other</th>
+<th data-quarto-table-cell-role="th">aus_Internal Proprietary</th>
+<th data-quarto-table-cell-role="th">aus_Not applicable</th>
+<th data-quarto-table-cell-role="th">aus_Exempt</th>
+<th data-quarto-table-cell-role="th">outcome</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">89944</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>2</td>
+<td>2</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>...</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">71083</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>4</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>...</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1.0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">44430</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>2</td>
+<td>2</td>
+<td>2</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>2</td>
+<td>...</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">33808</td>
+<td>2</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>2</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>...</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>1.0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">101468</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>3</td>
+<td>2</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>...</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">96435</td>
+<td>2</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>2</td>
+<td>2</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>...</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1.0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">64375</td>
+<td>2</td>
+<td>1</td>
+<td>1</td>
+<td>3</td>
+<td>2</td>
+<td>2</td>
+<td>3</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>...</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">107749</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>2</td>
+<td>2</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>...</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1.0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">40569</td>
+<td>3</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>2</td>
+<td>2</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>...</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">149685</td>
+<td>3</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>2</td>
+<td>2</td>
+<td>2</td>
+<td>2</td>
+<td>2</td>
+<td>1</td>
+<td>...</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1.0</td>
+</tr>
+</tbody>
+</table>
+
+<p>10 rows × 101 columns</p>
+</div>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<div class="cell" data-execution_count="5">
+<div id="tbl-dt-npc-trn" class="cell quarto-float anchored" data-execution_count="5">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-dt-npc-trn-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;8.3: Decision Tree Training Data (Without Protected Class)
+</figcaption>
+<div aria-describedby="tbl-dt-npc-trn-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display">
+<div>
+
+
+<table class="dataframe do-not-create-environment cell table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">preapproval</th>
+<th data-quarto-table-cell-role="th">open-end_line_of_credit</th>
+<th data-quarto-table-cell-role="th">loan_amount</th>
+<th data-quarto-table-cell-role="th">loan_to_value_ratio</th>
+<th data-quarto-table-cell-role="th">interest_rate</th>
+<th data-quarto-table-cell-role="th">total_loan_costs</th>
+<th data-quarto-table-cell-role="th">origination_charges</th>
+<th data-quarto-table-cell-role="th">discount_points</th>
+<th data-quarto-table-cell-role="th">lender_credits</th>
+<th data-quarto-table-cell-role="th">loan_term</th>
+<th data-quarto-table-cell-role="th">...</th>
+<th data-quarto-table-cell-role="th">company</th>
+<th data-quarto-table-cell-role="th">aus_Desktop Underwriter</th>
+<th data-quarto-table-cell-role="th">aus_Loan Prospector/Product Advisor</th>
+<th data-quarto-table-cell-role="th">aus_TOTAL Scorecard</th>
+<th data-quarto-table-cell-role="th">aus_GUS</th>
+<th data-quarto-table-cell-role="th">aus_Other</th>
+<th data-quarto-table-cell-role="th">aus_Internal Proprietary</th>
+<th data-quarto-table-cell-role="th">aus_Not applicable</th>
+<th data-quarto-table-cell-role="th">aus_Exempt</th>
+<th data-quarto-table-cell-role="th">outcome</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">142289</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>2</td>
+<td>3</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>2</td>
+<td>...</td>
+<td>3</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">174168</td>
+<td>0</td>
+<td>1</td>
+<td>2</td>
+<td>2</td>
+<td>3</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>2</td>
+<td>...</td>
+<td>3</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1.0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">106229</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>2</td>
+<td>2</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>2</td>
+<td>...</td>
+<td>2</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">30766</td>
+<td>1</td>
+<td>1</td>
+<td>3</td>
+<td>2</td>
+<td>2</td>
+<td>3</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>2</td>
+<td>...</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1.0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">34556</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>2</td>
+<td>2</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>2</td>
+<td>...</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">60130</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>2</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>2</td>
+<td>...</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0.0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">114480</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>4</td>
+<td>2</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>...</td>
+<td>3</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">61174</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>2</td>
+<td>2</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>2</td>
+<td>...</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0.0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">131619</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>4</td>
+<td>2</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>...</td>
+<td>3</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">77029</td>
+<td>1</td>
+<td>1</td>
+<td>2</td>
+<td>2</td>
+<td>2</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>2</td>
+<td>...</td>
+<td>4</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0.0</td>
+</tr>
+</tbody>
+</table>
+
+<p>10 rows × 34 columns</p>
+</div>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<div class="cell" data-execution_count="6">
+<div id="tbl-dt-npc-tst" class="cell quarto-float anchored" data-execution_count="6">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-dt-npc-tst-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;8.4: Decision Tree Testing Data (Without Protected Class)
+</figcaption>
+<div aria-describedby="tbl-dt-npc-tst-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display">
+<div>
+
+
+<table class="dataframe do-not-create-environment cell table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">preapproval</th>
+<th data-quarto-table-cell-role="th">open-end_line_of_credit</th>
+<th data-quarto-table-cell-role="th">loan_amount</th>
+<th data-quarto-table-cell-role="th">loan_to_value_ratio</th>
+<th data-quarto-table-cell-role="th">interest_rate</th>
+<th data-quarto-table-cell-role="th">total_loan_costs</th>
+<th data-quarto-table-cell-role="th">origination_charges</th>
+<th data-quarto-table-cell-role="th">discount_points</th>
+<th data-quarto-table-cell-role="th">lender_credits</th>
+<th data-quarto-table-cell-role="th">loan_term</th>
+<th data-quarto-table-cell-role="th">...</th>
+<th data-quarto-table-cell-role="th">company</th>
+<th data-quarto-table-cell-role="th">aus_Desktop Underwriter</th>
+<th data-quarto-table-cell-role="th">aus_Loan Prospector/Product Advisor</th>
+<th data-quarto-table-cell-role="th">aus_TOTAL Scorecard</th>
+<th data-quarto-table-cell-role="th">aus_GUS</th>
+<th data-quarto-table-cell-role="th">aus_Other</th>
+<th data-quarto-table-cell-role="th">aus_Internal Proprietary</th>
+<th data-quarto-table-cell-role="th">aus_Not applicable</th>
+<th data-quarto-table-cell-role="th">aus_Exempt</th>
+<th data-quarto-table-cell-role="th">outcome</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">89944</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>2</td>
+<td>2</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>2</td>
+<td>...</td>
+<td>4</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">71083</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>4</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>...</td>
+<td>4</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1.0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">44430</td>
+<td>0</td>
+<td>1</td>
+<td>2</td>
+<td>2</td>
+<td>2</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>2</td>
+<td>2</td>
+<td>...</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">33808</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>2</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>2</td>
+<td>...</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>1.0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">101468</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>3</td>
+<td>2</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>2</td>
+<td>...</td>
+<td>2</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">96435</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>2</td>
+<td>2</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>2</td>
+<td>...</td>
+<td>2</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1.0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">64375</td>
+<td>1</td>
+<td>1</td>
+<td>3</td>
+<td>2</td>
+<td>2</td>
+<td>3</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>2</td>
+<td>...</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">107749</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>2</td>
+<td>2</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>2</td>
+<td>...</td>
+<td>3</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1.0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">40569</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>2</td>
+<td>2</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>...</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">149685</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>2</td>
+<td>2</td>
+<td>2</td>
+<td>2</td>
+<td>2</td>
+<td>1</td>
+<td>2</td>
+<td>...</td>
+<td>3</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1.0</td>
+</tr>
+</tbody>
+</table>
+
+<p>10 rows × 34 columns</p>
+</div>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>As done in <a href="nb.html" class="quarto-xref"><span>Chapter 7</span></a> for train test splits - the indexes are disjoint between training and testing datasets for each parent dataset (with and without protected classes), and each model is trained with the same records for comparison and evaluation against one another (same records for training and testing allow for direct comparison of the models).</p>
+<p>By achieving these splits, the two models evaluated with and without protected class information will avoid unnecessary biases in the results. When a model is tested on data with which it has already been trained, the model has already optimized to the best of its ability to correctly classify the training data. As such, the outcome of an evaluation of a model using the same data in training and testing will artificially inflate its performance metrics (accuracy, precision, recall, F1, ROC-AUC). As such, it is paramount to have a disjoint training and testing dataset.</p>
+</section>
+<section id="results" class="level2" data-number="8.3">
+<h2 data-number="8.3" class="anchored" data-anchor-id="results"><span class="header-section-number">8.3</span> Results</h2>
+<div id="cell-fig-dt1-pc" class="cell" data-execution_count="8">
+<div class="cell-output cell-output-display">
+<div id="fig-dt1-pc" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-dt1-pc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="dt_files/figure-html/fig-dt1-pc-output-1.svg" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-dt1-pc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;8.1: Decision Tree (With Protected Classes)
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div id="cell-fig-dt1-npc" class="cell" data-execution_count="9">
+<div class="cell-output cell-output-display">
+<div id="fig-dt1-npc" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-dt1-npc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="dt_files/figure-html/fig-dt1-npc-output-1.svg" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-dt1-npc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;8.2: Decision Tree (Without Protected Classes)
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell" data-execution_count="10">
+<div id="tbl-dt-metrics1" class="cell quarto-float anchored" data-execution_count="10">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-dt-metrics1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;8.5: Model Performance Scores (Single Run; D=4)
+</figcaption>
+<div aria-describedby="tbl-dt-metrics1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display">
+<style type="text/css">
+</style>
+
+<table id="T_ff150" class="do-not-create-environment cell table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th id="T_ff150_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Model</th>
+<th id="T_ff150_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">Data</th>
+<th id="T_ff150_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">Accuracy</th>
+<th id="T_ff150_level0_col3" class="col_heading level0 col3" data-quarto-table-cell-role="th">Precision</th>
+<th id="T_ff150_level0_col4" class="col_heading level0 col4" data-quarto-table-cell-role="th">Recall</th>
+<th id="T_ff150_level0_col5" class="col_heading level0 col5" data-quarto-table-cell-role="th">F1</th>
+<th id="T_ff150_level0_col6" class="col_heading level0 col6" data-quarto-table-cell-role="th">ROC-AUC</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td id="T_ff150_row0_col0" class="data row0 col0">Decision Tree</td>
+<td id="T_ff150_row0_col1" class="data row0 col1">With Protected Classes</td>
+<td id="T_ff150_row0_col2" class="data row0 col2">0.909013</td>
+<td id="T_ff150_row0_col3" class="data row0 col3">0.911677</td>
+<td id="T_ff150_row0_col4" class="data row0 col4">0.989477</td>
+<td id="T_ff150_row0_col5" class="data row0 col5">0.948985</td>
+<td id="T_ff150_row0_col6" class="data row0 col6">0.711476</td>
+</tr>
+<tr class="even">
+<td id="T_ff150_row1_col0" class="data row1 col0">Decision Tree</td>
+<td id="T_ff150_row1_col1" class="data row1 col1">Without Protected Classes</td>
+<td id="T_ff150_row1_col2" class="data row1 col2">0.909013</td>
+<td id="T_ff150_row1_col3" class="data row1 col3">0.911677</td>
+<td id="T_ff150_row1_col4" class="data row1 col4">0.989477</td>
+<td id="T_ff150_row1_col5" class="data row1 col5">0.948985</td>
+<td id="T_ff150_row1_col6" class="data row1 col6">0.711476</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<div id="cell-fig-cm-dt1-pc" class="cell" data-execution_count="11">
+<div class="cell-output cell-output-display">
+<div id="fig-cm-dt1-pc" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-cm-dt1-pc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="dt_files/figure-html/fig-cm-dt1-pc-output-1.png" width="670" height="475" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-cm-dt1-pc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;8.3: Decision Tree Confusion Matrices (With Protected Class Information; D=4)
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>By far and large, the most interesting result from this research are the decision trees produced for the data with and without protected classes</p>
+<!-- ![](./imgs/SameTree.jpg) -->
+<p>One can clearly see that the initially crafted trees are <em>identical</em>. While the numbers in terms of the value of each variable may not be clear (as they are a re-mapping of the source data from categories to integers), the <em>gini index</em> of each variable, and the variable names leveraged in decision making for building each tree, are incredibly clear.</p>
+<p>The decision tree models for both datasets came to a concensus on how loan decisions could / should be made based upon <em>highly relevant variables</em>. Factors such as debt to income ratio, the loan’s proposed interest rate, the loan term, the automated underwriting system type, income, and whether or not the loan’s purpose was for an open end line of credit were the factors that most greatly partitioned each dataset so as to minimize the Gini index.</p>
+<p>Many of the leaf nodes (where the decisions are made for classification) had remarkably low values for Gini index, within a tree depth of 6. The worst amongst these was with regard to the leaf nodes connected to automated underwriting systems, with Gini nearing the worst case scenario of 0.5. Separate of those, the decision trees were able to, fairly substantially, reduce the index closer to zero. An additional 1 or two layers to these trees may improve upon the result, but could also potentially render a decision-making process for loan approval or denial more complex.</p>
+<p>Regardless, the result is astounding - for machine learning using decision trees, there is absolutely no impact to performance of the models when protected classes are included or excluded. These features do not provide sufficient enough information gain over other options to partition the dataset in a for the purpose of classification.</p>
+<p>Furthermore - the performance of the decision tree is reasonably accurate as well, at or above 90%. If using ROC-AUC as a discriminating factor, however, this model could certainly benefit from additional tuning and adaptations. That being said, the other scores - depending on metric importance for decision making, all exceed the 90% watermark and are fairly good in terms of performance.</p>
+<p>What if we prune some of the higher echelon features within the tree? What changes then?</p>
+<p>First - let’s look at the tree by removing the root node. One can do this by removing the feature from the dataset and reconstructing the tree with the pruned data. In this case, that feature will be the debt to income ratio on the application.</p>
+<div id="cell-fig-dt2-pc" class="cell" data-execution_count="13">
+<div class="cell-output cell-output-display" data-execution_count="37">
+<div id="fig-dt2-pc" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-dt2-pc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="dt_files/figure-html/fig-dt2-pc-output-1.svg" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-dt2-pc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;8.4: Decision Tree (With Protected Class Information; Feature Removed; D=4)
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div id="cell-fig-dt2-npc" class="cell" data-execution_count="14">
+<div class="cell-output cell-output-display" data-execution_count="38">
+<div id="fig-dt2-npc" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-dt2-npc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="dt_files/figure-html/fig-dt2-npc-output-1.svg" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-dt2-npc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;8.5: Decision Tree (Without Protected Class Information; Feature Removed; D=4)
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell" data-execution_count="15">
+<div id="tbl-dt-metrics2" class="cell quarto-float anchored" data-execution_count="15">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-dt-metrics2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;8.6: Model Performance Scores (Single Run; Features Removed; D=4)
+</figcaption>
+<div aria-describedby="tbl-dt-metrics2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display">
+<div>
+
+
+<table class="dataframe do-not-create-environment cell table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Model</th>
+<th data-quarto-table-cell-role="th">Data</th>
+<th data-quarto-table-cell-role="th">Accuracy</th>
+<th data-quarto-table-cell-role="th">Precision</th>
+<th data-quarto-table-cell-role="th">Recall</th>
+<th data-quarto-table-cell-role="th">F1</th>
+<th data-quarto-table-cell-role="th">ROC-AUC</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>Decision Tree</td>
+<td>With Protected Classes</td>
+<td>0.889389</td>
+<td>0.897131</td>
+<td>0.983439</td>
+<td>0.938304</td>
+<td>0.658499</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>Decision Tree</td>
+<td>Without Protected Classes</td>
+<td>0.889389</td>
+<td>0.897131</td>
+<td>0.983439</td>
+<td>0.938304</td>
+<td>0.658499</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<div id="cell-fig-cm-dt2-pc" class="cell" data-execution_count="16">
+<div class="cell-output cell-output-display">
+<div id="fig-cm-dt2-pc" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-cm-dt2-pc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="dt_files/figure-html/fig-cm-dt2-pc-output-1.png" width="664" height="475" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-cm-dt2-pc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;8.6: Decision Tree Confusion Matrices (With Protected Class Information; Feature Removed; D=4)
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>We can see that after removing the debt_to_income_ratio feature from the data, that the decision tree <em>with</em> protected classes to begin including race and ethnic information as part of the decision making process. This includes Filipino co-applicants, and when co-applicant ethnicity is not provided on the application.</p>
+<p>Despite that fact, however, the predicted outcomes (metric scores) are equivalent for each model.</p>
+<p>Does this change any further when dropping automated underwriting systems from the training datasets (e.g.&nbsp;the root node of these new trees)?</p>
+<div id="cell-fig-dt3-pc" class="cell" data-execution_count="18">
+<div class="cell-output cell-output-display" data-execution_count="42">
+<div id="fig-dt3-pc" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-dt3-pc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="dt_files/figure-html/fig-dt3-pc-output-1.svg" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-dt3-pc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;8.7: Decision Tree (With Protected Class Information; Features Removed; D=4)
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div id="cell-fig-dt3-npc" class="cell" data-execution_count="19">
+<div class="cell-output cell-output-display" data-execution_count="43">
+<div id="fig-dt3-npc" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-dt3-npc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="dt_files/figure-html/fig-dt3-npc-output-1.svg" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-dt3-npc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;8.8: Decision Tree (Without Protected Class Information; Features Removed; D=4)
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell" data-execution_count="20">
+<div id="tbl-dt-metrics3" class="cell quarto-float anchored" data-execution_count="20">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-dt-metrics3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;8.7: Model Performance Scores (Single Run; Features Removed; D=4)
+</figcaption>
+<div aria-describedby="tbl-dt-metrics3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display">
+<div>
+
+
+<table class="dataframe do-not-create-environment cell table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Model</th>
+<th data-quarto-table-cell-role="th">Data</th>
+<th data-quarto-table-cell-role="th">Accuracy</th>
+<th data-quarto-table-cell-role="th">Precision</th>
+<th data-quarto-table-cell-role="th">Recall</th>
+<th data-quarto-table-cell-role="th">F1</th>
+<th data-quarto-table-cell-role="th">ROC-AUC</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>Decision Tree</td>
+<td>With Protected Classes</td>
+<td>0.863544</td>
+<td>0.863488</td>
+<td>0.998275</td>
+<td>0.926002</td>
+<td>0.532782</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>Decision Tree</td>
+<td>Without Protected Classes</td>
+<td>0.863593</td>
+<td>0.863495</td>
+<td>0.998332</td>
+<td>0.926031</td>
+<td>0.532811</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<div id="cell-fig-cm-dt3-pc" class="cell" data-execution_count="21">
+<div class="cell-output cell-output-display">
+<div id="fig-cm-dt3-pc" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-cm-dt3-pc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="dt_files/figure-html/fig-cm-dt3-pc-output-1.png" width="664" height="475" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-cm-dt3-pc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;8.9: Decision Tree Confusion Matrices (With Protected Class Information; Features Removed; D=4)
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Here, we can see that the decision tree including protected class information picked up another deciding factor for race, substituting for the non-provided ethnic information. In this case, it has selected applicant race information unavailable as a splitting point in the tree. Examining the model performance metrics, we see that the decision tree <em>without protected classes</em> has improved performance over that of the tree that includes them.</p>
+<p>These trees were built off of a single iteration of training and testing splits. How do the performances of the two tree types (with and without protected class information) compare when performing the hypothesis testing outlined in <a href="nb.html" class="quarto-xref"><span>Chapter 7</span></a>.</p>
+<div id="da9a6fab" class="cell" data-execution_count="23">
+<div class="cell-output cell-output-display">
+<style type="text/css">
+</style>
+
+<table id="T_ea41c" data-quarto-postprocess="true" class="table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th id="T_ea41c_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Stat</th>
+<th id="T_ea41c_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">z-score</th>
+<th id="T_ea41c_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">p-value</th>
+<th id="T_ea41c_level0_col3" class="col_heading level0 col3" data-quarto-table-cell-role="th">top performer</th>
+<th id="T_ea41c_level0_col4" class="col_heading level0 col4" data-quarto-table-cell-role="th">top mean</th>
+<th id="T_ea41c_level0_col5" class="col_heading level0 col5" data-quarto-table-cell-role="th">difference in means</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td id="T_ea41c_row0_col0" class="data row0 col0">Accuracy</td>
+<td id="T_ea41c_row0_col1" class="data row0 col1">-0.063229</td>
+<td id="T_ea41c_row0_col2" class="data row0 col2">0.949584</td>
+<td id="T_ea41c_row0_col3" class="data row0 col3">Without Protected Classes</td>
+<td id="T_ea41c_row0_col4" class="data row0 col4">0.909842</td>
+<td id="T_ea41c_row0_col5" class="data row0 col5">0.000004</td>
+</tr>
+<tr class="even">
+<td id="T_ea41c_row1_col0" class="data row1 col0">Precision</td>
+<td id="T_ea41c_row1_col1" class="data row1 col1">-0.048038</td>
+<td id="T_ea41c_row1_col2" class="data row1 col2">0.961686</td>
+<td id="T_ea41c_row1_col3" class="data row1 col3">Without Protected Classes</td>
+<td id="T_ea41c_row1_col4" class="data row1 col4">0.912724</td>
+<td id="T_ea41c_row1_col5" class="data row1 col5">0.000002</td>
+</tr>
+<tr class="odd">
+<td id="T_ea41c_row2_col0" class="data row2 col0">Recall</td>
+<td id="T_ea41c_row2_col1" class="data row2 col1">-0.045748</td>
+<td id="T_ea41c_row2_col2" class="data row2 col2">0.963511</td>
+<td id="T_ea41c_row2_col3" class="data row2 col3">Without Protected Classes</td>
+<td id="T_ea41c_row2_col4" class="data row2 col4">0.989174</td>
+<td id="T_ea41c_row2_col5" class="data row2 col5">0.000001</td>
+</tr>
+<tr class="even">
+<td id="T_ea41c_row3_col0" class="data row3 col0">F1</td>
+<td id="T_ea41c_row3_col1" class="data row3 col1">-0.064089</td>
+<td id="T_ea41c_row3_col2" class="data row3 col2">0.948899</td>
+<td id="T_ea41c_row3_col3" class="data row3 col3">Without Protected Classes</td>
+<td id="T_ea41c_row3_col4" class="data row3 col4">0.949412</td>
+<td id="T_ea41c_row3_col5" class="data row3 col5">0.000002</td>
+</tr>
+<tr class="odd">
+<td id="T_ea41c_row4_col0" class="data row4 col0">ROC-AUC</td>
+<td id="T_ea41c_row4_col1" class="data row4 col1">-0.049822</td>
+<td id="T_ea41c_row4_col2" class="data row4 col2">0.960264</td>
+<td id="T_ea41c_row4_col3" class="data row4 col3">Without Protected Classes</td>
+<td id="T_ea41c_row4_col4" class="data row4 col4">0.715086</td>
+<td id="T_ea41c_row4_col5" class="data row4 col5">0.000009</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="5a9c4671" class="cell" data-execution_count="24">
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="dt_files/figure-html/cell-25-output-1.png" width="1086" height="577" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Over 500 randomizations, there isn’t sufficient evidence to reject <span class="math inline">\(H_0\)</span> - there is no significant difference between the two models. Surprisingly, the higher mean amongst all these insignificant test results had an insignificantly higher mean for each metric when protected class information was <em>excluded</em>. The p-values are incredibly high in these models, signifying a near total overlap in the mean and the variance of the data for both models’ performance metrics.</p>
+<p>It appears the initial finding of the first two trees trained on the full dataset is clear: it is ideal to exclude protected class information of any kind when constructing decision tree models for mortgage application predictions. The accuracy of the decision tree without hyperparameter tuning is not a strong as what was found for Bernoulli Naive Bayes.</p>
 
 
 </section>
@@ -650,13 +2308,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation column-body">
   <div class="nav-page nav-page-previous">
-      <a href="./arm.html" class="pagination-link  aria-label=" &lt;span="" rule="" mining&lt;="" span&gt;"="">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Association Rule Mining</span></span>
+      <a href="./nb.html" class="pagination-link  aria-label=" &lt;span="" bayes&lt;="" span&gt;"="">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Naive Bayes</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./nb.html" class="pagination-link" aria-label="<span class='chapter-number'>7</span>&nbsp; <span class='chapter-title'>Naive Bayes</span>">
-        <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Naive Bayes</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./reg.html" class="pagination-link" aria-label="<span class='chapter-number'>9</span>&nbsp; <span class='chapter-title'>Regression Modeling</span>">
+        <span class="nav-page-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Regression Modeling</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

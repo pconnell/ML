@@ -11,11 +11,12 @@ book:
     - index.qmd
     - data.qmd
     - pca.qmd
+    - mca.qmd
     - clustering.qmd
     - arm.qmd
-#    - dt.qmd
-#    - nb.qmd
-#    - reg.qmd
+    - nb.qmd
+    - dt.qmd
+    - reg.qmd
 #    - svm.qmd
 #    - conclusion.qmd
     - references.qmd
@@ -24,9 +25,10 @@ book:
     - app2.qmd
 #    - app3.qmd
     - app4.qmd
-#    - app5.qmd
-#    - app6.qmd
-#    - app7.qmd
+    - app6.qmd
+    - app5.qmd
+    - app7.qmd
+    - app8-mca.qmd
 
   downloads: [pdf]
   #references: refs.bib # Unsure if needed
