@@ -1,0 +1,181 @@
+# Ensemble Code {#app-Ensemble .appendix}
+
+
+
+## Data and Module Imports
+```{python data-import}
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import classification_report
+from sklearn.metrics import (
+    accuracy_score,roc_auc_score,
+    precision_score, recall_score, 
+    f1_score, confusion_matrix,
+    ConfusionMatrixDisplay
+)
+import pandas as pd, numpy as np, seaborn as sns
+from sklearn.tree import plot_tree
+from xgboost import XGBClassifier
+from sklearn.ensemble import RandomForestClassifier
+import matplotlib.pyplot as plt
+
+final = pd.read_csv('../data/final_clean_r2.csv')
+labels = final['outcome'].copy()
+clean = pd.read_csv('../data/cnb_pc.csv')
+clean_npc = pd.read_csv('../data/cnb_npc.csv')
+
+rf_pc,rf_npc = RandomForestClassifier(),RandomForestClassifier()
+xgb_pc,xgb_npc = XGBClassifier(),XGBClassifier()
+
+X_train,X_test,y_train,y_test = train_test_split(
+    clean,
+    labels,
+    stratify=labels,
+    test_size=0.2,
+    random_state=4444
+)
+
+X_train_npc,X_test_npc,y_train,y_test = train_test_split(
+    clean_npc,
+    labels,
+    stratify=labels,
+    test_size=0.2,
+    random_state=4444
+)
+```
+
+## Random Forests
+
+### Random Forest Fit/Predict
+
+```{python}
+rf_pc.fit(X_train,y_train)
+rf_npc.fit(X_train_npc,y_train)
+y_pred_pc = rf_pc.predict(X_test)
+y_pred_npc = rf_npc.predict(X_test_npc)
+```
+
+### Random Forest Model Metrics
+
+```{python}
+results = pd.DataFrame({
+    'Model':[],
+    'Data':[],
+    'Accuracy':[],
+    'Precision':[],
+    'Recall':[],
+    'F1':[],
+    'ROC-AUC':[]
+})
+results.loc[len(results)] = {
+    'Model':'Random Forest',
+    'Data':'With Protected Classes',
+    'Accuracy':accuracy_score(y_test,y_pred_pc),
+    'Precision':precision_score(y_test,y_pred_pc),
+    'Recall':recall_score(y_test,y_pred_pc),
+    'F1':f1_score(y_test,y_pred_pc),
+    'ROC-AUC':roc_auc_score(y_test,y_pred_pc)
+}
+results.loc[len(results)] = {
+    'Model':'Random Forest',
+    'Data':'Without Protected Classes',
+    'Accuracy':accuracy_score(y_test,y_pred_npc),
+    'Precision':precision_score(y_test,y_pred_npc),
+    'Recall':recall_score(y_test,y_pred_npc),
+    'F1':f1_score(y_test,y_pred_npc),
+    'ROC-AUC':roc_auc_score(y_test,y_pred_npc)
+}
+
+display(results.style.hide(axis='index'))
+```
+
+### Random Forest Confusion Matrices
+
+```{python}
+fig,axes=plt.subplots(nrows=1,ncols=2)
+
+ConfusionMatrixDisplay(
+    confusion_matrix(
+        y_pred=y_pred_pc,y_true=y_test
+    ),
+        display_labels=['Deny','Approve']
+).plot(ax=axes[0])
+ConfusionMatrixDisplay(
+    confusion_matrix(
+        y_pred=y_pred_npc,y_true=y_test
+    ),
+        display_labels=['Deny','Approve']
+).plot(ax=axes[1])
+axes[0].set_title('With Protected\nClasses')
+axes[1].set_title('Without Protected\nClasses')
+plt.suptitle("Confusion Matrices - Decision Trees")
+plt.tight_layout()
+plt.show()
+```
+
+## XGBoost
+
+### XGBoost Fit/Preict
+```{python}
+xgb_pc.fit(X_train,y_train)
+xgb_npc.fit(X_train_npc,y_train)
+y_pred_pc = xgb_pc.predict(X_test)
+y_pred_npc = xgb_npc.predict(X_test_npc)
+```
+
+### XGBoost Model Metrics
+
+```{python}
+results = pd.DataFrame({
+    'Model':[],
+    'Data':[],
+    'Accuracy':[],
+    'Precision':[],
+    'Recall':[],
+    'F1':[],
+    'ROC-AUC':[]
+})
+results.loc[len(results)] = {
+    'Model':'XGBoost',
+    'Data':'With Protected Classes',
+    'Accuracy':accuracy_score(y_test,y_pred_pc),
+    'Precision':precision_score(y_test,y_pred_pc),
+    'Recall':recall_score(y_test,y_pred_pc),
+    'F1':f1_score(y_test,y_pred_pc),
+    'ROC-AUC':roc_auc_score(y_test,y_pred_pc)
+}
+results.loc[len(results)] = {
+    'Model':'XGBoost',
+    'Data':'Without Protected Classes',
+    'Accuracy':accuracy_score(y_test,y_pred_npc),
+    'Precision':precision_score(y_test,y_pred_npc),
+    'Recall':recall_score(y_test,y_pred_npc),
+    'F1':f1_score(y_test,y_pred_npc),
+    'ROC-AUC':roc_auc_score(y_test,y_pred_npc)
+}
+
+display(results.style.hide(axis='index'))
+```
+
+### XGBoost Confusion Matrices
+
+```{python}
+fig,axes=plt.subplots(nrows=1,ncols=2)
+
+ConfusionMatrixDisplay(
+    confusion_matrix(
+        y_pred=y_pred_pc,y_true=y_test
+    ),
+        display_labels=['Deny','Approve']
+).plot(ax=axes[0])
+ConfusionMatrixDisplay(
+    confusion_matrix(
+        y_pred=y_pred_npc,y_true=y_test
+    ),
+        display_labels=['Deny','Approve']
+).plot(ax=axes[1])
+axes[0].set_title('With Protected\nClasses')
+axes[1].set_title('Without Protected\nClasses')
+plt.suptitle("Confusion Matrices - Decision Trees")
+plt.tight_layout()
+plt.show()
+```

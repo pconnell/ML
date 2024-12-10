@@ -59,7 +59,7 @@ N = np.sum(x).sum()
 
 ```{python}
 Z = np.array(x / N)
-Z
+display(pd.DataFrame(Z))
 ```
 
 * Calculate the column-wise sum as matrix $c$.  Transform to a diagonal matrix $D_c$
@@ -67,8 +67,11 @@ Z
 c = np.sum(Z,axis=0)
 Dc = np.diag(c)
 c = np.matrix(c)
-print('c:\n{}'.format(c))
-print('Dc: {}'.format(Dc))
+print('c:')
+display(pd.DataFrame(c))
+print("Dc:")
+display(pd.DataFrame(Dc))
+# print('Dc: {}'.format(pd.DataFrame(Dc)))
 ```
 
 * Calculate the row-wise sum as matrix $r$.  Transform to a diagonal matrix $D_r$
@@ -77,9 +80,10 @@ r = np.sum(Z,axis=1)
 Dr = np.diag(r)
 r = np.matrix(r).T
 
-print('r:\n{}'.format(r))
-print('Dr: {}'.format(Dr))
-
+print('r:')
+display(pd.DataFrame(r))
+print('Dr:')
+display(pd.DataFrame(Dr))
 ```
 
 * Calculate matrix $M = D_r^{-\frac{1}{2}}(Z-rc^T)D_c^{-\frac{1}{2}}$
@@ -91,7 +95,7 @@ b[b==np.inf] = 0
 
 # M = np.power(Dr,-.5)@(Z-np.dot(r,c))@np.power(Dc,-.5)
 M = a @(Z-np.dot(r,c))@b
-display(M)
+display(pd.DataFrame(M))
 ```
 
 * Perform Matrix decomposition on $M$:
@@ -100,14 +104,17 @@ display(M)
 ```{python}
 # svd = np.linalg.svd(M)
 P,D,Q = np.linalg.svd(M,full_matrices=False)
-display(P,Q)
+print("P:")
+display(pd.DataFrame(P))
+print("Q:")
+display(pd.DataFrame(Q))
 eig = np.power(D,2)
 # eig = np.sum(np.power(np.diag(np.linalg.svd(M)[1]),2),axis=0)
 ```
 
 * $\Delta^2$ provides the eigenvalues of the target matrix.
 ```{python}
-eig
+display(pd.DataFrame(eig.T))
 ```
 
 * Use the eigenvalues to apply transformations of the input data into a new the new eigenbasis.
@@ -146,29 +153,29 @@ mca_Nd_npc_ColCont = pd.read_csv('../data/mca-Nd-npc-ColCont.csv')
 mca_Nd_npc_eig = pd.read_csv('../data/mca-Nd-npc-eig.csv')
 ```
 
-```{python mca-nd-eig-top}
-#| label: mca-nd-eig-top
+```{python tbl-mca-nd-eig-top}
+#| label: tbl-mca-nd-eig-top
 #| tbl-cap: MCA Summary of Eigenvalues (with protected class information) - Top 5
 
 mca_Nd_eig.head(5)
 ```
 
-```{python mca-nd-eig-bot}
-#| label: mca-nd-eig-bot
+```{python tbl-mca-nd-eig-bot}
+#| label: tbl-mca-nd-eig-bot
 #| tbl-cap: MCA Summary of Eigenvalues (with protected class information) - Bottom 5
 
 mca_Nd_eig.tail(5)
 ```
 
-```{python mca-nd-npc-eig-top}
-#| label: mca-nd-npc-eig-top
+```{python tbl-mca-nd-npc-eig-top}
+#| label: tbl-mca-nd-npc-eig-top
 #| tbl-cap: MCA Summary of Eigenvalues (without protected class information) - Top 5
 
 mca_Nd_npc_eig.head(5)
 ```
 
-```{python mca-nd-npc-eig-bot}
-#| label: mca-nd-npc-eig-bot
+```{python tbl-mca-nd-npc-eig-bot}
+#| label: tbl-mca-nd-npc-eig-bot
 #| tbl-cap: MCA Summary of Eigenvalues (without protected class information) - Bottom 5
 
 mca_Nd_npc_eig.tail(5)
@@ -182,22 +189,22 @@ MCA also provides us with insight as to which columns provide the greatest contr
 
 ### With Protected Classes
 
-```{python mca-col-conts1}
-#| label: mca-col-conts1
+```{python tbl-mca-col-conts1}
+#| label: tbl-mca-col-conts1
 #| tbl-cap: MC1 (with protected class information) - Top 10 Column Contributors
 cols = mca_Nd_ColCont.columns[[0,1]]
 mca_Nd_ColCont[cols].sort_values(by='MC1',ascending=False).head(10)
 ```
 
-```{python mca-col-conts2}
-#| label: mca-col-conts2
+```{python tbl-mca-col-conts2}
+#| label: tbl-mca-col-conts2
 #| tbl-cap: MC2 (with protected class information) - Top 10 Column Contributors
 cols = mca_Nd_ColCont.columns[[0,2]]
 mca_Nd_ColCont[cols].sort_values(by='MC2',ascending=False).head(10)
 ```
 
-```{python mca-col-conts3}
-#| label: mca-col-conts3
+```{python tbl-mca-col-conts3}
+#| label: tbl-mca-col-conts3
 #| tbl-cap: MC3 (with protected class information) - Top 10 Column Contributors
 cols = mca_Nd_ColCont.columns[[0,3]]
 mca_Nd_ColCont[cols].sort_values(by='MC3',ascending=False).head(10)
@@ -207,22 +214,22 @@ Examining the above three tables, it is evident that features revolving around p
 
 ### Without Protected Classes
 
-```{python mca-npc-col-conts1}
-#| label: mca-npc-col-conts1
+```{python tbl-mca-npc-col-conts1}
+#| label: tbl-mca-npc-col-conts1
 #| tbl-cap: MC1 (without protected class information) - Top 10 Column Contributors
 cols = mca_Nd_npc_ColCont.columns[[0,1]]
 mca_Nd_npc_ColCont[cols].sort_values(by='MC1',ascending=False).head(10)
 ```
 
-```{python mca-npc-col-conts2}
-#| label: mca-npc-col-conts2
+```{python tbl-mca-npc-col-conts2}
+#| label: tbl-mca-npc-col-conts2
 #| tbl-cap: MC2 (without protected class information) - Top 10 Column Contributors
 cols = mca_Nd_npc_ColCont.columns[[0,2]]
 mca_Nd_npc_ColCont[cols].sort_values(by='MC2',ascending=False).head(10)
 ```
 
-```{python mca-npc-col-conts3}
-#| label: mca-npc-col-conts3
+```{python tbl-mca-npc-col-conts3}
+#| label: tbl-mca-npc-col-conts3
 #| tbl-cap: MC3 (without protected class information) - Top 10 Column Contributors
 cols = mca_Nd_npc_ColCont.columns[[0,3]]
 mca_Nd_npc_ColCont[cols].sort_values(by='MC3',ascending=False).head(10)
@@ -231,3 +238,119 @@ mca_Nd_npc_ColCont[cols].sort_values(by='MC3',ascending=False).head(10)
 Examining the MCs for data that exludes protected class information, we immediately see that each holds data that is likely highly relevant to making a decision of whether or not to approve a loan.  The _H and _MH in MC1 column contributions signify that the loan is between 1 and 2 standard deviations, or over 2 standard deviations from the mean.  With high loan costs, high origination charges, high discount points and so forth all are likely candidates to impact the decision making process of whether or not to grant a loan.
 
 It's also interesting to see that in MC2, two banks stand out - Bank of America and Rocket Mortgage, apparently having a higher influence on the loan outcome in the 2nd MC.
+
+### Clustering
+
+```{python ImportsBlock}
+import pandas as pd, numpy as np, matplotlib.pyplot as plt, seaborn as sns
+
+from sklearn.model_selection import train_test_split
+
+from sklearn.cluster import (KMeans,AgglomerativeClustering,DBSCAN)
+```
+
+```{python}
+mca_pc = pd.read_csv('../data/mcaNd.csv')
+mca_npc = pd.read_csv('../data/mcaNd-npc.csv')
+```
+
+```{python}
+labels = pd.read_csv('../data/final_clean_r2.csv')['outcome']
+```
+
+```{python}
+mca_pc = mca_pc[mca_pc.columns[0:3]]
+mca_npc = mca_npc[mca_npc.columns[0:3]]
+```
+
+```{python}
+knn_pc = KMeans(n_clusters=2)
+pc_clust = knn_pc.fit_predict(mca_pc)
+```
+
+```{python}
+knn_npc = KMeans(n_clusters=2)
+npc_clust = knn_npc.fit_predict(mca_pc)
+```
+
+```{python}
+mca_pc['y_pred'] = pc_clust
+mca_pc['labels'] = labels
+mca_npc['y_pred'] = npc_clust
+mca_npc['labels'] = labels
+```
+
+```{python}
+import seaborn as sns
+sns.scatterplot(
+    data=mca_pc,
+    x='MC1',y='MC2',hue='labels'
+)
+```
+```{python}
+import seaborn as sns
+sns.scatterplot(
+    data=mca_pc,
+    x='MC1',y='MC2',hue='y_pred'
+)
+```
+
+
+```{python}
+X_train_pc,X_test_pc,y_train,y_test=train_test_split(
+    mca_pc,
+    labels,
+    stratify=labels,
+    test_size=0.2,
+    random_state=8808
+)
+X_train_npc,X_test_npc,y_train,y_test=train_test_split(
+    mca_npc,
+    labels,
+    stratify=labels,
+    test_size=0.2,
+    random_state=8808
+)
+```
+<!-- 
+```{python}
+ag_pc = AgglomerativeClustering(
+    distance_threshold=1,
+    compute_full_tree=True,
+    n_clusters=None,
+    metric='cosine',
+    linkage='average'
+)
+ag_npc = AgglomerativeClustering(
+    distance_threshold=1,
+    compute_full_tree=True,
+    n_clusters=None,
+    metric='cosine',
+    linkage='average'
+)
+y_pred = ag_pc.fit_predict(X_test_pc)
+y_pred_npc = ag_npc.fit_predict(X_test_npc)
+```
+
+
+```{python}
+X_test_pc['y_pred_ag_pc'] = y_pred
+X_test_pc['labels'] = y_test
+X_test_npc['y_pred_ag_npc'] = y_pred_npc
+X_test_npc['labels'] = y_test
+```
+
+```{python}
+import seaborn as sns
+sns.scatterplot(
+    data=X_test_pc,
+    x='MC1',y='MC2',hue='labels'
+)
+```
+```{python}
+import seaborn as sns
+sns.scatterplot(
+    data=mca_pc,
+    x='MC1',y='MC2',hue='y_pred_ag_pc'
+)
+``` -->

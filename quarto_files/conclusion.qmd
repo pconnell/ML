@@ -6,4 +6,52 @@ Many results between models trained with and without protected class information
 
 Operationally and ethically speaking, the percentage difference in performance for the best models were insufficient to justify the inclusion of protected class data as part of a model to make a decision on mortgage loan applications.
 
-## Research Questions
+
+## Summary Table of Results
+
+```{python}
+import pandas as pd
+pd.DataFrame({
+    'Model':[
+        'BernoulliNB','CategoricalNB','MultinomialNB','Decision Trees','Logistic Regression'
+    ],
+    'Metric':[
+        'Accuracy','Accuracy','Accuracy','Accuracy','Accuracy'
+    ],
+    'z-score':[
+        -53.447,-8.212,-1.242,-0.063, 44.649
+    ],
+    'p-value':[
+        0,0,0.214,0.950,0
+    ],
+    'significant difference':[
+        'Yes','Yes','No','No','Yes'
+    ],
+    'top performer':[
+        'Without protected classes','Without protected classes','Without protected classes','Without protected classes','With protected classes'
+    ],
+    'top mean':[
+        '94.08%','88.35%','80.46%','90.98%','96.36%'
+    ],
+    'difference in means':[
+        '0.35%','3.11%','0.018%','0.0004%','0.246%'
+    ]
+}).style.hide(axis='index')
+
+```
+
+Here is a summary of the accuracy of models that were run 500 times and compared to one another for difference in performance.  Any case where there is a significant difference is worth examining and noting.  It is notable that logistic regression had the highest accuracy of all performances, yet the difference in performance was less than a quarter of a percent better than training without protected class information.  In all other cases, the gap was similar, with the top performer being those models that *excluded* protected class information from the training data.  In all cases - less Categorical Naive Bayes, the difference in performance remained within a fraction of a percent of the other model in terms of accuracy.
+
+## Final Thoughts 
+
+There is a common thread across almost every model implemented in this study.  The results are consistent across multiple model types and methodologies and is particularly revealing.  
+
+Use of any of the methods included in this research would not offer an organization a substantial edge, benefit, or higher performance when including protected class information as predictors.  In the case of the best performer yet, support vector machines with RBF kernel, has the highest performative ROC-AUC for the *exclusion* of protected classes, with similarly high metrics across the board.
+
+It's remarkable, revealing, and actually quite astounding.  Any statistical or data analytics researcher exploring publically available data and applying a thorough amount of rigor could clearly reach the same results and conclusions found in this study.  Other important, non-publically available information that is relevant to one's finanical status as a mortgage applicant, would likely provide a greater explanation of data variation and the reasons behind an applicant's denial for a mortgage than any racial, ethnic, age-based, or gender-based features of an applicant / co-applicant pair.
+
+It is unlikely, but possible, that financial institutions leverage machine learning models as those explored in this research, with or without protected class information (or proxies for it) in their training and prediction datasets.  It is clearly evident that for the best performing models in this study, the publically available information *does not favor* their inclusion in modeling.
+
+Sure, when one is talking about millions, or potentially billions, of dollars at stake, the small performative increases of between 0.1% and 0.4% may initially appear to be substantial in terms of a company's bottom-line.  It seems that these perceived benefits would be far outweighed by the cost of disenfranchising countless potential borrowers and facing a hefty risk of expensive lawsuits.  The cost of time in court, litigation, lawyer fees, settlements, and/or paying out an actual loss in court is likely to go far and beyond any potential financial gain.  Overall, the gain is operationally ineffectual.
+
+Any financial institution leveraging machine learning models should expect a level of ethical due-diligence of their analysts to maximize predictive performance of any operational model while operating within the constraints of the law, regulatory guidance and requirements, corporate policy and procedure, and industry best-practices.  The inclusion of protected class information *clearly* runs counter to the law and regulatory requirements, and even if a company chose to break those lines, they're only hurting themselves and their potential borrowers.

@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.549">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Exploring Protected Classes as Predictors in Mortgage Approval - 11&nbsp; Ensemble Modeling</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./conclusion.html" rel="next">
+<link href="./svm.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<style>html{ scroll-behavior: smooth; }</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./ensemble.html"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Ensemble Modeling</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Exploring Protected Classes as Predictors in Mortgage Approval</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/pconnell/ML" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+    <a href="./ML-Final-Report.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Data Gathering and Exploratory Analysis</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./pca.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Principal Component Analysis</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./mca.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Multiple Correspondence Analysis</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./clustering.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Data Clustering</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./arm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Association Rule Mining</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./nb.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Naive Bayes</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./dt.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Decision Tree Modeling</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./reg.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Regression Modeling</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./svm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Support Vector Machine Modeling</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ensemble.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Ensemble Modeling</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./conclusion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Conclusion</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./app1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Data Gathering/Cleaning Code</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./app2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Component Analysis Code (PCA and MCA)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./app4.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Association Rule Mining Code</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./app6.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">Naive Bayes Code</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./app5.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">E</span>&nbsp; <span class="chapter-title">Decision Tree Code</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./app7.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">F</span>&nbsp; <span class="chapter-title">Regression Code</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./app8-mca.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">G</span>&nbsp; <span class="chapter-title">Multiple Correspondence Analysis</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ensemble-app.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">H</span>&nbsp; <span class="chapter-title">Ensemble Code</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview"><span class="header-section-number">11.1</span> Overview</a>
+  <ul class="collapse">
+  <li><a href="#bagging" id="toc-bagging" class="nav-link" data-scroll-target="#bagging"><span class="header-section-number">11.1.1</span> Bagging</a></li>
+  <li><a href="#boosting" id="toc-boosting" class="nav-link" data-scroll-target="#boosting"><span class="header-section-number">11.1.2</span> Boosting</a></li>
+  <li><a href="#random-forests" id="toc-random-forests" class="nav-link" data-scroll-target="#random-forests"><span class="header-section-number">11.1.3</span> Random Forests</a></li>
+  <li><a href="#xgboost" id="toc-xgboost" class="nav-link" data-scroll-target="#xgboost"><span class="header-section-number">11.1.4</span> XGBoost</a></li>
+  </ul></li>
+  <li><a href="#data-and-code" id="toc-data-and-code" class="nav-link" data-scroll-target="#data-and-code"><span class="header-section-number">11.2</span> Data and Code</a></li>
+  <li><a href="#results" id="toc-results" class="nav-link" data-scroll-target="#results"><span class="header-section-number">11.3</span> Results</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content column-body" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span id="sec-Ensemble" class="quarto-section-identifier"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Ensemble Modeling</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta column-body">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="overview" class="level2" data-number="11.1">
+<h2 data-number="11.1" class="anchored" data-anchor-id="overview"><span class="header-section-number">11.1</span> Overview</h2>
+<p>Ensemble methods are a combination of machine learning algorithms that are trained separately (either in series or parallel), and their outputs are combined to determine the classification of a given new vector of data. This provides a method that can improve predictive performance of a model, mitigate issues of model overfitting, as one model may be overfit to the data, but other independently or separately trained models can not have such overfit, and as a result, better balance the bias-variance curve of the output predictions overall for the model. What is meant by series and parallel, though?</p>
+<section id="bagging" class="level3" data-number="11.1.1">
+<h3 data-number="11.1.1" class="anchored" data-anchor-id="bagging"><span class="header-section-number">11.1.1</span> Bagging</h3>
+<p>Bagging is a <em>parallel</em> method. This means that each model is trained independently of one another on separate random subset samplings of the source training data. Each model is then optimized for that subset of the data, and each model gets a vote in the classification of a testing datapoint. Because of this voting process, the output tends to have an odd number of models that are independently trained (at least for binary classification systems differentiating between a positive and negative outcome). Random Forests are an example of a bagging ensemble learning method.</p>
+</section>
+<section id="boosting" class="level3" data-number="11.1.2">
+<h3 data-number="11.1.2" class="anchored" data-anchor-id="boosting"><span class="header-section-number">11.1.2</span> Boosting</h3>
+<p>Boosting is a <em>series</em> method. For models trained in series, each subsequent model is trained based on the outcomes of the previous model, tending to focus more on records that were misclassified by the previous model. In this way, the subsequent models identify those misclassified records while still retaining appropriate predictive performance on the previous correctly classified records. An example of a boosting algorithm is called Adaptive Boosting (or ada boost)</p>
+</section>
+<section id="random-forests" class="level3" data-number="11.1.3">
+<h3 data-number="11.1.3" class="anchored" data-anchor-id="random-forests"><span class="header-section-number">11.1.3</span> Random Forests</h3>
+<p>Random forests take the decision tree algorithm as described in <a href="dt.html" class="quarto-xref"><span>Chapter 8</span></a>, and trains multiple decision trees using that algorithm in parallel. Each tree gets a vote on the classification of new records.</p>
+</section>
+<section id="xgboost" class="level3" data-number="11.1.4">
+<h3 data-number="11.1.4" class="anchored" data-anchor-id="xgboost"><span class="header-section-number">11.1.4</span> XGBoost</h3>
+</section>
+</section>
+<section id="data-and-code" class="level2" data-number="11.2">
+<h2 data-number="11.2" class="anchored" data-anchor-id="data-and-code"><span class="header-section-number">11.2</span> Data and Code</h2>
+<p>Data for this section leverages the same data as for decision trees and can be found here:</p>
+<ul>
+<li><p><a href="https://drive.google.com/file/d/1Nj2P23ZMlQCzdnMdvJVKH_dufNl_tmrr/view?usp=drive_link">Label Encoded Data - With Protected Classes</a></p></li>
+<li><p><a href="https://drive.google.com/file/d/1ybGEqiSdRsqu0j9O1KJXZgyJrSlX7JNl/view?usp=drive_link">Label Encoded Data - Without Protected Classes</a></p></li>
+</ul>
+<p>Code to execute XGBoost and Random Forests can be found in <span class="citation" data-cites="app-Ensemble">(<a href="#ref-app-Ensemble" role="doc-biblioref"><strong>app-Ensemble?</strong></a>)</span>.</p>
+</section>
+<section id="results" class="level2" data-number="11.3">
+<h2 data-number="11.3" class="anchored" data-anchor-id="results"><span class="header-section-number">11.3</span> Results</h2>
+<div id="d0160479" class="cell" data-execution_count="4">
+<div class="cell-output cell-output-display">
+<style type="text/css">
+</style>
+
+<table id="T_01d3d" data-quarto-postprocess="true" class="table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th id="T_01d3d_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Model</th>
+<th id="T_01d3d_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">Data</th>
+<th id="T_01d3d_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">Accuracy</th>
+<th id="T_01d3d_level0_col3" class="col_heading level0 col3" data-quarto-table-cell-role="th">Precision</th>
+<th id="T_01d3d_level0_col4" class="col_heading level0 col4" data-quarto-table-cell-role="th">Recall</th>
+<th id="T_01d3d_level0_col5" class="col_heading level0 col5" data-quarto-table-cell-role="th">F1</th>
+<th id="T_01d3d_level0_col6" class="col_heading level0 col6" data-quarto-table-cell-role="th">ROC-AUC</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td id="T_01d3d_row0_col0" class="data row0 col0">Random Forest</td>
+<td id="T_01d3d_row0_col1" class="data row0 col1">With Protected Classes</td>
+<td id="T_01d3d_row0_col2" class="data row0 col2">0.926817</td>
+<td id="T_01d3d_row0_col3" class="data row0 col3">0.935313</td>
+<td id="T_01d3d_row0_col4" class="data row0 col4">0.982375</td>
+<td id="T_01d3d_row0_col5" class="data row0 col5">0.958267</td>
+<td id="T_01d3d_row0_col6" class="data row0 col6">0.790423</td>
+</tr>
+<tr class="even">
+<td id="T_01d3d_row1_col0" class="data row1 col0">Random Forest</td>
+<td id="T_01d3d_row1_col1" class="data row1 col1">Without Protected Classes</td>
+<td id="T_01d3d_row1_col2" class="data row1 col2">0.925710</td>
+<td id="T_01d3d_row1_col3" class="data row1 col3">0.939595</td>
+<td id="T_01d3d_row1_col4" class="data row1 col4">0.975877</td>
+<td id="T_01d3d_row1_col5" class="data row1 col5">0.957392</td>
+<td id="T_01d3d_row1_col6" class="data row1 col6">0.802552</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="fbfaf4cb" class="cell" data-execution_count="5">
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="ensemble_files/figure-html/cell-6-output-1.png" width="670" height="475" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="73827008" class="cell" data-execution_count="7">
+<div class="cell-output cell-output-display">
+<style type="text/css">
+</style>
+
+<table id="T_d7a6d" data-quarto-postprocess="true" class="table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th id="T_d7a6d_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Model</th>
+<th id="T_d7a6d_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">Data</th>
+<th id="T_d7a6d_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">Accuracy</th>
+<th id="T_d7a6d_level0_col3" class="col_heading level0 col3" data-quarto-table-cell-role="th">Precision</th>
+<th id="T_d7a6d_level0_col4" class="col_heading level0 col4" data-quarto-table-cell-role="th">Recall</th>
+<th id="T_d7a6d_level0_col5" class="col_heading level0 col5" data-quarto-table-cell-role="th">F1</th>
+<th id="T_d7a6d_level0_col6" class="col_heading level0 col6" data-quarto-table-cell-role="th">ROC-AUC</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td id="T_d7a6d_row0_col0" class="data row0 col0">XGBoost</td>
+<td id="T_d7a6d_row0_col1" class="data row0 col1">With Protected Classes</td>
+<td id="T_d7a6d_row0_col2" class="data row0 col2">0.933653</td>
+<td id="T_d7a6d_row0_col3" class="data row0 col3">0.939455</td>
+<td id="T_d7a6d_row0_col4" class="data row0 col4">0.985969</td>
+<td id="T_d7a6d_row0_col5" class="data row0 col5">0.962150</td>
+<td id="T_d7a6d_row0_col6" class="data row0 col6">0.805219</td>
+</tr>
+<tr class="even">
+<td id="T_d7a6d_row1_col0" class="data row1 col0">XGBoost</td>
+<td id="T_d7a6d_row1_col1" class="data row1 col1">Without Protected Classes</td>
+<td id="T_d7a6d_row1_col2" class="data row1 col2">0.932645</td>
+<td id="T_d7a6d_row1_col3" class="data row1 col3">0.939074</td>
+<td id="T_d7a6d_row1_col4" class="data row1 col4">0.985164</td>
+<td id="T_d7a6d_row1_col5" class="data row1 col5">0.961567</td>
+<td id="T_d7a6d_row1_col6" class="data row1 col6">0.803712</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="51159692" class="cell" data-execution_count="8">
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="ensemble_files/figure-html/cell-9-output-1.png" width="670" height="475" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Of these two ensemble methods, one can see that XGBoost outperformed Random Forest classification. However, the results compared to those in the other sections examining Bernoulli Naive Bayes, Logistic Regression, and Support Vector Machines far outshine the performance of XGBoost - especially when comparing ROC-AUC.</p>
+<p>Both of these models had a more rapid time for training, fitting, and predicting outcomes, at the cost of accuracy and other model performance metrics.</p>
+<p>In the case of XGBoost, a single test appears to favor the inclusion of protected class data. While that is the case, the difference in performance is less than 1% across all metrics. Is this statistically significant?</p>
+<div id="868fd21d" class="cell" data-execution_count="10">
+<div class="cell-output cell-output-display">
+<style type="text/css">
+</style>
+
+<table id="T_0b12d" data-quarto-postprocess="true" class="table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th id="T_0b12d_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Stat</th>
+<th id="T_0b12d_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">z-score</th>
+<th id="T_0b12d_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">p-value</th>
+<th id="T_0b12d_level0_col3" class="col_heading level0 col3" data-quarto-table-cell-role="th">top performer</th>
+<th id="T_0b12d_level0_col4" class="col_heading level0 col4" data-quarto-table-cell-role="th">top mean</th>
+<th id="T_0b12d_level0_col5" class="col_heading level0 col5" data-quarto-table-cell-role="th">difference in means</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td id="T_0b12d_row0_col0" class="data row0 col0">Accuracy</td>
+<td id="T_0b12d_row0_col1" class="data row0 col1">0.177171</td>
+<td id="T_0b12d_row0_col2" class="data row0 col2">0.859374</td>
+<td id="T_0b12d_row0_col3" class="data row0 col3">With Protected Classes</td>
+<td id="T_0b12d_row0_col4" class="data row0 col4">0.934603</td>
+<td id="T_0b12d_row0_col5" class="data row0 col5">0.000011</td>
+</tr>
+<tr class="even">
+<td id="T_0b12d_row1_col0" class="data row1 col0">Precision</td>
+<td id="T_0b12d_row1_col1" class="data row1 col1">4.179453</td>
+<td id="T_0b12d_row1_col2" class="data row1 col2">0.000029</td>
+<td id="T_0b12d_row1_col3" class="data row1 col3">With Protected Classes</td>
+<td id="T_0b12d_row1_col4" class="data row1 col4">0.940035</td>
+<td id="T_0b12d_row1_col5" class="data row1 col5">0.000229</td>
+</tr>
+<tr class="odd">
+<td id="T_0b12d_row2_col0" class="data row2 col0">Recall</td>
+<td id="T_0b12d_row2_col1" class="data row2 col1">-6.218760</td>
+<td id="T_0b12d_row2_col2" class="data row2 col2">0.000000</td>
+<td id="T_0b12d_row2_col3" class="data row2 col3">Without Protected Classes</td>
+<td id="T_0b12d_row2_col4" class="data row2 col4">0.986727</td>
+<td id="T_0b12d_row2_col5" class="data row2 col5">0.000260</td>
+</tr>
+<tr class="even">
+<td id="T_0b12d_row3_col0" class="data row3 col0">F1</td>
+<td id="T_0b12d_row3_col1" class="data row3 col1">-0.107982</td>
+<td id="T_0b12d_row3_col2" class="data row3 col2">0.914010</td>
+<td id="T_0b12d_row3_col3" class="data row3 col3">Without Protected Classes</td>
+<td id="T_0b12d_row3_col4" class="data row3 col4">0.962694</td>
+<td id="T_0b12d_row3_col5" class="data row3 col5">0.000004</td>
+</tr>
+<tr class="odd">
+<td id="T_0b12d_row4_col0" class="data row4 col0">ROC-AUC</td>
+<td id="T_0b12d_row4_col1" class="data row4 col1">3.743439</td>
+<td id="T_0b12d_row4_col2" class="data row4 col2">0.000182</td>
+<td id="T_0b12d_row4_col3" class="data row4 col3">With Protected Classes</td>
+<td id="T_0b12d_row4_col4" class="data row4 col4">0.807282</td>
+<td id="T_0b12d_row4_col5" class="data row4 col5">0.000676</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="3264ac90" class="cell" data-execution_count="11">
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="ensemble_files/figure-html/cell-12-output-1.png" width="1430" height="287" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>In short - yes, statistically significant difference in performance exist, and they favor inclusion of protected classes for precision and ROC-AUC, and favor exclusion of protected classes in recall. All other p-values are above the significance threshold of <span class="math inline">\(\alpha\)</span> = 0.003.</p>
+<p>Operationally, however - there is no real impact. The significant differences are less than a fraction of a percent and in no way shape or form justify their inclusion as a substantially better improvement over their exclustion.</p>
+<!-- This is a common thread across almost every model implemented in this study.  The results are consistent across multiple model types and methodologies and is particularly revealing.  
+
+Use of any of the methods included in this research would not offer an organization a substantial edge, benefit, or higher performance when including protected class information as predictors.  In the case of the best performer yet, support vector machines with RBF kernel, has the highest performative ROC-AUC for the *exclusion* of protected classes, with similarly high metrics across the board.
+
+It's remarkable, revealing, and actually quite astounding.  Any statistical or data analytics researcher exploring publically available data and applying a thorough amount of rigor could clearly reach the same results and conclusions found in this study.  Other important, non-publically available information that is relevant to one's finanical status as a mortgage applicant, would likely provide a greater explanation of data variation and the reasons behind an applicant's denial for a mortgage than any racial, ethnic, age-based, or gender-based features of an applicant / co-applicant pair.
+
+It is unlikely, but possible, that financial institutions leverage machine learning models as those explored in this research, with or without protected class information (or proxies for it) in their training and prediction datasets.  It is clearly evident that for the best performing models in this study, the publically available information *does not favor* their inclusion in modeling.
+
+Sure, when one is talking about millions, or potentially billions, of dollars at stake, the small performative increases of between 0.1% and 0.4% may initially appear to be substantial in terms of a company's bottom-line.  It seems that these perceived benefits would be far outweighed by the cost of disenfranchising countless potential borrowers and facing a hefty risk of expensive lawsuits.  The cost of time in court, litigation, lawyer fees, settlements, and/or paying out an actual loss in court is likely to go far and beyond any potential financial gain.  
+
+Any financial institution leveraging machine learning models should expect a level of ethical due-diligence of their analysts to maximize predictive performance of any operational model while operating within the constraints of the law, regulatory guidance and requirements, corporate policy and procedure, and industry best-practices.  The inclusion of protected class information *clearly* runs counter to the law and regulatory requirements, and even if a company chose to break those lines, they're only hurting themselves and their potential borrowers. -->
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation column-body">
+  <div class="nav-page nav-page-previous">
+      <a href="./svm.html" class="pagination-link  aria-label=" &lt;span="" vector="" machine="" modeling&lt;="" span&gt;"="">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Support Vector Machine Modeling</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./conclusion.html" class="pagination-link" aria-label="<span class='chapter-number'>12</span>&nbsp; <span class='chapter-title'>Conclusion</span>">
+        <span class="nav-page-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Conclusion</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+<script src="site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>

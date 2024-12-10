@@ -64,6 +64,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
+<link href="./ensemble-app.html" rel="next">
 <link href="./app7.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -203,8 +204,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./references.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">References</span></a>
+  <a href="./svm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Support Vector Machine Modeling</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ensemble.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Ensemble Modeling</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./conclusion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Conclusion</span></span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -258,6 +271,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="menu-text"><span class="chapter-number">G</span>&nbsp; <span class="chapter-title">Multiple Correspondence Analysis</span></span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ensemble-app.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">H</span>&nbsp; <span class="chapter-title">Ensemble Code</span></span></a>
+  </div>
+</li>
       </ul>
   </li>
     </ul>
@@ -304,7 +323,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <p>First, import the necessary modules</p>
-<div id="f9fe23bb" class="cell" data-execution_count="1">
+<div id="84d685bd" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd, numpy <span class="im">as</span> np, seaborn <span class="im">as</span> sns, matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> StandardScaler</span>
@@ -328,7 +347,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>First, to perform MCA, variables require separation, and transformation to categorical variables. Below, the binary encoded fields for applicant race, ethnicity, and underwriting system, are broken back out into corresponding binary True/False columns for each category.</p>
 <section id="breakout-race-ethnicity-and-underwriting-system-columns" class="level3" data-number="G.1.1">
 <h3 data-number="G.1.1" class="anchored" data-anchor-id="breakout-race-ethnicity-and-underwriting-system-columns"><span class="header-section-number">G.1.1</span> Breakout Race, Ethnicity, and Underwriting System Columns</h3>
-<div id="5f103989" class="cell" data-execution_count="2">
+<div id="56735d57" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">##for use in splitting the collapsed columns </span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co">##back out into their respective binary values</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>mapper <span class="op">=</span> {</span>
@@ -425,7 +444,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><p>Value &gt; Mean + 2 * standard deviation =&gt; H (High)</p></li>
 </ul>
 <p>This categorization allowed for diversity in the source data prior to transforming with MCA</p>
-<div id="55930719" class="cell" data-execution_count="3">
+<div id="14113e6f" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">#adjust numerics to categoricals</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co">#drop columns that will not be leveraged in MCA</span></span>
@@ -756,7 +775,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>After transforming numerics, the one-hot encoded columns extracted from race, ethnicity, and underwriting system required separation from the rest of the data so that all remaining categorical columns could be converted to a one-hot encoding.</p>
 <p>Below outlines the separation of the race, ethnicity, and underwriting columns.</p>
-<div id="9a6bf619" class="cell" data-execution_count="4">
+<div id="0cfdaae3" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#extract binary columns</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co">## because they're already one-hot encoded</span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>fr_bin <span class="op">=</span> fr[[</span>
@@ -790,7 +809,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>        <span class="st">'co-applicant_race'</span>,</span>
 <span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>        <span class="st">'co-applicant_ethnicity'</span>,</span>
 <span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>        <span class="st">'denial_reason'</span>,</span>
-<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a>        <span class="st">'aus'</span>,</span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a>        <span class="st">'aus'</span>, <span class="co">#may need to exclude this/comment it out...</span></span>
 <span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a>        <span class="st">'outcome'</span>,</span>
 <span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a>        <span class="st">'action_taken'</span></span>
 <span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a>    ],</span>
@@ -1359,7 +1378,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>The below cell takes the remaining non-binary encoded data and performs one-hot encoding.</p>
-<div id="1bf11d11" class="cell" data-execution_count="5">
+<div id="5f83959b" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># perform one-hot encoding of remaining columns</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>ohe <span class="op">=</span> OneHotEncoder()</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>out <span class="op">=</span> ohe.fit_transform(fr)</span>
@@ -1541,7 +1560,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="check-for-buggy-columns" class="level3" data-number="G.1.2">
 <h3 data-number="G.1.2" class="anchored" data-anchor-id="check-for-buggy-columns"><span class="header-section-number">G.1.2</span> Check for Buggy Columns</h3>
 <p>MCA requires a one-hot encoded vector to have at least 1 zero and at least 1 one per column. The below checks for any columns that did not meet this requirement, and any such columns are exlcued from the MCA.</p>
-<div id="01bcee27" class="cell" data-execution_count="6">
+<div id="8cac9287" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">#check for any columns that only have one value/result</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> col <span class="kw">in</span> outdf.columns:</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> <span class="bu">list</span>(outdf[col].unique())</span>
@@ -1558,7 +1577,7 @@ aus_Exempt</code></pre>
 </section>
 <section id="mca-with-protected-classes" class="level3" data-number="G.1.3">
 <h3 data-number="G.1.3" class="anchored" data-anchor-id="mca-with-protected-classes"><span class="header-section-number">G.1.3</span> MCA With Protected Classes</h3>
-<div id="e925c677" class="cell" data-execution_count="7">
+<div id="7f85668a" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>ncomp<span class="op">=</span><span class="dv">181</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>mcaNd <span class="op">=</span> MCA(n_components<span class="op">=</span>ncomp,one_hot<span class="op">=</span><span class="va">False</span>)</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -1576,7 +1595,7 @@ aus_Exempt</code></pre>
 <span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>xformNd.columns <span class="op">=</span> [<span class="st">'MC</span><span class="sc">{}</span><span class="st">'</span>.<span class="bu">format</span>(i<span class="op">+</span><span class="dv">1</span>) <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(xformNd.columns))]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="50034908" class="cell" data-execution_count="8">
+<div id="6e6b06fc" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">#head of the MCA dataframe</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>xformNd.head(<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="8">
@@ -1858,7 +1877,7 @@ aus_Exempt</code></pre>
 </div>
 </div>
 </div>
-<div id="71c3ce17" class="cell" data-execution_count="9">
+<div id="f8e427d9" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">#summary of eigenvalues</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>display(mcaNd.eigenvalues_summary)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
@@ -1954,7 +1973,7 @@ aus_Exempt</code></pre>
 </div>
 </div>
 </div>
-<div id="5cfcf928" class="cell" data-execution_count="10">
+<div id="d909893b" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co">#summary of column contributions to each component, sorted by the first component (e.g)</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co">#max eigenvalue's top 10 contributors</span></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>display(mcaNd.column_contributions_.sort_values(by<span class="op">=</span><span class="dv">0</span>,ascending<span class="op">=</span><span class="va">False</span>).head(<span class="dv">10</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -2240,7 +2259,7 @@ aus_Exempt</code></pre>
 </section>
 <section id="mca-without-protected-classes" class="level3" data-number="G.1.4">
 <h3 data-number="G.1.4" class="anchored" data-anchor-id="mca-without-protected-classes"><span class="header-section-number">G.1.4</span> MCA without Protected Classes</h3>
-<div id="d2271f54" class="cell" data-execution_count="11">
+<div id="1af10f94" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co">#perform an MCA, excluding any information on:</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co">#age, gender, or race</span></span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="co">##need 99 components to get 100% of variance</span></span>
@@ -2308,7 +2327,7 @@ aus_Exempt</code></pre>
 <span id="cb12-65"><a href="#cb12-65" aria-hidden="true" tabindex="-1"></a>))</span>
 <span id="cb12-66"><a href="#cb12-66" aria-hidden="true" tabindex="-1"></a>xformNd_nr.columns <span class="op">=</span> [<span class="st">'MC</span><span class="sc">{}</span><span class="st">'</span>.<span class="bu">format</span>(i<span class="op">+</span><span class="dv">1</span>) <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(xformNd_nr.columns))]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="ebdb3cdf" class="cell" data-execution_count="12">
+<div id="c38dcf18" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co">#head of the MCA dataframe</span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>xformNd_nr.head(<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="12">
@@ -2590,7 +2609,7 @@ aus_Exempt</code></pre>
 </div>
 </div>
 </div>
-<div id="c9039296" class="cell" data-execution_count="13">
+<div id="cb78e7bf" class="cell" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co">#summary of eigenvalues</span></span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>display(mcaNd_nr.eigenvalues_summary)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
@@ -2686,7 +2705,7 @@ aus_Exempt</code></pre>
 </div>
 </div>
 </div>
-<div id="c54fd2c8" class="cell" data-execution_count="14">
+<div id="7be3f6a7" class="cell" data-execution_count="14">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co">#summary of column contributions to each component, sorted by the first component (e.g)</span></span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="co">#max eigenvalue's top contributors</span></span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>display(mcaNd_nr.column_contributions_.sort_values(by<span class="op">=</span><span class="dv">0</span>,ascending<span class="op">=</span><span class="va">False</span>).head(<span class="dv">20</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -3209,7 +3228,7 @@ aus_Exempt</code></pre>
 </div>
 </div>
 </div>
-<div id="01bfbc8e" class="cell" data-execution_count="15">
+<div id="dcb449d9" class="cell" data-execution_count="15">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co">#forgot to drop from outdf_nr earlier.  fixing...</span></span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>outdf_nr.drop(</span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    columns<span class="op">=</span>[<span class="st">'derived_sex_Female'</span>,<span class="st">'derived_sex_Joint'</span>,<span class="st">'derived_sex_Male'</span>,</span>
@@ -3219,7 +3238,7 @@ aus_Exempt</code></pre>
 </section>
 <section id="output-the-results-to-csv" class="level3" data-number="G.1.5">
 <h3 data-number="G.1.5" class="anchored" data-anchor-id="output-the-results-to-csv"><span class="header-section-number">G.1.5</span> Output the Results to CSV</h3>
-<div id="3cce5e15" class="cell" data-execution_count="16">
+<div id="3861cd26" class="cell" data-execution_count="16">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>out <span class="op">=</span> mcaNd.column_contributions_.copy()</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>out_nr <span class="op">=</span> mcaNd_nr.column_contributions_.copy()</span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -3239,7 +3258,7 @@ aus_Exempt</code></pre>
 <span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>xformNd.to_csv(<span class="st">'../data/mcaNd.csv'</span>,index<span class="op">=</span><span class="va">False</span>)</span>
 <span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>xformNd_nr.to_csv(<span class="st">'../data/mcaNd-npc.csv'</span>,index<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="5fdcdf9f" class="cell" data-execution_count="18">
+<div id="f09d5e08" class="cell" data-execution_count="18">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>tmp <span class="op">=</span> pd.concat([out,labels],axis<span class="op">=</span><span class="dv">1</span>)</span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>sns.scatterplot(</span>
@@ -3255,7 +3274,7 @@ aus_Exempt</code></pre>
 </div>
 </div>
 </div>
-<div id="987e1704" class="cell" data-execution_count="19">
+<div id="90881a02" class="cell" data-execution_count="19">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -3664,6 +3683,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       </a>          
   </div>
   <div class="nav-page nav-page-next">
+      <a href="./ensemble-app.html" class="pagination-link" aria-label="<span class='chapter-number'>H</span>&nbsp; <span class='chapter-title'>Ensemble Code</span>">
+        <span class="nav-page-text"><span class="chapter-number">H</span>&nbsp; <span class="chapter-title">Ensemble Code</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
   </div>
 </nav>
 </div> <!-- /content -->

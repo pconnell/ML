@@ -199,8 +199,20 @@ window.Quarto = {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./references.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">References</span></a>
+  <a href="./svm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Support Vector Machine Modeling</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ensemble.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Ensemble Modeling</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./conclusion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Conclusion</span></span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -254,6 +266,12 @@ window.Quarto = {
  <span class="menu-text"><span class="chapter-number">G</span>&nbsp; <span class="chapter-title">Multiple Correspondence Analysis</span></span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ensemble-app.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">H</span>&nbsp; <span class="chapter-title">Ensemble Code</span></span></a>
+  </div>
+</li>
       </ul>
   </li>
     </ul>
@@ -272,6 +290,7 @@ window.Quarto = {
   <ul class="collapse">
   <li><a href="#with-protected-classes" id="toc-with-protected-classes" class="nav-link" data-scroll-target="#with-protected-classes"><span class="header-section-number">4.3.1</span> With Protected Classes</a></li>
   <li><a href="#without-protected-classes" id="toc-without-protected-classes" class="nav-link" data-scroll-target="#without-protected-classes"><span class="header-section-number">4.3.2</span> Without Protected Classes</a></li>
+  <li><a href="#clustering" id="toc-clustering" class="nav-link" data-scroll-target="#clustering"><span class="header-section-number">4.3.3</span> Clustering</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -303,160 +322,160 @@ window.Quarto = {
 <p>Many of the research questions within this effort are inherently linked to categorical factors in lieu of numeric factors. Principal component analysis is only executable upon <em>numeric</em> data and not upon categorical data - even in the case of ordinal data. As a simple example, consider a ordinal variable “size” with categories small, medium, large, and extra-large. One could apply a simple encoding and assign small=1, medium=2, large=3, and extra-large=4. This encoding, while apparently holding a degree of validity in terms of increasing size, does not match up mathematically to reality. Consider getting a fountain drink at a fast-food restaurant and ask the question - is a large the same as 3 smalls? Is an extra large the same as 1 medium and two smalls? Rarely are either of these answers “yes”. One might have to add decimal places to the categories, and at that point, one may as well get the exact size measurements in terms of fluid ounces or liters, which may or may not be possible.</p>
 <p>The additive and multiplicative challenges between these categories when assigning them a value produces challenges for ordinal variables. These challenges are further confounded when pivoting away from an ordinal variables. One runs the risk of making mathematical claims such as red is 4 times blue, or that sad is 3 less than happy. Such statements are nonsensical, have no foundation in mathematics, and while they may produce results in a model post-transformation, do not hold validity, explainability, or generalizability.</p>
 <p>Enter Multiple Correspondence Analysis (or MCA). MCA performs an analogous action on <em>categorical</em> variables as PCA performs upon <em>numeric</em> variables. To perform an MCA, one must construct a Complete Disjunctive Table, which is effectively a one-hot encoded matrix. One takes the source categorical columns and transforms them to a column per category, and for the new column, the value is set to 1 if the current row is a member of the category, and zero otherwise. This is repeated for all columns and categories until the dataset is fully expanded.</p>
-<div id="dd2294a1" class="cell" data-execution_count="2">
+<div id="7cf92f9f" class="cell" data-execution_count="2">
 <div class="cell-output cell-output-display">
 <style type="text/css">
 </style>
 
-<table id="T_29c9b" data-quarto-postprocess="true" class="table table-sm table-striped small">
+<table id="T_51f26" data-quarto-postprocess="true" class="table table-sm table-striped small">
 <thead>
 <tr class="header">
-<th id="T_29c9b_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">a</th>
-<th id="T_29c9b_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">b</th>
+<th id="T_51f26_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">a</th>
+<th id="T_51f26_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">b</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td id="T_29c9b_row0_col0" class="data row0 col0">s</td>
-<td id="T_29c9b_row0_col1" class="data row0 col1">f</td>
+<td id="T_51f26_row0_col0" class="data row0 col0">s</td>
+<td id="T_51f26_row0_col1" class="data row0 col1">f</td>
 </tr>
 <tr class="even">
-<td id="T_29c9b_row1_col0" class="data row1 col0">m</td>
-<td id="T_29c9b_row1_col1" class="data row1 col1">w</td>
+<td id="T_51f26_row1_col0" class="data row1 col0">m</td>
+<td id="T_51f26_row1_col1" class="data row1 col1">w</td>
 </tr>
 <tr class="odd">
-<td id="T_29c9b_row2_col0" class="data row2 col0">s</td>
-<td id="T_29c9b_row2_col1" class="data row2 col1">s</td>
+<td id="T_51f26_row2_col0" class="data row2 col0">s</td>
+<td id="T_51f26_row2_col1" class="data row2 col1">s</td>
 </tr>
 <tr class="even">
-<td id="T_29c9b_row3_col0" class="data row3 col0">s</td>
-<td id="T_29c9b_row3_col1" class="data row3 col1">f</td>
+<td id="T_51f26_row3_col0" class="data row3 col0">s</td>
+<td id="T_51f26_row3_col1" class="data row3 col1">f</td>
 </tr>
 <tr class="odd">
-<td id="T_29c9b_row4_col0" class="data row4 col0">m</td>
-<td id="T_29c9b_row4_col1" class="data row4 col1">f</td>
+<td id="T_51f26_row4_col0" class="data row4 col0">m</td>
+<td id="T_51f26_row4_col1" class="data row4 col1">f</td>
 </tr>
 <tr class="even">
-<td id="T_29c9b_row5_col0" class="data row5 col0">m</td>
-<td id="T_29c9b_row5_col1" class="data row5 col1">f</td>
+<td id="T_51f26_row5_col0" class="data row5 col0">m</td>
+<td id="T_51f26_row5_col1" class="data row5 col1">f</td>
 </tr>
 <tr class="odd">
-<td id="T_29c9b_row6_col0" class="data row6 col0">l</td>
-<td id="T_29c9b_row6_col1" class="data row6 col1">w</td>
+<td id="T_51f26_row6_col0" class="data row6 col0">l</td>
+<td id="T_51f26_row6_col1" class="data row6 col1">w</td>
 </tr>
 <tr class="even">
-<td id="T_29c9b_row7_col0" class="data row7 col0">l</td>
-<td id="T_29c9b_row7_col1" class="data row7 col1">s</td>
+<td id="T_51f26_row7_col0" class="data row7 col0">l</td>
+<td id="T_51f26_row7_col1" class="data row7 col1">s</td>
 </tr>
 <tr class="odd">
-<td id="T_29c9b_row8_col0" class="data row8 col0">l</td>
-<td id="T_29c9b_row8_col1" class="data row8 col1">f</td>
+<td id="T_51f26_row8_col0" class="data row8 col0">l</td>
+<td id="T_51f26_row8_col1" class="data row8 col1">f</td>
 </tr>
 <tr class="even">
-<td id="T_29c9b_row9_col0" class="data row9 col0">m</td>
-<td id="T_29c9b_row9_col1" class="data row9 col1">w</td>
+<td id="T_51f26_row9_col0" class="data row9 col0">m</td>
+<td id="T_51f26_row9_col1" class="data row9 col1">w</td>
 </tr>
 </tbody>
 </table>
 </div>
 </div>
 <p>Taking the above example table, one can transform it to a one-hot encoded table:</p>
-<div id="e9ec8d23" class="cell" data-execution_count="3">
+<div id="2cfd7d72" class="cell" data-execution_count="3">
 <div class="cell-output cell-output-display" data-execution_count="3">
 <style type="text/css">
 </style>
 
-<table id="T_adf34" data-quarto-postprocess="true" class="table table-sm table-striped small">
+<table id="T_98085" data-quarto-postprocess="true" class="table table-sm table-striped small">
 <thead>
 <tr class="header">
-<th id="T_adf34_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">a_l</th>
-<th id="T_adf34_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">a_m</th>
-<th id="T_adf34_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">a_s</th>
-<th id="T_adf34_level0_col3" class="col_heading level0 col3" data-quarto-table-cell-role="th">b_f</th>
-<th id="T_adf34_level0_col4" class="col_heading level0 col4" data-quarto-table-cell-role="th">b_s</th>
-<th id="T_adf34_level0_col5" class="col_heading level0 col5" data-quarto-table-cell-role="th">b_w</th>
+<th id="T_98085_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">a_l</th>
+<th id="T_98085_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">a_m</th>
+<th id="T_98085_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">a_s</th>
+<th id="T_98085_level0_col3" class="col_heading level0 col3" data-quarto-table-cell-role="th">b_f</th>
+<th id="T_98085_level0_col4" class="col_heading level0 col4" data-quarto-table-cell-role="th">b_s</th>
+<th id="T_98085_level0_col5" class="col_heading level0 col5" data-quarto-table-cell-role="th">b_w</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td id="T_adf34_row0_col0" class="data row0 col0">0</td>
-<td id="T_adf34_row0_col1" class="data row0 col1">0</td>
-<td id="T_adf34_row0_col2" class="data row0 col2">1</td>
-<td id="T_adf34_row0_col3" class="data row0 col3">1</td>
-<td id="T_adf34_row0_col4" class="data row0 col4">0</td>
-<td id="T_adf34_row0_col5" class="data row0 col5">0</td>
+<td id="T_98085_row0_col0" class="data row0 col0">0</td>
+<td id="T_98085_row0_col1" class="data row0 col1">0</td>
+<td id="T_98085_row0_col2" class="data row0 col2">1</td>
+<td id="T_98085_row0_col3" class="data row0 col3">1</td>
+<td id="T_98085_row0_col4" class="data row0 col4">0</td>
+<td id="T_98085_row0_col5" class="data row0 col5">0</td>
 </tr>
 <tr class="even">
-<td id="T_adf34_row1_col0" class="data row1 col0">0</td>
-<td id="T_adf34_row1_col1" class="data row1 col1">1</td>
-<td id="T_adf34_row1_col2" class="data row1 col2">0</td>
-<td id="T_adf34_row1_col3" class="data row1 col3">0</td>
-<td id="T_adf34_row1_col4" class="data row1 col4">0</td>
-<td id="T_adf34_row1_col5" class="data row1 col5">1</td>
+<td id="T_98085_row1_col0" class="data row1 col0">0</td>
+<td id="T_98085_row1_col1" class="data row1 col1">1</td>
+<td id="T_98085_row1_col2" class="data row1 col2">0</td>
+<td id="T_98085_row1_col3" class="data row1 col3">0</td>
+<td id="T_98085_row1_col4" class="data row1 col4">0</td>
+<td id="T_98085_row1_col5" class="data row1 col5">1</td>
 </tr>
 <tr class="odd">
-<td id="T_adf34_row2_col0" class="data row2 col0">0</td>
-<td id="T_adf34_row2_col1" class="data row2 col1">0</td>
-<td id="T_adf34_row2_col2" class="data row2 col2">1</td>
-<td id="T_adf34_row2_col3" class="data row2 col3">0</td>
-<td id="T_adf34_row2_col4" class="data row2 col4">1</td>
-<td id="T_adf34_row2_col5" class="data row2 col5">0</td>
+<td id="T_98085_row2_col0" class="data row2 col0">0</td>
+<td id="T_98085_row2_col1" class="data row2 col1">0</td>
+<td id="T_98085_row2_col2" class="data row2 col2">1</td>
+<td id="T_98085_row2_col3" class="data row2 col3">0</td>
+<td id="T_98085_row2_col4" class="data row2 col4">1</td>
+<td id="T_98085_row2_col5" class="data row2 col5">0</td>
 </tr>
 <tr class="even">
-<td id="T_adf34_row3_col0" class="data row3 col0">0</td>
-<td id="T_adf34_row3_col1" class="data row3 col1">0</td>
-<td id="T_adf34_row3_col2" class="data row3 col2">1</td>
-<td id="T_adf34_row3_col3" class="data row3 col3">1</td>
-<td id="T_adf34_row3_col4" class="data row3 col4">0</td>
-<td id="T_adf34_row3_col5" class="data row3 col5">0</td>
+<td id="T_98085_row3_col0" class="data row3 col0">0</td>
+<td id="T_98085_row3_col1" class="data row3 col1">0</td>
+<td id="T_98085_row3_col2" class="data row3 col2">1</td>
+<td id="T_98085_row3_col3" class="data row3 col3">1</td>
+<td id="T_98085_row3_col4" class="data row3 col4">0</td>
+<td id="T_98085_row3_col5" class="data row3 col5">0</td>
 </tr>
 <tr class="odd">
-<td id="T_adf34_row4_col0" class="data row4 col0">0</td>
-<td id="T_adf34_row4_col1" class="data row4 col1">1</td>
-<td id="T_adf34_row4_col2" class="data row4 col2">0</td>
-<td id="T_adf34_row4_col3" class="data row4 col3">1</td>
-<td id="T_adf34_row4_col4" class="data row4 col4">0</td>
-<td id="T_adf34_row4_col5" class="data row4 col5">0</td>
+<td id="T_98085_row4_col0" class="data row4 col0">0</td>
+<td id="T_98085_row4_col1" class="data row4 col1">1</td>
+<td id="T_98085_row4_col2" class="data row4 col2">0</td>
+<td id="T_98085_row4_col3" class="data row4 col3">1</td>
+<td id="T_98085_row4_col4" class="data row4 col4">0</td>
+<td id="T_98085_row4_col5" class="data row4 col5">0</td>
 </tr>
 <tr class="even">
-<td id="T_adf34_row5_col0" class="data row5 col0">0</td>
-<td id="T_adf34_row5_col1" class="data row5 col1">1</td>
-<td id="T_adf34_row5_col2" class="data row5 col2">0</td>
-<td id="T_adf34_row5_col3" class="data row5 col3">1</td>
-<td id="T_adf34_row5_col4" class="data row5 col4">0</td>
-<td id="T_adf34_row5_col5" class="data row5 col5">0</td>
+<td id="T_98085_row5_col0" class="data row5 col0">0</td>
+<td id="T_98085_row5_col1" class="data row5 col1">1</td>
+<td id="T_98085_row5_col2" class="data row5 col2">0</td>
+<td id="T_98085_row5_col3" class="data row5 col3">1</td>
+<td id="T_98085_row5_col4" class="data row5 col4">0</td>
+<td id="T_98085_row5_col5" class="data row5 col5">0</td>
 </tr>
 <tr class="odd">
-<td id="T_adf34_row6_col0" class="data row6 col0">1</td>
-<td id="T_adf34_row6_col1" class="data row6 col1">0</td>
-<td id="T_adf34_row6_col2" class="data row6 col2">0</td>
-<td id="T_adf34_row6_col3" class="data row6 col3">0</td>
-<td id="T_adf34_row6_col4" class="data row6 col4">0</td>
-<td id="T_adf34_row6_col5" class="data row6 col5">1</td>
+<td id="T_98085_row6_col0" class="data row6 col0">1</td>
+<td id="T_98085_row6_col1" class="data row6 col1">0</td>
+<td id="T_98085_row6_col2" class="data row6 col2">0</td>
+<td id="T_98085_row6_col3" class="data row6 col3">0</td>
+<td id="T_98085_row6_col4" class="data row6 col4">0</td>
+<td id="T_98085_row6_col5" class="data row6 col5">1</td>
 </tr>
 <tr class="even">
-<td id="T_adf34_row7_col0" class="data row7 col0">1</td>
-<td id="T_adf34_row7_col1" class="data row7 col1">0</td>
-<td id="T_adf34_row7_col2" class="data row7 col2">0</td>
-<td id="T_adf34_row7_col3" class="data row7 col3">0</td>
-<td id="T_adf34_row7_col4" class="data row7 col4">1</td>
-<td id="T_adf34_row7_col5" class="data row7 col5">0</td>
+<td id="T_98085_row7_col0" class="data row7 col0">1</td>
+<td id="T_98085_row7_col1" class="data row7 col1">0</td>
+<td id="T_98085_row7_col2" class="data row7 col2">0</td>
+<td id="T_98085_row7_col3" class="data row7 col3">0</td>
+<td id="T_98085_row7_col4" class="data row7 col4">1</td>
+<td id="T_98085_row7_col5" class="data row7 col5">0</td>
 </tr>
 <tr class="odd">
-<td id="T_adf34_row8_col0" class="data row8 col0">1</td>
-<td id="T_adf34_row8_col1" class="data row8 col1">0</td>
-<td id="T_adf34_row8_col2" class="data row8 col2">0</td>
-<td id="T_adf34_row8_col3" class="data row8 col3">1</td>
-<td id="T_adf34_row8_col4" class="data row8 col4">0</td>
-<td id="T_adf34_row8_col5" class="data row8 col5">0</td>
+<td id="T_98085_row8_col0" class="data row8 col0">1</td>
+<td id="T_98085_row8_col1" class="data row8 col1">0</td>
+<td id="T_98085_row8_col2" class="data row8 col2">0</td>
+<td id="T_98085_row8_col3" class="data row8 col3">1</td>
+<td id="T_98085_row8_col4" class="data row8 col4">0</td>
+<td id="T_98085_row8_col5" class="data row8 col5">0</td>
 </tr>
 <tr class="even">
-<td id="T_adf34_row9_col0" class="data row9 col0">0</td>
-<td id="T_adf34_row9_col1" class="data row9 col1">1</td>
-<td id="T_adf34_row9_col2" class="data row9 col2">0</td>
-<td id="T_adf34_row9_col3" class="data row9 col3">0</td>
-<td id="T_adf34_row9_col4" class="data row9 col4">0</td>
-<td id="T_adf34_row9_col5" class="data row9 col5">1</td>
+<td id="T_98085_row9_col0" class="data row9 col0">0</td>
+<td id="T_98085_row9_col1" class="data row9 col1">1</td>
+<td id="T_98085_row9_col2" class="data row9 col2">0</td>
+<td id="T_98085_row9_col3" class="data row9 col3">0</td>
+<td id="T_98085_row9_col4" class="data row9 col4">0</td>
+<td id="T_98085_row9_col5" class="data row9 col5">1</td>
 </tr>
 </tbody>
 </table>
@@ -468,139 +487,817 @@ window.Quarto = {
 <li><p>Calculate the sum of all values (0s and 1s) from the CDT as value <span class="math inline">\(N\)</span></p></li>
 <li><p>Calculate matrix <span class="math inline">\(Z = \frac{CDT}{N}\)</span></p></li>
 </ul>
-<div id="2371fb3f" class="cell" data-execution_count="5">
-<div class="cell-output cell-output-display" data-execution_count="5">
-<pre><code>array([[0.  , 0.  , 0.05, 0.05, 0.  , 0.  ],
-       [0.  , 0.05, 0.  , 0.  , 0.  , 0.05],
-       [0.  , 0.  , 0.05, 0.  , 0.05, 0.  ],
-       [0.  , 0.  , 0.05, 0.05, 0.  , 0.  ],
-       [0.  , 0.05, 0.  , 0.05, 0.  , 0.  ],
-       [0.  , 0.05, 0.  , 0.05, 0.  , 0.  ],
-       [0.05, 0.  , 0.  , 0.  , 0.  , 0.05],
-       [0.05, 0.  , 0.  , 0.  , 0.05, 0.  ],
-       [0.05, 0.  , 0.  , 0.05, 0.  , 0.  ],
-       [0.  , 0.05, 0.  , 0.  , 0.  , 0.05]])</code></pre>
+<div id="e5304b19" class="cell" data-execution_count="5">
+<div class="cell-output cell-output-display">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">0</th>
+<th data-quarto-table-cell-role="th">1</th>
+<th data-quarto-table-cell-role="th">2</th>
+<th data-quarto-table-cell-role="th">3</th>
+<th data-quarto-table-cell-role="th">4</th>
+<th data-quarto-table-cell-role="th">5</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>0.00</td>
+<td>0.00</td>
+<td>0.05</td>
+<td>0.05</td>
+<td>0.00</td>
+<td>0.00</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>0.00</td>
+<td>0.05</td>
+<td>0.00</td>
+<td>0.00</td>
+<td>0.00</td>
+<td>0.05</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>0.00</td>
+<td>0.00</td>
+<td>0.05</td>
+<td>0.00</td>
+<td>0.05</td>
+<td>0.00</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>0.00</td>
+<td>0.00</td>
+<td>0.05</td>
+<td>0.05</td>
+<td>0.00</td>
+<td>0.00</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>0.00</td>
+<td>0.05</td>
+<td>0.00</td>
+<td>0.05</td>
+<td>0.00</td>
+<td>0.00</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">5</td>
+<td>0.00</td>
+<td>0.05</td>
+<td>0.00</td>
+<td>0.05</td>
+<td>0.00</td>
+<td>0.00</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">6</td>
+<td>0.05</td>
+<td>0.00</td>
+<td>0.00</td>
+<td>0.00</td>
+<td>0.00</td>
+<td>0.05</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">7</td>
+<td>0.05</td>
+<td>0.00</td>
+<td>0.00</td>
+<td>0.00</td>
+<td>0.05</td>
+<td>0.00</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">8</td>
+<td>0.05</td>
+<td>0.00</td>
+<td>0.00</td>
+<td>0.05</td>
+<td>0.00</td>
+<td>0.00</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">9</td>
+<td>0.00</td>
+<td>0.05</td>
+<td>0.00</td>
+<td>0.00</td>
+<td>0.00</td>
+<td>0.05</td>
+</tr>
+</tbody>
+</table>
+
+</div>
 </div>
 </div>
 <ul>
 <li>Calculate the column-wise sum as matrix <span class="math inline">\(c\)</span>. Transform to a diagonal matrix <span class="math inline">\(D_c\)</span></li>
 </ul>
-<div id="e4d448fe" class="cell" data-execution_count="6">
+<div id="71c0e792" class="cell" data-execution_count="6">
 <div class="cell-output cell-output-stdout">
 <pre><code>c:
-[[0.15 0.2  0.15 0.25 0.1  0.15]]
-Dc: [[0.15 0.   0.   0.   0.   0.  ]
- [0.   0.2  0.   0.   0.   0.  ]
- [0.   0.   0.15 0.   0.   0.  ]
- [0.   0.   0.   0.25 0.   0.  ]
- [0.   0.   0.   0.   0.1  0.  ]
- [0.   0.   0.   0.   0.   0.15]]</code></pre>
+Dc:</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">0</th>
+<th data-quarto-table-cell-role="th">1</th>
+<th data-quarto-table-cell-role="th">2</th>
+<th data-quarto-table-cell-role="th">3</th>
+<th data-quarto-table-cell-role="th">4</th>
+<th data-quarto-table-cell-role="th">5</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>0.15</td>
+<td>0.2</td>
+<td>0.15</td>
+<td>0.25</td>
+<td>0.1</td>
+<td>0.15</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">0</th>
+<th data-quarto-table-cell-role="th">1</th>
+<th data-quarto-table-cell-role="th">2</th>
+<th data-quarto-table-cell-role="th">3</th>
+<th data-quarto-table-cell-role="th">4</th>
+<th data-quarto-table-cell-role="th">5</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>0.15</td>
+<td>0.0</td>
+<td>0.00</td>
+<td>0.00</td>
+<td>0.0</td>
+<td>0.00</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>0.00</td>
+<td>0.2</td>
+<td>0.00</td>
+<td>0.00</td>
+<td>0.0</td>
+<td>0.00</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>0.00</td>
+<td>0.0</td>
+<td>0.15</td>
+<td>0.00</td>
+<td>0.0</td>
+<td>0.00</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>0.00</td>
+<td>0.0</td>
+<td>0.00</td>
+<td>0.25</td>
+<td>0.0</td>
+<td>0.00</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>0.00</td>
+<td>0.0</td>
+<td>0.00</td>
+<td>0.00</td>
+<td>0.1</td>
+<td>0.00</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">5</td>
+<td>0.00</td>
+<td>0.0</td>
+<td>0.00</td>
+<td>0.00</td>
+<td>0.0</td>
+<td>0.15</td>
+</tr>
+</tbody>
+</table>
+
+</div>
 </div>
 </div>
 <ul>
 <li>Calculate the row-wise sum as matrix <span class="math inline">\(r\)</span>. Transform to a diagonal matrix <span class="math inline">\(D_r\)</span></li>
 </ul>
-<div id="2ce2f537" class="cell" data-execution_count="7">
+<div id="81017b88" class="cell" data-execution_count="7">
 <div class="cell-output cell-output-stdout">
 <pre><code>r:
-[[0.1]
- [0.1]
- [0.1]
- [0.1]
- [0.1]
- [0.1]
- [0.1]
- [0.1]
- [0.1]
- [0.1]]
-Dr: [[0.1 0.  0.  0.  0.  0.  0.  0.  0.  0. ]
- [0.  0.1 0.  0.  0.  0.  0.  0.  0.  0. ]
- [0.  0.  0.1 0.  0.  0.  0.  0.  0.  0. ]
- [0.  0.  0.  0.1 0.  0.  0.  0.  0.  0. ]
- [0.  0.  0.  0.  0.1 0.  0.  0.  0.  0. ]
- [0.  0.  0.  0.  0.  0.1 0.  0.  0.  0. ]
- [0.  0.  0.  0.  0.  0.  0.1 0.  0.  0. ]
- [0.  0.  0.  0.  0.  0.  0.  0.1 0.  0. ]
- [0.  0.  0.  0.  0.  0.  0.  0.  0.1 0. ]
- [0.  0.  0.  0.  0.  0.  0.  0.  0.  0.1]]</code></pre>
+Dr:</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">0</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>0.1</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>0.1</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>0.1</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>0.1</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>0.1</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">5</td>
+<td>0.1</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">6</td>
+<td>0.1</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">7</td>
+<td>0.1</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">8</td>
+<td>0.1</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">9</td>
+<td>0.1</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">0</th>
+<th data-quarto-table-cell-role="th">1</th>
+<th data-quarto-table-cell-role="th">2</th>
+<th data-quarto-table-cell-role="th">3</th>
+<th data-quarto-table-cell-role="th">4</th>
+<th data-quarto-table-cell-role="th">5</th>
+<th data-quarto-table-cell-role="th">6</th>
+<th data-quarto-table-cell-role="th">7</th>
+<th data-quarto-table-cell-role="th">8</th>
+<th data-quarto-table-cell-role="th">9</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>0.1</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>0.0</td>
+<td>0.1</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.1</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.1</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.1</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">5</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.1</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">6</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.1</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">7</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.1</td>
+<td>0.0</td>
+<td>0.0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">8</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.1</td>
+<td>0.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">9</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.1</td>
+</tr>
+</tbody>
+</table>
+
+</div>
 </div>
 </div>
 <ul>
 <li>Calculate matrix <span class="math inline">\(M = D_r^{-\frac{1}{2}}(Z-rc^T)D_c^{-\frac{1}{2}}\)</span></li>
 </ul>
-<div id="573f0b4f" class="cell" data-execution_count="8">
+<div id="68bfdeda" class="cell" data-execution_count="8">
 <div class="cell-output cell-output-display">
-<pre><code>matrix([[-0.12247449, -0.14142136,  0.2857738 ,  0.15811388, -0.1       ,
-         -0.12247449],
-        [-0.12247449,  0.21213203, -0.12247449, -0.15811388, -0.1       ,
-          0.2857738 ],
-        [-0.12247449, -0.14142136,  0.2857738 , -0.15811388,  0.4       ,
-         -0.12247449],
-        [-0.12247449, -0.14142136,  0.2857738 ,  0.15811388, -0.1       ,
-         -0.12247449],
-        [-0.12247449,  0.21213203, -0.12247449,  0.15811388, -0.1       ,
-         -0.12247449],
-        [-0.12247449,  0.21213203, -0.12247449,  0.15811388, -0.1       ,
-         -0.12247449],
-        [ 0.2857738 , -0.14142136, -0.12247449, -0.15811388, -0.1       ,
-          0.2857738 ],
-        [ 0.2857738 , -0.14142136, -0.12247449, -0.15811388,  0.4       ,
-         -0.12247449],
-        [ 0.2857738 , -0.14142136, -0.12247449,  0.15811388, -0.1       ,
-         -0.12247449],
-        [-0.12247449,  0.21213203, -0.12247449, -0.15811388, -0.1       ,
-          0.2857738 ]])</code></pre>
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">0</th>
+<th data-quarto-table-cell-role="th">1</th>
+<th data-quarto-table-cell-role="th">2</th>
+<th data-quarto-table-cell-role="th">3</th>
+<th data-quarto-table-cell-role="th">4</th>
+<th data-quarto-table-cell-role="th">5</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>-0.122474</td>
+<td>-0.141421</td>
+<td>0.285774</td>
+<td>0.158114</td>
+<td>-0.1</td>
+<td>-0.122474</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>-0.122474</td>
+<td>0.212132</td>
+<td>-0.122474</td>
+<td>-0.158114</td>
+<td>-0.1</td>
+<td>0.285774</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>-0.122474</td>
+<td>-0.141421</td>
+<td>0.285774</td>
+<td>-0.158114</td>
+<td>0.4</td>
+<td>-0.122474</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>-0.122474</td>
+<td>-0.141421</td>
+<td>0.285774</td>
+<td>0.158114</td>
+<td>-0.1</td>
+<td>-0.122474</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>-0.122474</td>
+<td>0.212132</td>
+<td>-0.122474</td>
+<td>0.158114</td>
+<td>-0.1</td>
+<td>-0.122474</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">5</td>
+<td>-0.122474</td>
+<td>0.212132</td>
+<td>-0.122474</td>
+<td>0.158114</td>
+<td>-0.1</td>
+<td>-0.122474</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">6</td>
+<td>0.285774</td>
+<td>-0.141421</td>
+<td>-0.122474</td>
+<td>-0.158114</td>
+<td>-0.1</td>
+<td>0.285774</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">7</td>
+<td>0.285774</td>
+<td>-0.141421</td>
+<td>-0.122474</td>
+<td>-0.158114</td>
+<td>0.4</td>
+<td>-0.122474</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">8</td>
+<td>0.285774</td>
+<td>-0.141421</td>
+<td>-0.122474</td>
+<td>0.158114</td>
+<td>-0.1</td>
+<td>-0.122474</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">9</td>
+<td>-0.122474</td>
+<td>0.212132</td>
+<td>-0.122474</td>
+<td>-0.158114</td>
+<td>-0.1</td>
+<td>0.285774</td>
+</tr>
+</tbody>
+</table>
+
+</div>
 </div>
 </div>
 <ul>
 <li><p>Perform Matrix decomposition on <span class="math inline">\(M\)</span>:</p></li>
 <li><p>seek two unitary matrices (e.g.&nbsp;of total length 1), P and Q, and the generalized diagonal matrix of singular values <span class="math inline">\(\Delta\)</span> such that <span class="math inline">\(M=P\Delta Q^T\)</span></p></li>
 </ul>
-<div id="c032ba14" class="cell" data-execution_count="9">
-<div class="cell-output cell-output-display">
-<pre><code>matrix([[ 0.2668487 , -0.36973681, -0.02965527, -0.33505172,  0.40790586,
-          0.05256851],
-        [-0.44855833,  0.05243584,  0.3155619 , -0.06604041, -0.61898123,
-          0.17517594],
-        [ 0.5022207 ,  0.09366613,  0.5636881 ,  0.07394102, -0.17747711,
-         -0.43474836],
-        [ 0.2668487 , -0.36973681, -0.02965527, -0.33505172, -0.44893205,
-         -0.20433625],
-        [-0.16826172, -0.2934583 , -0.12732264,  0.42101532, -0.00278799,
-         -0.40682761],
-        [-0.16826172, -0.2934583 , -0.12732264,  0.42101532, -0.00278799,
-         -0.40682761],
-        [-0.1994144 ,  0.45207925, -0.19614346, -0.49896387,  0.06725846,
-         -0.61814986],
-        [ 0.31625419,  0.56958804, -0.04568462,  0.39708461,  0.03180824,
-          0.04373763],
-        [ 0.0808822 ,  0.1061851 , -0.639028  , -0.01190814, -0.31757   ,
-         -0.01210386],
-        [-0.44855833,  0.05243584,  0.3155619 , -0.06604041,  0.33321947,
-         -0.14354217]])</code></pre>
+<div id="3aa89782" class="cell" data-execution_count="9">
+<div class="cell-output cell-output-stdout">
+<pre><code>P:
+Q:</code></pre>
 </div>
 <div class="cell-output cell-output-display">
-<pre><code>matrix([[ 0.09313213, -0.50322667,  0.48794398,  0.10145015,  0.47216689,
-         -0.51649423],
-        [ 0.58423147, -0.21624736, -0.33453053, -0.4895997 ,  0.42078311,
-          0.28850252],
-        [-0.58423147,  0.21624736,  0.33453053, -0.4895997 ,  0.42078311,
-          0.28850252],
-        [-0.09313213,  0.50322667, -0.48794398,  0.10145015,  0.47216689,
-         -0.51649423],
-        [ 0.5451003 ,  0.62942762,  0.5451003 , -0.06910931, -0.04370857,
-         -0.05353184],
-        [ 0.05353184,  0.06181325,  0.05353184,  0.70372147,  0.44507253,
-          0.5451003 ]])</code></pre>
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">0</th>
+<th data-quarto-table-cell-role="th">1</th>
+<th data-quarto-table-cell-role="th">2</th>
+<th data-quarto-table-cell-role="th">3</th>
+<th data-quarto-table-cell-role="th">4</th>
+<th data-quarto-table-cell-role="th">5</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>0.266849</td>
+<td>-0.369737</td>
+<td>-0.029655</td>
+<td>-0.335052</td>
+<td>0.407906</td>
+<td>0.052569</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>-0.448558</td>
+<td>0.052436</td>
+<td>0.315562</td>
+<td>-0.066040</td>
+<td>-0.618981</td>
+<td>0.175176</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>0.502221</td>
+<td>0.093666</td>
+<td>0.563688</td>
+<td>0.073941</td>
+<td>-0.177477</td>
+<td>-0.434748</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>0.266849</td>
+<td>-0.369737</td>
+<td>-0.029655</td>
+<td>-0.335052</td>
+<td>-0.448932</td>
+<td>-0.204336</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>-0.168262</td>
+<td>-0.293458</td>
+<td>-0.127323</td>
+<td>0.421015</td>
+<td>-0.002788</td>
+<td>-0.406828</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">5</td>
+<td>-0.168262</td>
+<td>-0.293458</td>
+<td>-0.127323</td>
+<td>0.421015</td>
+<td>-0.002788</td>
+<td>-0.406828</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">6</td>
+<td>-0.199414</td>
+<td>0.452079</td>
+<td>-0.196143</td>
+<td>-0.498964</td>
+<td>0.067258</td>
+<td>-0.618150</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">7</td>
+<td>0.316254</td>
+<td>0.569588</td>
+<td>-0.045685</td>
+<td>0.397085</td>
+<td>0.031808</td>
+<td>0.043738</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">8</td>
+<td>0.080882</td>
+<td>0.106185</td>
+<td>-0.639028</td>
+<td>-0.011908</td>
+<td>-0.317570</td>
+<td>-0.012104</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">9</td>
+<td>-0.448558</td>
+<td>0.052436</td>
+<td>0.315562</td>
+<td>-0.066040</td>
+<td>0.333219</td>
+<td>-0.143542</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">0</th>
+<th data-quarto-table-cell-role="th">1</th>
+<th data-quarto-table-cell-role="th">2</th>
+<th data-quarto-table-cell-role="th">3</th>
+<th data-quarto-table-cell-role="th">4</th>
+<th data-quarto-table-cell-role="th">5</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>0.093132</td>
+<td>-0.503227</td>
+<td>0.487944</td>
+<td>0.101450</td>
+<td>0.472167</td>
+<td>-0.516494</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>0.584231</td>
+<td>-0.216247</td>
+<td>-0.334531</td>
+<td>-0.489600</td>
+<td>0.420783</td>
+<td>0.288503</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>-0.584231</td>
+<td>0.216247</td>
+<td>0.334531</td>
+<td>-0.489600</td>
+<td>0.420783</td>
+<td>0.288503</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>-0.093132</td>
+<td>0.503227</td>
+<td>-0.487944</td>
+<td>0.101450</td>
+<td>0.472167</td>
+<td>-0.516494</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>0.545100</td>
+<td>0.629428</td>
+<td>0.545100</td>
+<td>-0.069109</td>
+<td>-0.043709</td>
+<td>-0.053532</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">5</td>
+<td>0.053532</td>
+<td>0.061813</td>
+<td>0.053532</td>
+<td>0.703721</td>
+<td>0.445073</td>
+<td>0.545100</td>
+</tr>
+</tbody>
+</table>
+
+</div>
 </div>
 </div>
 <ul>
 <li><span class="math inline">\(\Delta^2\)</span> provides the eigenvalues of the target matrix.</li>
 </ul>
-<div id="76b4d249" class="cell" data-execution_count="10">
-<div class="cell-output cell-output-display" data-execution_count="10">
-<pre><code>array([7.51207074e-01, 6.21131266e-01, 3.78868734e-01, 2.48792926e-01,
-       1.95441618e-32, 3.22830823e-33])</code></pre>
+<div id="c6c9c6a5" class="cell" data-execution_count="10">
+<div class="cell-output cell-output-display">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">0</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>7.512071e-01</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>6.211313e-01</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>3.788687e-01</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>2.487929e-01</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>1.954416e-32</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">5</td>
+<td>3.228308e-33</td>
+</tr>
+</tbody>
+</table>
+
+</div>
 </div>
 </div>
 <ul>
@@ -626,12 +1323,17 @@ Dr: [[0.1 0.  0.  0.  0.  0.  0.  0.  0.  0. ]
 <section id="results" class="level2" data-number="4.3">
 <h2 data-number="4.3" class="anchored" data-anchor-id="results"><span class="header-section-number">4.3</span> Results</h2>
 <div class="cell" data-execution_count="12">
-<div id="mca-nd-eig-top" class="cell-output cell-output-display" data-execution_count="12">
+<div id="tbl-mca-nd-eig-top" class="cell quarto-float anchored" data-execution_count="12">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-mca-nd-eig-top-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;4.1: MCA Summary of Eigenvalues (with protected class information) - Top 5
+</figcaption>
+<div aria-describedby="tbl-mca-nd-eig-top-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display" data-execution_count="12">
 <div>
 
 
-<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
-<caption>MCA Summary of Eigenvalues (with protected class information) - Top 5 {#cell-mca-nd-eig-top}</caption>
+<table class="dataframe do-not-create-environment cell table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
 <thead>
 <tr class="header">
 <th data-quarto-table-cell-role="th"></th>
@@ -677,13 +1379,21 @@ Dr: [[0.1 0.  0.  0.  0.  0.  0.  0.  0.  0. ]
 </div>
 </div>
 </div>
+</figure>
+</div>
+</div>
 <div class="cell" data-execution_count="13">
-<div id="mca-nd-eig-bot" class="cell-output cell-output-display" data-execution_count="13">
+<div id="tbl-mca-nd-eig-bot" class="cell quarto-float anchored" data-execution_count="13">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-mca-nd-eig-bot-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;4.2: MCA Summary of Eigenvalues (with protected class information) - Bottom 5
+</figcaption>
+<div aria-describedby="tbl-mca-nd-eig-bot-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display" data-execution_count="13">
 <div>
 
 
-<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
-<caption>MCA Summary of Eigenvalues (with protected class information) - Bottom 5 {#cell-mca-nd-eig-bot}</caption>
+<table class="dataframe do-not-create-environment cell table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
 <thead>
 <tr class="header">
 <th data-quarto-table-cell-role="th"></th>
@@ -729,13 +1439,21 @@ Dr: [[0.1 0.  0.  0.  0.  0.  0.  0.  0.  0. ]
 </div>
 </div>
 </div>
+</figure>
+</div>
+</div>
 <div class="cell" data-execution_count="14">
-<div id="mca-nd-npc-eig-top" class="cell-output cell-output-display" data-execution_count="14">
+<div id="tbl-mca-nd-npc-eig-top" class="cell quarto-float anchored" data-execution_count="14">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-mca-nd-npc-eig-top-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;4.3: MCA Summary of Eigenvalues (without protected class information) - Top 5
+</figcaption>
+<div aria-describedby="tbl-mca-nd-npc-eig-top-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display" data-execution_count="14">
 <div>
 
 
-<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
-<caption>MCA Summary of Eigenvalues (without protected class information) - Top 5 {#cell-mca-nd-npc-eig-top}</caption>
+<table class="dataframe do-not-create-environment cell table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
 <thead>
 <tr class="header">
 <th data-quarto-table-cell-role="th"></th>
@@ -781,13 +1499,21 @@ Dr: [[0.1 0.  0.  0.  0.  0.  0.  0.  0.  0. ]
 </div>
 </div>
 </div>
+</figure>
+</div>
+</div>
 <div class="cell" data-execution_count="15">
-<div id="mca-nd-npc-eig-bot" class="cell-output cell-output-display" data-execution_count="15">
+<div id="tbl-mca-nd-npc-eig-bot" class="cell quarto-float anchored" data-execution_count="15">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-mca-nd-npc-eig-bot-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;4.4: MCA Summary of Eigenvalues (without protected class information) - Bottom 5
+</figcaption>
+<div aria-describedby="tbl-mca-nd-npc-eig-bot-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display" data-execution_count="15">
 <div>
 
 
-<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
-<caption>MCA Summary of Eigenvalues (without protected class information) - Bottom 5 {#cell-mca-nd-npc-eig-bot}</caption>
+<table class="dataframe do-not-create-environment cell table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
 <thead>
 <tr class="header">
 <th data-quarto-table-cell-role="th"></th>
@@ -833,18 +1559,26 @@ Dr: [[0.1 0.  0.  0.  0.  0.  0.  0.  0.  0. ]
 </div>
 </div>
 </div>
+</figure>
+</div>
+</div>
 <p>MCA doesn’t necessarily provide direct dimensionality reduction, but does enable one to reduce dimensions from a sparse matrix. Instead it enables use of more variables while also (potentially) increasing the data’s dimensionality. The sparse matrices to produce the transformations had 243 columns (with protected) and 179 columns (without protected).</p>
 <p>The outcomes of the transformations allow substantial dimensionality reduction from these sparse matrices. With 181 components, the data containing protected class information achieved (99.99%) explained variance in the source data (reduction of 62 features). Similarly, with 100 components, the data excluding protected class information achieved 99.99% explained variance (reduction of 79 features).</p>
 <p>MCA also provides us with insight as to which columns provide the greatest contributions to each primary component in the output data. Exploring some of these provides interesting insights. To explore these, we’ll look at the first 3 components, sorted in descending order, and examine which columns from the source data provide the strongest contributions to the transformation:</p>
 <section id="with-protected-classes" class="level3" data-number="4.3.1">
 <h3 data-number="4.3.1" class="anchored" data-anchor-id="with-protected-classes"><span class="header-section-number">4.3.1</span> With Protected Classes</h3>
 <div class="cell" data-execution_count="16">
-<div id="mca-col-conts1" class="cell-output cell-output-display" data-execution_count="16">
+<div id="tbl-mca-col-conts1" class="cell quarto-float anchored" data-execution_count="16">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-mca-col-conts1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;4.5: MC1 (with protected class information) - Top 10 Column Contributors
+</figcaption>
+<div aria-describedby="tbl-mca-col-conts1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display" data-execution_count="16">
 <div>
 
 
-<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
-<caption>MC1 (with protected class information) - Top 10 Column Contributors {#cell-mca-col-conts1}</caption>
+<table class="dataframe do-not-create-environment cell table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
 <thead>
 <tr class="header">
 <th data-quarto-table-cell-role="th"></th>
@@ -909,13 +1643,21 @@ Dr: [[0.1 0.  0.  0.  0.  0.  0.  0.  0.  0. ]
 </div>
 </div>
 </div>
+</figure>
+</div>
+</div>
 <div class="cell" data-execution_count="17">
-<div id="mca-col-conts2" class="cell-output cell-output-display" data-execution_count="17">
+<div id="tbl-mca-col-conts2" class="cell quarto-float anchored" data-execution_count="17">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-mca-col-conts2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;4.6: MC2 (with protected class information) - Top 10 Column Contributors
+</figcaption>
+<div aria-describedby="tbl-mca-col-conts2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display" data-execution_count="17">
 <div>
 
 
-<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
-<caption>MC2 (with protected class information) - Top 10 Column Contributors {#cell-mca-col-conts2}</caption>
+<table class="dataframe do-not-create-environment cell table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
 <thead>
 <tr class="header">
 <th data-quarto-table-cell-role="th"></th>
@@ -980,13 +1722,21 @@ Dr: [[0.1 0.  0.  0.  0.  0.  0.  0.  0.  0. ]
 </div>
 </div>
 </div>
+</figure>
+</div>
+</div>
 <div class="cell" data-execution_count="18">
-<div id="mca-col-conts3" class="cell-output cell-output-display" data-execution_count="18">
+<div id="tbl-mca-col-conts3" class="cell quarto-float anchored" data-execution_count="18">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-mca-col-conts3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;4.7: MC3 (with protected class information) - Top 10 Column Contributors
+</figcaption>
+<div aria-describedby="tbl-mca-col-conts3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display" data-execution_count="18">
 <div>
 
 
-<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
-<caption>MC3 (with protected class information) - Top 10 Column Contributors {#cell-mca-col-conts3}</caption>
+<table class="dataframe do-not-create-environment cell table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
 <thead>
 <tr class="header">
 <th data-quarto-table-cell-role="th"></th>
@@ -1051,17 +1801,25 @@ Dr: [[0.1 0.  0.  0.  0.  0.  0.  0.  0.  0. ]
 </div>
 </div>
 </div>
+</figure>
+</div>
+</div>
 <p>Examining the above three tables, it is evident that features revolving around protected class information contribute substantially to each Multiple Correspondence Component (MC). For each of the MCs, much of the contributions come from feature values revolving around all protected classes of age, sex, race, and ethnicity. Using data of this nature could easily produce predictive outcomes of models trained with with biases (either for or against) testing data that fits within these categories.</p>
 </section>
 <section id="without-protected-classes" class="level3" data-number="4.3.2">
 <h3 data-number="4.3.2" class="anchored" data-anchor-id="without-protected-classes"><span class="header-section-number">4.3.2</span> Without Protected Classes</h3>
 <div class="cell" data-execution_count="19">
-<div id="mca-npc-col-conts1" class="cell-output cell-output-display" data-execution_count="19">
+<div id="tbl-mca-npc-col-conts1" class="cell quarto-float anchored" data-execution_count="19">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-mca-npc-col-conts1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;4.8: MC1 (without protected class information) - Top 10 Column Contributors
+</figcaption>
+<div aria-describedby="tbl-mca-npc-col-conts1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display" data-execution_count="19">
 <div>
 
 
-<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
-<caption>MC1 (without protected class information) - Top 10 Column Contributors {#cell-mca-npc-col-conts1}</caption>
+<table class="dataframe do-not-create-environment cell table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
 <thead>
 <tr class="header">
 <th data-quarto-table-cell-role="th"></th>
@@ -1126,13 +1884,21 @@ Dr: [[0.1 0.  0.  0.  0.  0.  0.  0.  0.  0. ]
 </div>
 </div>
 </div>
+</figure>
+</div>
+</div>
 <div class="cell" data-execution_count="20">
-<div id="mca-npc-col-conts2" class="cell-output cell-output-display" data-execution_count="20">
+<div id="tbl-mca-npc-col-conts2" class="cell quarto-float anchored" data-execution_count="20">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-mca-npc-col-conts2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;4.9: MC2 (without protected class information) - Top 10 Column Contributors
+</figcaption>
+<div aria-describedby="tbl-mca-npc-col-conts2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display" data-execution_count="20">
 <div>
 
 
-<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
-<caption>MC2 (without protected class information) - Top 10 Column Contributors {#cell-mca-npc-col-conts2}</caption>
+<table class="dataframe do-not-create-environment cell table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
 <thead>
 <tr class="header">
 <th data-quarto-table-cell-role="th"></th>
@@ -1197,13 +1963,21 @@ Dr: [[0.1 0.  0.  0.  0.  0.  0.  0.  0.  0. ]
 </div>
 </div>
 </div>
+</figure>
+</div>
+</div>
 <div class="cell" data-execution_count="21">
-<div id="mca-npc-col-conts3" class="cell-output cell-output-display" data-execution_count="21">
+<div id="tbl-mca-npc-col-conts3" class="cell quarto-float anchored" data-execution_count="21">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-mca-npc-col-conts3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;4.10: MC3 (without protected class information) - Top 10 Column Contributors
+</figcaption>
+<div aria-describedby="tbl-mca-npc-col-conts3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display" data-execution_count="21">
 <div>
 
 
-<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
-<caption>MC3 (without protected class information) - Top 10 Column Contributors {#cell-mca-npc-col-conts3}</caption>
+<table class="dataframe do-not-create-environment cell table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
 <thead>
 <tr class="header">
 <th data-quarto-table-cell-role="th"></th>
@@ -1268,8 +2042,52 @@ Dr: [[0.1 0.  0.  0.  0.  0.  0.  0.  0.  0. ]
 </div>
 </div>
 </div>
+</figure>
+</div>
+</div>
 <p>Examining the MCs for data that exludes protected class information, we immediately see that each holds data that is likely highly relevant to making a decision of whether or not to approve a loan. The _H and _MH in MC1 column contributions signify that the loan is between 1 and 2 standard deviations, or over 2 standard deviations from the mean. With high loan costs, high origination charges, high discount points and so forth all are likely candidates to impact the decision making process of whether or not to grant a loan.</p>
 <p>It’s also interesting to see that in MC2, two banks stand out - Bank of America and Rocket Mortgage, apparently having a higher influence on the loan outcome in the 2nd MC.</p>
+</section>
+<section id="clustering" class="level3" data-number="4.3.3">
+<h3 data-number="4.3.3" class="anchored" data-anchor-id="clustering"><span class="header-section-number">4.3.3</span> Clustering</h3>
+<div id="7436cfdc" class="cell" data-execution_count="29">
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="mca_files/figure-html/cell-30-output-1.png" width="585" height="429" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="e160dcab" class="cell" data-execution_count="30">
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="mca_files/figure-html/cell-31-output-1.png" width="585" height="429" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<!-- 
+
+
+
+
+
+::: {#848d7128 .cell execution_count=34}
+
+::: {.cell-output .cell-output-display}
+![](mca_files/figure-html/cell-35-output-1.png){width=585 height=429}
+:::
+:::
+
+
+import seaborn as sns
+sns.scatterplot(
+    data=mca_pc,
+    x='MC1',y='MC2',hue='y_pred_ag_pc'
+)
+``` -->
 
 
 </section>

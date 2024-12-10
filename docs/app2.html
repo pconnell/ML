@@ -201,8 +201,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./references.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">References</span></a>
+  <a href="./svm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Support Vector Machine Modeling</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ensemble.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Ensemble Modeling</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./conclusion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Conclusion</span></span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -256,6 +268,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="menu-text"><span class="chapter-number">G</span>&nbsp; <span class="chapter-title">Multiple Correspondence Analysis</span></span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ensemble-app.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">H</span>&nbsp; <span class="chapter-title">Ensemble Code</span></span></a>
+  </div>
+</li>
       </ul>
   </li>
     </ul>
@@ -299,7 +317,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="module-and-data-imports" class="level2" data-number="B.1">
 <h2 data-number="B.1" class="anchored" data-anchor-id="module-and-data-imports"><span class="header-section-number">B.1</span> Module and Data Imports</h2>
-<div id="d2aa7399" class="cell" data-execution_count="1">
+<div id="62b5f87c" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd, numpy <span class="im">as</span> np, seaborn <span class="im">as</span> sns, matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> StandardScaler</span>
@@ -320,7 +338,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 data-number="B.1.1" class="anchored" data-anchor-id="principal-component-analysis"><span class="header-section-number">B.1.1</span> Principal Component Analysis</h3>
 <section id="select-scale-numeric-columns" class="level4" data-number="B.1.1.1">
 <h4 data-number="B.1.1.1" class="anchored" data-anchor-id="select-scale-numeric-columns"><span class="header-section-number">B.1.1.1</span> Select &amp; Scale Numeric Columns</h4>
-<div id="2952788c" class="cell" data-execution_count="2">
+<div id="2c2fbf86" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>columns <span class="op">=</span> [</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">#'loan_amount',</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="co">#'property_value',</span></span>
@@ -350,7 +368,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="perform-2d-pca" class="level4" data-number="B.1.1.2">
 <h4 data-number="B.1.1.2" class="anchored" data-anchor-id="perform-2d-pca"><span class="header-section-number">B.1.1.2</span> Perform 2D PCA</h4>
-<div id="8572f46b" class="cell" data-execution_count="3">
+<div id="64d06ec2" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>pca2d <span class="op">=</span> PCA(n_components<span class="op">=</span><span class="dv">2</span>)</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>result2d <span class="op">=</span> pd.DataFrame(pca2d.fit_transform(X))</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>result2d[<span class="st">'outcome'</span>]  <span class="op">=</span> fr[<span class="st">'outcome'</span>].astype(<span class="bu">bool</span>)</span>
@@ -381,7 +399,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="perform-3d-pca" class="level4" data-number="B.1.1.3">
 <h4 data-number="B.1.1.3" class="anchored" data-anchor-id="perform-3d-pca"><span class="header-section-number">B.1.1.3</span> Perform 3D PCA</h4>
-<div id="8795d3d5" class="cell" data-execution_count="4">
+<div id="a2cb067a" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>pca3d <span class="op">=</span> PCA(n_components<span class="op">=</span><span class="dv">3</span>)</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>result3d <span class="op">=</span> pd.DataFrame(pca3d.fit_transform(X))</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>result3d[<span class="st">'outcome'</span>]  <span class="op">=</span> fr[<span class="st">'outcome'</span>].astype(<span class="bu">bool</span>)</span>
@@ -397,7 +415,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <pre><code>array([0.20851998, 0.33529045, 0.43221855])</code></pre>
 </div>
 </div>
-<div id="d43a7efb" class="cell" data-execution_count="5">
+<div id="b7fb0bdb" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> plt.figure(figsize<span class="op">=</span>(<span class="dv">12</span>,<span class="dv">12</span>))</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> Axes3D(fig,rect<span class="op">=</span>[<span class="dv">0</span>,<span class="dv">0</span>,<span class="fl">.9</span>,<span class="dv">1</span>],elev<span class="op">=</span><span class="dv">5</span>,azim<span class="op">=</span><span class="dv">225</span>)</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>

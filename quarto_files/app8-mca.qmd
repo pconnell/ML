@@ -256,7 +256,7 @@ fr.drop(
         'co-applicant_race',
         'co-applicant_ethnicity',
         'denial_reason',
-        'aus',
+        'aus', #may need to exclude this/comment it out...
         'outcome',
         'action_taken'
     ],
@@ -523,3 +523,4 @@ sns.scatterplot(
     hue='outcome'
 )
 ```
+

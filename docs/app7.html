@@ -204,8 +204,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./references.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">References</span></a>
+  <a href="./svm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Support Vector Machine Modeling</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ensemble.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Ensemble Modeling</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./conclusion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Conclusion</span></span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -259,6 +271,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="menu-text"><span class="chapter-number">G</span>&nbsp; <span class="chapter-title">Multiple Correspondence Analysis</span></span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ensemble-app.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">H</span>&nbsp; <span class="chapter-title">Ensemble Code</span></span></a>
+  </div>
+</li>
       </ul>
   </li>
     </ul>
@@ -302,7 +320,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 data-number="F.1" class="anchored" data-anchor-id="logistic-regression"><span class="header-section-number">F.1</span> Logistic Regression</h2>
 <p>Data was prepared in <a href="app8-mca.html" class="quarto-xref"><span>Appendix G</span></a>.</p>
 <p>Performing train-test split of 80/20, stratified on the outcome “approve/deny”.</p>
-<div id="b14c857a" class="cell" data-execution_count="3">
+<div id="8e0cd2fb" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#build the training and test data</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>X_train,X_test,y_train,y_test <span class="op">=</span> train_test_split(</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    mca, <span class="co">#mca[mca.columns[:126]],</span></span>
@@ -332,12 +350,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>    <span class="st">'ROC-AUC'</span>:[]</span>
 <span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="3d288232" class="cell" data-execution_count="4">
+<div id="35aa6663" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#train the model</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>lr <span class="op">=</span> LogisticRegression(max_iter<span class="op">=</span><span class="dv">300</span>)</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>lr_npc <span class="op">=</span> LogisticRegression(max_iter<span class="op">=</span><span class="dv">300</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="e8fa65d4" class="cell" data-execution_count="5">
+<div id="00b8f0d6" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>lr.fit(X_train,y_train)</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>y_pred <span class="op">=</span> lr.predict(X_test)</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>results.loc[<span class="bu">len</span>(results)] <span class="op">=</span> {</span>
@@ -350,7 +368,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">'ROC-AUC'</span>:roc_auc_score(y_test,y_pred)</span>
 <span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="f2e46a01" class="cell" data-execution_count="6">
+<div id="7e250ccb" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#run the model with the test dataset</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>lr_npc.fit(X_train_npc,y_train)</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>y_pred_npc <span class="op">=</span> lr_npc.predict(X_test_npc)</span>
@@ -364,7 +382,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">'ROC-AUC'</span>:roc_auc_score(y_test,y_pred_npc)</span>
 <span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="be06542f" class="cell" data-execution_count="7">
+<div id="244d56c3" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># display_labels=My_BNB_Model.classes_)</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co">#display summarized classification results</span></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
@@ -395,47 +413,47 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<div id="1e3812d3" class="cell" data-execution_count="8">
+<div id="e6f0e542" class="cell" data-execution_count="8">
 <div class="cell-output cell-output-display">
 <style type="text/css">
 </style>
 
-<table id="T_9a599" data-quarto-postprocess="true" class="table table-sm table-striped small">
+<table id="T_8504f" data-quarto-postprocess="true" class="table table-sm table-striped small">
 <thead>
 <tr class="header">
-<th id="T_9a599_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Model</th>
-<th id="T_9a599_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">Data</th>
-<th id="T_9a599_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">Accuracy</th>
-<th id="T_9a599_level0_col3" class="col_heading level0 col3" data-quarto-table-cell-role="th">Precision</th>
-<th id="T_9a599_level0_col4" class="col_heading level0 col4" data-quarto-table-cell-role="th">Recall</th>
-<th id="T_9a599_level0_col5" class="col_heading level0 col5" data-quarto-table-cell-role="th">F1</th>
-<th id="T_9a599_level0_col6" class="col_heading level0 col6" data-quarto-table-cell-role="th">ROC-AUC</th>
+<th id="T_8504f_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Model</th>
+<th id="T_8504f_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">Data</th>
+<th id="T_8504f_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">Accuracy</th>
+<th id="T_8504f_level0_col3" class="col_heading level0 col3" data-quarto-table-cell-role="th">Precision</th>
+<th id="T_8504f_level0_col4" class="col_heading level0 col4" data-quarto-table-cell-role="th">Recall</th>
+<th id="T_8504f_level0_col5" class="col_heading level0 col5" data-quarto-table-cell-role="th">F1</th>
+<th id="T_8504f_level0_col6" class="col_heading level0 col6" data-quarto-table-cell-role="th">ROC-AUC</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td id="T_9a599_row0_col0" class="data row0 col0">Logistic Regression</td>
-<td id="T_9a599_row0_col1" class="data row0 col1">With Protected Classes</td>
-<td id="T_9a599_row0_col2" class="data row0 col2">0.961859</td>
-<td id="T_9a599_row0_col3" class="data row0 col3">0.983022</td>
-<td id="T_9a599_row0_col4" class="data row0 col4">0.972197</td>
-<td id="T_9a599_row0_col5" class="data row0 col5">0.977579</td>
-<td id="T_9a599_row0_col6" class="data row0 col6">0.936481</td>
+<td id="T_8504f_row0_col0" class="data row0 col0">Logistic Regression</td>
+<td id="T_8504f_row0_col1" class="data row0 col1">With Protected Classes</td>
+<td id="T_8504f_row0_col2" class="data row0 col2">0.961859</td>
+<td id="T_8504f_row0_col3" class="data row0 col3">0.983022</td>
+<td id="T_8504f_row0_col4" class="data row0 col4">0.972197</td>
+<td id="T_8504f_row0_col5" class="data row0 col5">0.977579</td>
+<td id="T_8504f_row0_col6" class="data row0 col6">0.936481</td>
 </tr>
 <tr class="even">
-<td id="T_9a599_row1_col0" class="data row1 col0">Logistic Regression</td>
-<td id="T_9a599_row1_col1" class="data row1 col1">Without Protected Classes</td>
-<td id="T_9a599_row1_col2" class="data row1 col2">0.958859</td>
-<td id="T_9a599_row1_col3" class="data row1 col3">0.981304</td>
-<td id="T_9a599_row1_col4" class="data row1 col4">0.970385</td>
-<td id="T_9a599_row1_col5" class="data row1 col5">0.975814</td>
-<td id="T_9a599_row1_col6" class="data row1 col6">0.930562</td>
+<td id="T_8504f_row1_col0" class="data row1 col0">Logistic Regression</td>
+<td id="T_8504f_row1_col1" class="data row1 col1">Without Protected Classes</td>
+<td id="T_8504f_row1_col2" class="data row1 col2">0.958859</td>
+<td id="T_8504f_row1_col3" class="data row1 col3">0.981304</td>
+<td id="T_8504f_row1_col4" class="data row1 col4">0.970385</td>
+<td id="T_8504f_row1_col5" class="data row1 col5">0.975814</td>
+<td id="T_8504f_row1_col6" class="data row1 col6">0.930562</td>
 </tr>
 </tbody>
 </table>
 </div>
 </div>
-<div id="7b97c4c9" class="cell" data-execution_count="9">
+<div id="d5a28195" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># are the results significantly different? do a randomization test...</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>results <span class="op">=</span> pd.DataFrame({</span>
@@ -493,10 +511,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb6-55"><a href="#cb6-55" aria-hidden="true" tabindex="-1"></a>        <span class="st">'ROC-AUC'</span>:roc_auc_score(y_test,y_pred_npc)</span>
 <span id="cb6-56"><a href="#cb6-56" aria-hidden="true" tabindex="-1"></a>    }</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="0212d0fe" class="cell" data-execution_count="10">
+<div id="8b2d9866" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>results.to_csv(<span class="st">'../data/logRegRandTest.csv'</span>,index<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="48766d4f" class="cell" data-execution_count="12">
+<div id="210f98c6" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">#visualize the output distributions</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>res <span class="op">=</span> results.copy()</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>res <span class="op">=</span> res.melt(id_vars<span class="op">=</span>[<span class="st">'Model'</span>,<span class="st">'Data'</span>],var_name<span class="op">=</span><span class="st">'Metric'</span>,value_name<span class="op">=</span><span class="st">'Score'</span>)</span>
@@ -518,62 +536,62 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<div id="e1c749e3" class="cell" data-execution_count="13">
+<div id="d17383ef" class="cell" data-execution_count="13">
 <div class="cell-output cell-output-display">
 <style type="text/css">
 </style>
 
-<table id="T_48585" data-quarto-postprocess="true" class="table table-sm table-striped small">
+<table id="T_38c71" data-quarto-postprocess="true" class="table table-sm table-striped small">
 <thead>
 <tr class="header">
-<th id="T_48585_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Stat</th>
-<th id="T_48585_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">z-score</th>
-<th id="T_48585_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">p-value</th>
-<th id="T_48585_level0_col3" class="col_heading level0 col3" data-quarto-table-cell-role="th">top performer</th>
-<th id="T_48585_level0_col4" class="col_heading level0 col4" data-quarto-table-cell-role="th">top mean</th>
-<th id="T_48585_level0_col5" class="col_heading level0 col5" data-quarto-table-cell-role="th">difference in means</th>
+<th id="T_38c71_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Stat</th>
+<th id="T_38c71_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">z-score</th>
+<th id="T_38c71_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">p-value</th>
+<th id="T_38c71_level0_col3" class="col_heading level0 col3" data-quarto-table-cell-role="th">top performer</th>
+<th id="T_38c71_level0_col4" class="col_heading level0 col4" data-quarto-table-cell-role="th">top mean</th>
+<th id="T_38c71_level0_col5" class="col_heading level0 col5" data-quarto-table-cell-role="th">difference in means</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td id="T_48585_row0_col0" class="data row0 col0">Accuracy</td>
-<td id="T_48585_row0_col1" class="data row0 col1">44.648798</td>
-<td id="T_48585_row0_col2" class="data row0 col2">0.000000</td>
-<td id="T_48585_row0_col3" class="data row0 col3">With Protected Classes</td>
-<td id="T_48585_row0_col4" class="data row0 col4">0.963586</td>
-<td id="T_48585_row0_col5" class="data row0 col5">0.002457</td>
+<td id="T_38c71_row0_col0" class="data row0 col0">Accuracy</td>
+<td id="T_38c71_row0_col1" class="data row0 col1">44.648798</td>
+<td id="T_38c71_row0_col2" class="data row0 col2">0.000000</td>
+<td id="T_38c71_row0_col3" class="data row0 col3">With Protected Classes</td>
+<td id="T_38c71_row0_col4" class="data row0 col4">0.963586</td>
+<td id="T_38c71_row0_col5" class="data row0 col5">0.002457</td>
 </tr>
 <tr class="even">
-<td id="T_48585_row1_col0" class="data row1 col0">Precision</td>
-<td id="T_48585_row1_col1" class="data row1 col1">47.173034</td>
-<td id="T_48585_row1_col2" class="data row1 col2">0.000000</td>
-<td id="T_48585_row1_col3" class="data row1 col3">With Protected Classes</td>
-<td id="T_48585_row1_col4" class="data row1 col4">0.983867</td>
-<td id="T_48585_row1_col5" class="data row1 col5">0.001985</td>
+<td id="T_38c71_row1_col0" class="data row1 col0">Precision</td>
+<td id="T_38c71_row1_col1" class="data row1 col1">47.173034</td>
+<td id="T_38c71_row1_col2" class="data row1 col2">0.000000</td>
+<td id="T_38c71_row1_col3" class="data row1 col3">With Protected Classes</td>
+<td id="T_38c71_row1_col4" class="data row1 col4">0.983867</td>
+<td id="T_38c71_row1_col5" class="data row1 col5">0.001985</td>
 </tr>
 <tr class="odd">
-<td id="T_48585_row2_col0" class="data row2 col0">Recall</td>
-<td id="T_48585_row2_col1" class="data row2 col1">16.219786</td>
-<td id="T_48585_row2_col2" class="data row2 col2">0.000000</td>
-<td id="T_48585_row2_col3" class="data row2 col3">With Protected Classes</td>
-<td id="T_48585_row2_col4" class="data row2 col4">0.973386</td>
-<td id="T_48585_row2_col5" class="data row2 col5">0.000889</td>
+<td id="T_38c71_row2_col0" class="data row2 col0">Recall</td>
+<td id="T_38c71_row2_col1" class="data row2 col1">16.219786</td>
+<td id="T_38c71_row2_col2" class="data row2 col2">0.000000</td>
+<td id="T_38c71_row2_col3" class="data row2 col3">With Protected Classes</td>
+<td id="T_38c71_row2_col4" class="data row2 col4">0.973386</td>
+<td id="T_38c71_row2_col5" class="data row2 col5">0.000889</td>
 </tr>
 <tr class="even">
-<td id="T_48585_row3_col0" class="data row3 col0">F1</td>
-<td id="T_48585_row3_col1" class="data row3 col1">43.977874</td>
-<td id="T_48585_row3_col2" class="data row3 col2">0.000000</td>
-<td id="T_48585_row3_col3" class="data row3 col3">With Protected Classes</td>
-<td id="T_48585_row3_col4" class="data row3 col4">0.978598</td>
-<td id="T_48585_row3_col5" class="data row3 col5">0.001431</td>
+<td id="T_38c71_row3_col0" class="data row3 col0">F1</td>
+<td id="T_38c71_row3_col1" class="data row3 col1">43.977874</td>
+<td id="T_38c71_row3_col2" class="data row3 col2">0.000000</td>
+<td id="T_38c71_row3_col3" class="data row3 col3">With Protected Classes</td>
+<td id="T_38c71_row3_col4" class="data row3 col4">0.978598</td>
+<td id="T_38c71_row3_col5" class="data row3 col5">0.001431</td>
 </tr>
 <tr class="odd">
-<td id="T_48585_row4_col0" class="data row4 col0">ROC-AUC</td>
-<td id="T_48585_row4_col1" class="data row4 col1">50.590439</td>
-<td id="T_48585_row4_col2" class="data row4 col2">0.000000</td>
-<td id="T_48585_row4_col3" class="data row4 col3">With Protected Classes</td>
-<td id="T_48585_row4_col4" class="data row4 col4">0.939526</td>
-<td id="T_48585_row4_col5" class="data row4 col5">0.006305</td>
+<td id="T_38c71_row4_col0" class="data row4 col0">ROC-AUC</td>
+<td id="T_38c71_row4_col1" class="data row4 col1">50.590439</td>
+<td id="T_38c71_row4_col2" class="data row4 col2">0.000000</td>
+<td id="T_38c71_row4_col3" class="data row4 col3">With Protected Classes</td>
+<td id="T_38c71_row4_col4" class="data row4 col4">0.939526</td>
+<td id="T_38c71_row4_col5" class="data row4 col5">0.006305</td>
 </tr>
 </tbody>
 </table>

@@ -17,9 +17,10 @@ book:
     - nb.qmd
     - dt.qmd
     - reg.qmd
-#    - svm.qmd
-#    - conclusion.qmd
-    - references.qmd
+    - svm.qmd
+    - ensemble.qmd
+    - conclusion.qmd
+    # - references.qmd
   appendices:
     - app1.qmd
     - app2.qmd
@@ -29,6 +30,7 @@ book:
     - app5.qmd
     - app7.qmd
     - app8-mca.qmd
+    - ensemble-app.qmd
 
   downloads: [pdf]
   #references: refs.bib # Unsure if needed

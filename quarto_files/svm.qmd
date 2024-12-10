@@ -1,18 +1,1000 @@
 # Support Vector Machine Modeling {#sec-SVM}
 
 ```{python importBlock}
-
-```
-
-```{python dataImport}
-
+import pandas as pd, numpy as np, seaborn as sns
+from sklearn.metrics import (
+    accuracy_score,roc_auc_score,
+    precision_score, recall_score, 
+    f1_score, confusion_matrix,
+    ConfusionMatrixDisplay
+)
+from sklearn.svm import SVC,LinearSVC
+from sklearn.model_selection import train_test_split
+import matplotlib.pyplot as plt
 ```
 
 ## Overview
 
-## Data
+*What are SVMs?*
 
-## Code
+Support vector machines are an algorithm that seeks to optimize and solve for the maximum possible linear distance separation between member points of different classes.
+
+Specifically, SVMs seek to produce the equation of a line, plane, or hyperplane, depending on the number of dimensions:
+
+$$
+w^Tx+b = 0
+$$
+
+where $w$ is a vector of weights, $x$ is a vector of the data points used to train the model, and $b$ is an adjusting bias. 
+
+Ultimately, one seeks to find the best possible equation with weights and biases above so that the margin between two different classes of points is maximized.
+
+Consider the below graphic:
+
+```{python fig-examp-data}
+#| label: fig-examp-data
+#| fig-cap: Random Gaussian Points in 2 Classes
+
+np.random.seed(8009)
+x1 = np.random.normal(loc=8,scale=0.9,size=120)
+y1 = np.random.normal(loc=17,scale=1.2,size=120)
+x2 = np.random.normal(loc=3,scale=0.9,size=80)
+y2 = np.random.normal(loc=14,scale=2,size=80)
+labels = [0]*120 + [1]*80
+rframe = pd.DataFrame({
+    'x':list(x1)+list(x2),
+    'y':list(y1)+list(y2),
+    'class':labels
+})
+sns.scatterplot(
+    data=rframe,
+    x='x',y='y',hue='class'
+)
+plt.title("Display of Random Points, 2 Classes")
+plt.show()
+```
+
+In @fig-examp-data, one can clearly see that there are two groups of points with some degree of separation between the classes of orange and blue.  A support vector machine may support finding a reasonable separation boundary to predict the class of a new data vector $v$.  
+
+How can one go about calculating that?
+
+### Infinite Possibilities
+
+Using the same data as above, there are countless means and methods to attempt to divide the data on a hard boundary to support the classification of points.  Consider these examples: 
+
+```{python}
+sns.scatterplot(
+    data=rframe,
+    x='x',y='y',hue='class'
+)
+xj = np.linspace(0,11,100)
+yj = xj*-2 + 27
+sns.lineplot(x=xj,y=yj)
+```
+
+Here's one such line, with the equation $y=-2x+27$
+
+```{python}
+sns.scatterplot(
+    data=rframe,
+    x='x',y='y',hue='class'
+)
+xj = np.linspace(0,11,100)
+yj = xj*-1.7 + 25
+sns.lineplot(x=xj,y=yj)
+```
+
+Here's another such line, with the equation $y=-1.7x=25$
+
+```{python}
+sns.scatterplot(
+    data=rframe,
+    x='x',y='y',hue='class'
+)
+xj = np.linspace(0,11,100)
+yj = xj*-1.5 + 24
+sns.lineplot(x=xj,y=yj)
+```
+
+And another with $y=-1.5x+24$
+
+Are any of these lines better separators than the other?  At least visually, one can tell that the separator seems pretty close in the case of the line $y=-1.7x+25$, but there is no real measure or metric to tell if it is better, and if it is, by how much.
+
+It's clear that separation is needed, and the separation requires maximization to have a well-performing model for new vectors based upon the available training data.  One could scan the infinite space of possibilities as done above and potentially find one that is good, but potentially is not optimal.  As such, leveraging advanced vector mathematics is necessary to construct a constrained optimization problem that will produce an optimal solution.
+
+### Starting
+
+Seeking a maximum marginal boundary is entirely dependent on $w$ and $b$.  If these values were immediately available, the problem would be solved.  Here are some important facts about these variables:
+
+From the equation $w^Tx+b=y$ if one were to take the vector $w$ and plot it as a line, that line itself would be *perpendicular* or *orthogonal* to the best boundary separation line.
+
+
+Taking the above equation for $y=-2x+27$ (although it in-and-of itself is not necessarily the optimal solution), one can examine the orthogonality.
+
+$y=-2x+27$
+$2x+y-27=0$
+$w_1 = 2, w_2 = 1$
+$w=[2,1]$ 
+
+The slope of w, then is the rise over the run, thus being $\frac{1}{2}$
+
+Plotting a line from the origin with slope of .5, the following result is produced:
+
+```{python}
+xj = np.linspace(0,14,100)
+yj = xj*-1.5 + 24
+sns.lineplot(x=xj,y=yj)
+yk = xj*.5
+sns.lineplot(x=xj,y=yk,color='black')
+```
+
+This doesn't look perpendicular - let's zoom in
+
+```{python}
+xj = np.linspace(0,14,100)
+yj = xj*-1.5 + 24
+sns.lineplot(x=xj,y=yj)
+yk = xj*.5
+sns.lineplot(x=xj,y=yk,color='black')
+plt.xlim(9.5,14.5)
+plt.ylim(4,8)
+plt.show()
+```
+
+Looks a lot closer.  The proof that they're orthogonal truly lies in their slopes; when the slopes of two lines are negative multiplicative inverses of one another, the result is a perpendicular intersection.
+
+Using this fact, one can *project* data points from their original location *onto* w.  To do this, $w$ must be converted to a unit vector: 
+
+$\text{unit vector}(w) = \frac{w}{||w||}$
+
+Using this formulation, any datapoint $v$ in the same dimensional space can be projected onto that vector:
+
+$$
+\text{projection}(p,w) = \frac{w}{||w||} \times \bigg(p\cdot \frac{w}{||w||}\bigg)
+$${#eq-pt-proj}
+
+Where $\times$ signifies multiplication and $\cdot$ signifies the dot product of two vectors.
+
+
+
+```{python}
+pt = np.array(rframe.loc[0][['x','y']])
+w = np.array([2,1])
+unit_w = (w/np.linalg.norm(w))
+pt_w = unit_w * np.dot(pt,unit_w)
+
+
+xforms = rframe[['x','y']]
+
+sns.lineplot(x=xj,y=yj,color='blue')
+sns.lineplot(x=xj,y=yk,color='black')
+plt.scatter(x=pt[0],y=pt[1],color='blue')
+plt.scatter(x=pt_w[0],y=pt_w[1],color='black')
+plt.plot([pt[0],pt_w[0]],[pt[1],pt_w[1]],linestyle='dashed')
+plt.title('Projection of a datapoint to a vector')
+plt.show()
+```
+
+This is beneficial to us in the pursuit of optimization.  One can see that the original point (in blue) is beyond the current best separator line (also in blue).  The projected point (in black) lies directly along the vector $w$ and also remains beyond the current best separator line.  The transformation provides intuition and a starting important and useful metric one can use for optimization - the distance along $w$ of a projected point tells which class the point should fall into.  If the projected point is beyond the distance to the intersection of w and the best fit line, it should be in one class, whereas if it is shorter than the distance to the intersection, then it should fall into the other class.
+
+This can be peformed for every data point in the source data:
+
+```{python}
+pt = np.array(rframe.loc[0][['x','y']])
+w = np.array([[2,1]])
+unit_w = (w/np.linalg.norm(w))
+# pt_w = unit_w * np.dot(pt,unit_w)
+
+scaled = unit_w@np.array(rframe[['x','y']]).T
+projected = unit_w.T@scaled
+
+rframe['proj_x'] = projected[0,:]
+rframe['proj_y'] = projected[1,:]
+
+for i in range(200):#for_lines:
+    row = rframe.loc[i]
+    plt.plot(
+        [row['x'],row['proj_x']],
+        [row['y'],row['proj_y']],
+        linestyle='dashed',
+        color='gray',alpha=0.25
+    )
+
+sns.scatterplot(
+    data=rframe,
+    x='x',y='y',
+    hue='class'
+)
+sns.scatterplot(
+    data=rframe,
+    x='proj_x',y='proj_y',hue='class'
+)
+
+sns.lineplot(x=xj,y=yj,color='blue')
+sns.lineplot(x=xj,y=yk,color='black')
+
+np.random.seed(10)
+for_lines = np.random.randint(0,200,20)
+
+
+
+plt.title("Projection of all points to the vector, w")
+plt.show()
+```
+
+
+A few things are immediately evident after this vector transformation:
+
+* All projected points lie along a single line, the vector $w$
+
+* The boundary separation line is not a best fit; some points in the blue class would be misclassified as members of the orange class.  This line will need to be adjusted.
+
+* A handful of points in each class are closest to one another along the vector $w$.  The boundary needs to maximize the separation between these points.
+
+Examining these findings, further math is needed.  The optimal vector $w$ needs to maximially separate these points in different classes.  Consider the following application and decision for classification using this model:
+
+1. Any original points below the optimal separating line (lower x and y value) should be classified as -1 (in the example case, the orange points).
+
+2. Any original points above the optimal separating line (higher x and y value) should be classified as +1 (in the example case, the blue points).
+
+Seeing the above projection and understanding the math behind it, the following equations must be fulfilled in order to achieve these objectives.
+
+Let a function $y_v$ be the prediction of the class of a datapoint $v$
+
+
+For the first case:
+$$
+w^Tx+b \geq +1
+$$
+
+$$
+w^Tx+b -1 \geq 0
+$${#eq-svm-pos-pred}
+
+In this case, $y_v$ for some vector $v$ would predict +1.
+
+For the second case
+$$
+w^Tx +b \leq -1
+$$
+
+
+$$
+w^Tx +b  + 1 \leq 0
+$${#eq-svm-neg-pred}
+
+In this case, $y_v$ for some vector $v$ would predict -1.
+
+If we multiply both @eq-svm-pos-pred and @eq-svm-neg-pred...
+
+$$
+(+1)(w^Tx-1 \geq 0)
+$$
+
+$$
+w^Tx-1 \geq 0
+$$
+
+$$
+(-1)(w^Tx-1 \geq 0)
+$$
+
+$$
+-w^Tx+1 \leq 0)
+$$
+
+$$
+0 \leq w^Tx-1
+$$
+
+$$
+w^Tx-1 \geq 0
+$${#eq-formulation}
+
+The same result of $w^Tx-1\geq 0$ is produced in both cases!  This means that both equations can be consolidated to a single calculation:
+
+$$
+y_v(w^Tx)-1\geq 0
+$${#eq-svm-pred-form}
+
+For the best-fitting linear separator, @eq-svm-pred-form should be true for *every* datapoint in the dataset.  As long as it is true, then all points in one class will be mapped to -1, and all points in the other class will be mapped to +1.
+
+### Maximizing the Margin
+
+The goal of an SVM is to maximize the margin between points of different classes.  The examination of point projection onto the vector $w$ with @eq-pt-proj, and the constraint of @eq-svm-pred-form must hold true for every datapoint.  An SVM seeks to solve for the best $w$ for which @eq-svm-pred-form is true.
+
+Let's define a margin using @eq-svm-neg-pred and @eq-svm-pos-pred by subtracting and adding 1, respectively:
+
+$$
+\text{lower margin} = w^Tx +b  - 1 = 0
+$$
+
+$$
+\text{upper margin} = w^Tx +b  + 1 = 0
+$$
+
+
+The previous example graph clearly does not provide a good example to move forward.  In order to have a better example, the separation line $y=-2.3x+28$ will be used, with margin lines at $\pm 1$ from the separation line: 
+
+```{python}
+xj = np.linspace(0,13,100)
+yl = -2.3 *xj + 28
+sns.lineplot(x=xj,y=yl+1,color='blue',alpha=0.3)
+sns.lineplot(x=xj,y=yl,color='blue')
+sns.lineplot(x=xj,y=yl-1,color='blue',alpha=0.3)
+ym = (1/2.3)*xj
+sns.lineplot(x=xj,y=ym,color='black')
+w = np.array([[2.3,1]])
+unit_w = w / np.linalg.norm(w)
+scaled = unit_w@np.array(rframe[['x','y']]).T
+projected = unit_w.T@scaled
+rframe['proj_x'] = projected[0,:]
+rframe['proj_y'] = projected[1,:]
+sns.scatterplot(
+    data=rframe,
+    x='proj_x',y='proj_y',hue='class'
+)
+plt.xlim(8,14)
+plt.ylim(3,7)
+plt.title("Points projected to w, with margin condition")
+plt.show()
+```
+
+Here is the depiction of the margin, at the boundary line +/- 1.  One can see that this margin and boundary line do effectively separate the datapoints between classes, but the vector $w$ in this case does not maximize the margin.  If the margin were maximized, then the transparent blue margin lines would directly intersect the closest points in each respective class.
+
+Let these two closest points be represented by $x^-$ for the orange point, and $x^+$ for the blue point.  The size of the best margin, then, is defined as:
+
+$$
+\text{margin} = (x^+ - x^-) \cdot \frac{w}{||w||}
+$${#eq-margin-formula}
+
+This formulation arises from the projection formula.  When the points are projected onto $w$, subtracting them will give the distance along each vector in the source data.  And to get our optimal solution, one seeks to *maximize* this value.  In the latest example, one can clearly see it's not maximized yet.  At maximum, those transparent blue lines will directly intersect the closest projectetd orange and blue points along the black vector, $w$. 
+
+Recall @eq-formulation.  One can combine this with @eq-margin-formula using $x^-$ and $x^+$.  In an ideal margin, both of these points would lay *along* the respective margins.  In that case the equations would shift from inequalities to equalities
+
+For $x^-$:
+$w^Tx+b + 1 = 0$ ; thus $w^Tx = 1-b$.  As $w^Tx$ in this case represents the projection of $x^-$ onto vector $w$, $1-b$ can be substituted in the margin formula and other equations.
+
+For $x^+$: 
+$w^Tx+b -1 = 0$ ; thus $w^Tx=-1-b$.  $w^Tx$ represents the projection of the point $x^+$ onto the vector $w$, therefore it can be substituted with $-1-b$ in other equations, as was the case for $x^-$.
+
+Plugging this into the margin formula:
+
+$$
+\text{margin} = \frac{[(1-b)-(-1-b)]}{||w||}
+$$
+
+In this formulation, the values of $b$ cancel, and the result becomes:
+
+$$ 
+\text{margin} = \frac{2}{||w||}
+$$
+
+This is the length of the margin - precisely 2 divided by the magnitude, $w$.  SVMs seek to maximimze this value.
+
+### Quadratic Transformation and Optimization
+
+SVMs seek the maximum value for $\frac{2}{||w||}$, this can also be represented as $\frac{1}{||w||}$.  The constant in the numerator has no impact; if the inverse norm of $w$ is maximized, the result will be the same.  Simlarly, taking the inverse of this result for $\text{max}\bigg(\frac{1}{||w||}\bigg)$ produces $\text{min}(\||w||)$, because dividing by a smaller and smaller denominator will maximize the output value for $\frac{1}{||w||}$
+
+Taking the indefinite integral of $||w||$ gives $\frac{1}{2}||w||^2$, a quadratic formulation.  This quadratic formulation would still be subject to the minimization criterion for $||w||$ and as such one can seek to minimize the value thereof.
+
+By taking the quadratic formulation, efforts to seek the minimum fall within the realm of possibility.  For any quadratic equation of the form $y=ax^2+bx+c$, if the value of $a$ is positive, then the equation is guaranteed to have a *global* minimum at the vertex point $(x,y)$ where $x=\frac{-b}{2a}$ and that value of $x$ is inserted into the source equation.  This is common knowledge for anyone who has taken grade school algebra.
+
+Another way of reaching this vertex point is taking the *derivative* of the source equation and setting it equal to zero, and solving for x:  $2ax + b = 0$ => $2ax = -b$ => $x = \frac{-b}{2a}$.  This methodology is how the common knowledge vertex equation is derived.
+
+The beauty of the quadratic equation $\frac{1}{2}||w||^2$ is in that its derivative is simply $||w||$.  Thus, seeking out the global minimum point for $\frac{1}{2}||w||^2$ will similarly produce the global minimum for $||w||$ and solve the problem SVMs seek to solve.
+
+SVMs goal, then is to:
+
+* *minimize* $\frac{1}{2}||w||^2$
+
+* *constrain* the solution subject to @eq-svm-pred-form
+
+To implement this solution mathematically, the following is produced:
+
+$$
+L = \frac{1}{2}||w||^2 - \sum_{i=1}^n \lambda_i[y_i(w\cdot x_i + b) - 1]
+$$
+
+The first half of this formulation is the minimization target.  The second half examines all points within the training data, examining the constraint of @eq-svm-pred-form.  Within the summation, one notices a lagrangian multiplier $\lambda_i$, which corresponds to the (eigenvalue) of datapoint $x_i$ projected onto vector $w$
+
+Taking this formulation and calculating the partial derivative with respect to each factor and setting that result equal to zero enables optimization for the margin.
+
+$$
+L = \frac{1}{2}||w||^2 - \sum_{i=1}^n \lambda_i[y_i(w\cdot x_i + b) - 1]
+$$
+
+$$
+L = \frac{1}{2}||w||^2 - \sum_{i=1}^n \lambda_i[y_iw\cdot x_i + y_ib - 1]
+$$
+
+$$
+L = \frac{1}{2}||w||^2 - \sum_{i=1}^n \lambda_i y_iw\cdot x_i + \lambda_i y_ib - \lambda_i]
+$$
+
+
+Taking the partial derivative with respect to $w$ produces the following result:
+$$
+\frac{\delta L}{\delta w} = ||w|| - \sum_{i=1}^{n} \lambda_i y_i x_i = 0
+$$
+
+Thus 
+
+$$
+w = \sum_{i=1}^{n} \lambda_i y_i x_i
+$${#eq-delta-w}
+
+Taking the partial derivative with respect to $b$ produces the following result:
+$$
+\frac{\delta L}{\delta b} = -\sum_{i=1}^n \lambda_i y_i = 0
+$$
+
+Thus
+
+$$
+\sum_{i=1}^n \lambda_i y_i = 0
+$${#eq-delta-b}
+
+Taking the partial derivative with respect to $\lambda$ produces the following result:
+$$
+\frac{\delta L}{\delta \lambda} = - \sum_{i=1}^n [y_i(w\cdot x_i) + b - 1] = 0
+$${#eq-delta-lamdba-pr}
+
+Thus
+
+$$
+\sum_{i=1}^n [y_i(w\cdot x_i) + b - 1] = 0
+$${#eq-delta-lambda}
+
+
+
+We now have partial derivatives with respect to each feature, $w$ and $b$.
+
+$$
+L = \frac{1}{2}\bigg|\bigg|\frac{\delta L}{\delta w}\bigg|\bigg| - \sum_{i=1}^{n} \lambda_i\bigg[y_iw\cdot x_i+\frac{\delta L}{\delta b}\bigg]-1
+$$
+
+$$
+L = \frac{1}{2}\bigg|\bigg|\sum_{i=1}^{n} \lambda_i y_i x_i\bigg|\bigg| - \sum_{i=1}^{n} \lambda_i\bigg[y_i\sum_{i=1}^{n} \lambda_i y_i x_i\cdot x_i+\sum_{j=1}^n \lambda_j y_j\bigg]-1
+$$
+
+...
+
+
+Thus to maximize ...
+$$
+max\bigg[\sum_{}^{}\lambda_i -\frac{1}{2}\sum_{}^{} \lambda_i \lambda_j y_i y_j x_i^Tx_j : \lambda\in, \lambda > 0\bigg]
+$${#eq-dual-form}
+
+and 
+
+$$
+\bar{w} = \sum_{i=1}^{n}\bar{\lambda}_iy_ix_i
+$$
+
+
+
+$$
+L = \frac{1}{2}||w||^2 - \sum_{i=1}^n \lambda_i y_iw\cdot x_i + \lambda_i y_ib - \lambda_i]
+$$
+
+
+$$
+w = \sum_{i=1}^{n} \lambda_i y_i x_i
+$${#eq-delta-w2}
+
+$$
+\sum_{i=1}^n \lambda_i y_i = 0
+$${#eq-delta-b2}
+
+$$
+L = \frac{1}{2} \bigg(\sum_{i=1}^{n} \lambda_i y_i x_i\cdot \sum_{j=1}^{n} \lambda_j y_j x_j\bigg) - \sum_{i=1}^n \lambda_i y_i \cdot \bigg(\sum_{j=1}^{n} \lambda_j y_j x_j\bigg) -\sum\lambda_iy_i b+\sum\lambda_i
+$${#eq-dual}
+
+$$
+L = \frac{1}{2} \bigg(\sum_{i=1}^{n} \lambda_i y_i x_i\cdot \sum_{j=1}^{n} \lambda_j y_j x_j\bigg) - \sum_{i=1}^n \lambda_i y_i \cdot \bigg(\sum_{j=1}^{n} \lambda_j y_j x_j\bigg) +\sum_{i=1}^n\lambda_i
+$$
+
+$$
+L = \sum_{i=1}^n - \frac{1}{2}\sum_{i=1}^n\sum_{j=1}^{n}\lambda_i\lambda_jy_iy_jx_i\cdot x_j
+$$
+
+
+The optimization problem here depends solely on the products of the sample points $x$
+
+$$
+\sum\lambda_iy_ix_i\cdot w + b \geq 0 \qquad \text{then +1, else -1}
+$$
+
+The decision rule solely depends on the dot product of the vector $w$ with each $x_i$
+
+
+Taking these equations, the solution to the problem can be found using a system of partial differential equations.  The data provides every $x_i$ and $y_i$.  Since one seeks the values for $w$ and $b$ and so the solution lay within taking @eq-dual, transforming it into a system of differential equations, performing substitutions, and solving for each $\lambda_i$ to derive $w$ and $b$
+
+Having performed these calculations, there's the truly best linear separating line:
+
+```{python}
+sv = SVC(kernel='linear',C=1e9)
+sv.fit(rframe[['x','y']],rframe['class'])
+w_act = sv.coef_
+b_act = sv.intercept_
+
+unit_w_act = w_act / np.linalg.norm(w_act)
+scaled = unit_w_act@np.array(rframe[['x','y']]).T
+projected = unit_w.T@scaled
+
+rframe['proj_x'] = projected[0,:]
+rframe['proj_y'] = projected[1,:]
+sns.scatterplot(
+    data=rframe,
+    x='proj_x',y='proj_y',hue='class'
+)
+
+def boundary_line(w,x,b):
+    m = -(w[0][0]/w[0][1])
+    c = (b)/w[0][1]
+    y = m*x + c
+    return y
+
+def w_line(x):
+    m = 0.43478260869565233
+    b = -1.7763568394002505e-15
+    return m*x + b
+xz = np.linspace(-17,-6,100)
+# yz =  boundary_line(unit_w_act,xz,b_act)
+yz =  boundary_line(w_act,xz,b_act)
+lb = yz - (2/np.linalg.norm(w_act))
+rb = yz + (2/np.linalg.norm(w_act))
+plt.plot(xz,yz,color='black')
+xq = xz.copy()
+yq = w_line(xq)
+
+sns.lineplot(x=xz,y=lb,color='black',alpha=0.2)
+sns.lineplot(x=xz,y=rb,color='black',alpha=0.2)
+sns.lineplot(x=xq,y=yq,color='black',alpha=0.1)
+```
+
+One can clearly see that the best line, and its separators, perfectly and evenly divide the closest points projected onto the line for vector $w$ from the origin.  This will only ever be the case when the data is linearly separable, however.  There are cases when the points will never have a perfect separator.  Soft-margin SVM helps solve this, leveraging a loss function (called hinge loss) that allows poitns to be within that margin while still being on the appropriate side of the separating line.  Hinge loss gets added as a constraint when solving for w and b.  Points within the identified margin are given a negative or positive score based upon how close they are to the boundary.
+
+### Kernels
+
+Soft-margin SVM doesn't always solve the problem, though - and that's where kernels come into play.  Kernels are a special kind of function (one that can be expressed as the dot product of two vectors) that can be used to project the source data into a higher dimensional space.  When data is not linearly separable in its given input vector space, a translation and projection into higher dimensional space may indeed render the data as linearly separable in that dimension.  Additionally, those transformations themselves are always linear, in a sense, as they can be expressed as the dot product of two vectors!  As such, many transformations that "reshape" or "curve" the data can be applied (in our current dimension) that allow for that separation.
+
+Essentially a kernel function can be expressed as $\phi(a,b) = a^T\cdot b$ where $\phi$ is the kernel function and $a$ $b$ are two vectors of equal dimension.  The key in making a kernel work is that it is expressible as the dot-product of two vectors.  Because of this, a kernel function can be applied to each data point *without transforming the datapoint into the new vector space*, which reduces time and resource requirements to compute the transformation of the dual function.=
+
+```{python}
+sv = SVC(kernel='linear',C=1e10)
+X_train,X_test,y_train,y_test = train_test_split(
+    rframe[['x','y']],
+    rframe['class'],
+    stratify=rframe['class'],
+    test_size=0.3,
+    random_state=8402
+)
+sv.fit(X_train,y_train)
+X_test['y_pred'] = sv.predict(X_test)
+X_test['y_true'] = y_test
+```
+
+```{python fig-svm-bound}
+#| label: fig-svm-bound
+#| fig-cap: Example SVM Boundary with Linear Kernel
+
+x_arr = np.linspace(0,9,100)
+y_arr = np.linspace(0,22,100)
+xlim,ylim = (min(x_arr),max(x_arr)), (min(y_arr),max(y_arr))
+xx = np.linspace(xlim[0],xlim[1])
+yy = np.linspace(ylim[0],ylim[1])
+YY,XX = np.meshgrid(yy,xx)
+xy = np.vstack(
+    [XX.ravel(),YY.ravel()]
+).T
+tmp = X_test.melt(id_vars=['x','y'])
+g = sns.FacetGrid(
+    data = tmp,
+    col='variable',
+    hue='value'
+)
+g.map_dataframe(
+    sns.scatterplot,x='x',y='y'
+)
+margin_bnd = sv.decision_function(xy).reshape(XX.shape)
+# g.axes[0].contour
+g.axes[0][0].contour(XX,YY,margin_bnd,levels=[-1,0,1],alpha=0.5,linestyles=['--','-','--'],colors='k')
+g.axes[0][1].contour(XX,YY,margin_bnd,levels=[-1,0,1],alpha=0.5,linestyles=['--','-','--'],colors='k')
+plt.show()
+```
+
+Examining @fig-svm-bound, the margin and boundary between data members of differing classes have linear separation between them.  Using a linear kernel, one can achieve such a separation.  This is the same as the previous example.  What if another kernel was used?
+
+```{python fig-svm-poly-bound}
+#| label: fig-svm-poly-bound
+#| fig-cap: Example SVM Boundary with Polynomial Kernel (d=2)
+
+sv = SVC(kernel='poly',degree=2)
+sv.fit(X_train,y_train)
+X_test['y_pred'] = sv.predict(X_test[['x','y']])
+X_test['y_true'] = y_test
+x_arr = np.linspace(0,9,100)
+y_arr = np.linspace(0,22,100)
+xlim,ylim = (min(x_arr),max(x_arr)), (min(y_arr),max(y_arr))
+xx = np.linspace(xlim[0],xlim[1])
+yy = np.linspace(ylim[0],ylim[1])
+YY,XX = np.meshgrid(yy,xx)
+xy = np.vstack(
+    [XX.ravel(),YY.ravel()]
+).T
+tmp = X_test.melt(id_vars=['x','y'])
+g = sns.FacetGrid(
+    data = tmp,
+    col='variable',
+    hue='value'
+)
+g.map_dataframe(
+    sns.scatterplot,x='x',y='y'
+)
+margin_bnd = sv.decision_function(xy).reshape(XX.shape)
+g.axes[0][0].contour(XX,YY,margin_bnd,levels=[-1,0,1],alpha=0.5,linestyles=['--','-','--'],colors='k')
+g.axes[0][1].contour(XX,YY,margin_bnd,levels=[-1,0,1],alpha=0.5,linestyles=['--','-','--'],colors='k')
+plt.show()
+```
+
+Examining @fig-svm-poly-bound, curvature is evident in the boundary and margins.  In this example, the boundary is formed using a polynomial kernel with degree 2, so in this case, we see that the boundary represents a parabola.  This is because the kernel function was a degree-2 polynomial, and produced a quadratic for the separating boundary and margin.
+
+```{python fig-svm-rbf-bound}
+#| label: fig-svm-rbf-bound
+#| fig-cap: Example SVM Boundary with RBF (Gaussian) Kernel
+
+sv = SVC()
+sv.fit(X_train,y_train)
+X_test['y_pred'] = sv.predict(X_test[['x','y']])
+X_test['y_true'] = y_test
+x_arr = np.linspace(0,9,100)
+y_arr = np.linspace(0,22,100)
+xlim,ylim = (min(x_arr),max(x_arr)), (min(y_arr),max(y_arr))
+xx = np.linspace(xlim[0],xlim[1])
+yy = np.linspace(ylim[0],ylim[1])
+YY,XX = np.meshgrid(yy,xx)
+xy = np.vstack(
+    [XX.ravel(),YY.ravel()]
+).T
+tmp = X_test.melt(id_vars=['x','y'])
+g = sns.FacetGrid(
+    data = tmp,
+    col='variable',
+    hue='value'
+)
+g.map_dataframe(
+    sns.scatterplot,x='x',y='y'
+)
+margin_bnd = sv.decision_function(xy).reshape(XX.shape)
+g.axes[0][0].contour(XX,YY,margin_bnd,levels=[-1,0,1],alpha=0.5,linestyles=['--','-','--'],colors='k')
+g.axes[0][1].contour(XX,YY,margin_bnd,levels=[-1,0,1],alpha=0.5,linestyles=['--','-','--'],colors='k')
+plt.show()
+```
+
+Examining @fig-svm-rbf-bound, curvature is evident in the boundary once more, and within the margins a high degree of curvature. The nature of the kernel in this case is Gaussian, and here in the case of a two-variable plot, these margins are akin to a bivariate kernel density estimate curve, shaping the boundary based on the variation in the two variables in question, x and y. 
+
+Using these and countless other kernel options, one has a plethora of options to produce means to separate data points of differing classes.  SVMs operate upon the concept of maximizing the margin between classes of points.  As such, *distance measurements* for each data point are necessary to establish the boundary and margin.  In order to do this, *labeled numeric data* are required to perform the algorithm.
+
+## Data & Code
+
+Data preparation for this sectionn leveraged the multiple correspondence analysis transformation described in @sec-MCA and executed in @sec-MCA-app.  This transformation placed all data into categories, and then transposed all the categories into a high-dimensional space (100+ numeric components for two datasets).
+
+The MCA transformation takes categorical variables and allows their transformation into numeric variables that are mathematically representative of the categorical variables' explanation of the variance in the source data.  Given that much of this research explores categorical variables, use of this transformation is ideal to perform SVM fitting and predictions.
+
+Code for this portion can be found [here](../src/SVM_code.ipynb) <!--update-->
+
+* [Multiple Correspondence Analysis - With Protected Classes](https://drive.google.com/file/d/1RPhKt5ZOlPsxo9bD8skxXjqH9rnMDpXR/view?usp=drive_link)
+
+* [Multiple Correspondence Analysis - Without Protected Classes](https://drive.google.com/file/d/1KZ6PmBicp02w8iphzMZxf0m29O5L2o0i/view?usp=drive_link)
+
+```{python import-source-data}
+pc = pd.read_csv('../data/mcaNd.csv')
+npc = pd.read_csv('../data/mcaNd-npc.csv')
+labels = pd.read_csv('../data/final_clean_r2.csv')['outcome']
+X_train_pc,X_test_pc,y_train,y_test = train_test_split(
+    pc,
+    labels,
+    stratify=labels,
+    test_size=0.2,
+    random_state=9001
+)
+X_train_npc,X_test_npc,y_train,y_test = train_test_split(
+    npc,
+    labels,
+    stratify=labels,
+    test_size=0.2,
+    random_state=9001
+)
+```
+
+```{python tbl-sample-data-pc-trn}
+#| label: tbl-sample-data-pc-trn
+#| tbl-cap: "Training Data (With Protected Classes), first 10 rows"
+X_train_pc.merge(right=y_train,left_index=True,right_index=True).head(10)
+```
+
+```{python tbl-sample-data-pc-tst}
+#| label: tbl-sample-data-pc-tst
+#| tbl-cap: "Testing Data (With Protected Classes), first 10 rows"
+X_test_pc.merge(right=y_test,left_index=True,right_index=True).head(10)
+```
+
+```{python tbl-sample-data-npc-trn}
+#| label: tbl-sample-data-npc-trn
+#| tbl-cap: "Training Data (No Protected Classes), first 10 rows"
+X_train_npc.merge(right=y_train,left_index=True,right_index=True).head(10)
+```
+
+```{python tbl-sample-data-npc-tst}
+#| label: tbl-sample-data-npc-tst
+#| tbl-cap: "Testing Data (No Protected Classes), first 10 rows"
+X_test_npc.merge(right=y_test,left_index=True,right_index=True).head(10)
+```
+
+Notice the indexes between @tbl-sample-data-pc-trn and @tbl-sample-data-npc-trn match for the training data, and that the indexes between @tbl-sample-data-pc-tst and @tbl-sample-data-npc-tst also match for testing data.  This enables a direct performance comparision between each model trained with and without protected class information.  Furthermore, the indexes in @tbl-sample-data-pc-trn and @tbl-sample-data-pc-tst are disjoint (as are the indexes between @tbl-sample-data-npc-trn and @tbl-sample-data-npc-tst).  This means that for both models, the training and testing data are disjoint sets.
+
+These train-test splits were generated by stratifying on outcome (loan approved / denied) with a random state of 9001 and an 80/20 split for training and testing.  Using the same random state between the two different MCAs allowed for extracting the same set of record indices for comparison of models trained on the same records leveraging different features.
 
 ## Results
 
+```{python get-data}
+predictions = pd.read_csv('../data/SVM_predictions.csv')
+#first two columns default, 2nd 2 columns are linear w/ C=0.5, and 3rd 2 columns are sigmoid with C=1.5
+cols = list(predictions.columns)
+default = predictions[cols[1:4]].copy()
+linear = predictions[[cols[1]]+cols[4:6]].copy()
+sigmoid = predictions[[cols[1]]+cols[6:]].copy()
+results = pd.DataFrame({
+    'Model':[],
+    'Data':[],
+    'Accuracy':[],
+    'Precision':[],
+    'Recall':[],
+    'F1':[],
+    'ROC-AUC':[]
+})
+```
+
+### Default RBF Kernel, C=1
+
+```{python rbf-scores}
+y_pred_npc,y_pred_pc = default[default.columns[1]],default[default.columns[2]]
+y_test = default[default.columns[0]]
+results.loc[len(results)] = {
+    'Model':'SVM (Kernel=RBF,C=1)',
+    'Data':'Without Protected Classes',
+    'Accuracy':accuracy_score(y_test,y_pred_npc),
+    'Precision':precision_score(y_test,y_pred_npc),
+    'Recall':recall_score(y_test,y_pred_npc),
+    'F1':f1_score(y_test,y_pred_npc),
+    'ROC-AUC':roc_auc_score(y_test,y_pred_npc)
+}
+results.loc[len(results)] = {
+    'Model':'SVM (Kernel=RBF,C=1)',
+    'Data':'With Protected Classes',
+    'Accuracy':accuracy_score(y_test,y_pred_pc),
+    'Precision':precision_score(y_test,y_pred_pc),
+    'Recall':recall_score(y_test,y_pred_pc),
+    'F1':f1_score(y_test,y_pred_npc),
+    'ROC-AUC':roc_auc_score(y_test,y_pred_pc)
+}
+# results.style.hide(axis='index')
+```
+
+```{python fig-rbf-cm}
+#| label: fig-rbf-cm
+#| fig-cap: Confusion Matrices for RBF Kernel, C=1
+import matplotlib.pyplot as plt
+fig,axes=plt.subplots(nrows=1,ncols=2)
+ConfusionMatrixDisplay(
+    confusion_matrix(
+        y_pred=y_pred_pc,y_true=y_test
+    ),
+    display_labels=['Deny','Approve']
+).plot(ax=axes[0])
+ConfusionMatrixDisplay(
+    confusion_matrix(
+        y_pred=y_pred_npc,y_true=y_test
+    ),
+    display_labels=['Deny','Approve']
+).plot(ax=axes[1])
+axes[0].set_title('With Protected\nClasses')
+axes[1].set_title('Without Protected\nClasses')
+plt.suptitle("Confusion Matrices - SVM RBF C=1.0")
+plt.tight_layout()
+plt.show()
+```
+
+### Linear Kernel, C=0.5
+
+```{python}
+y_pred_npc,y_pred_pc = linear[linear.columns[1]],linear[linear.columns[2]]
+y_true = linear[linear.columns[0]]
+results.loc[len(results)] = {
+    'Model':'SVM (Kernel=Linear,C=0.5)',
+    'Data':'Without Protected Classes',
+    'Accuracy':accuracy_score(y_test,y_pred_npc),
+    'Precision':precision_score(y_test,y_pred_npc),
+    'Recall':recall_score(y_test,y_pred_npc),
+    'F1':f1_score(y_test,y_pred_npc),
+    'ROC-AUC':roc_auc_score(y_test,y_pred_npc)
+}
+results.loc[len(results)] = {
+    'Model':'SVM (Kernel=Linear,C=0.5)',
+    'Data':'With Protected Classes',
+    'Accuracy':accuracy_score(y_test,y_pred_pc),
+    'Precision':precision_score(y_test,y_pred_pc),
+    'Recall':recall_score(y_test,y_pred_pc),
+    'F1':f1_score(y_test,y_pred_npc),
+    'ROC-AUC':roc_auc_score(y_test,y_pred_pc)
+}
+```
+
+```{python fig-linear-cm}
+#| label: fig-linear-cm
+#| fig-cap: Confusion Matrices for Linear Kernel, C=0.5
+fig,axes=plt.subplots(nrows=1,ncols=2)
+ConfusionMatrixDisplay(
+    confusion_matrix(
+        y_pred=y_pred_pc,y_true=y_test
+    ),
+    display_labels=['Deny','Approve']
+).plot(ax=axes[0])
+ConfusionMatrixDisplay(
+    confusion_matrix(
+        y_pred=y_pred_npc,y_true=y_test
+    ),
+    display_labels=['Deny','Approve']
+).plot(ax=axes[1])
+axes[0].set_title('With Protected\nClasses')
+axes[1].set_title('Without Protected\nClasses')
+plt.suptitle("Confusion Matrices - SVM Linear C=0.5")
+plt.tight_layout()
+plt.show()
+```
+
+### Sigmoid Kernel, C=1.5
+
+```{python}
+y_pred_npc,y_pred_pc = sigmoid[sigmoid.columns[1]],sigmoid[sigmoid.columns[2]]
+y_true = sigmoid[sigmoid.columns[0]]
+results.loc[len(results)] = {
+    'Model':'SVM (Kernel=Sigmoid,C=1.5)',
+    'Data':'Without Protected Classes',
+    'Accuracy':accuracy_score(y_test,y_pred_npc),
+    'Precision':precision_score(y_test,y_pred_npc),
+    'Recall':recall_score(y_test,y_pred_npc),
+    'F1':f1_score(y_test,y_pred_npc),
+    'ROC-AUC':roc_auc_score(y_test,y_pred_npc)
+}
+results.loc[len(results)] = {
+    'Model':'SVM (Kernel=Sigmoid,C=1.5)',
+    'Data':'With Protected Classes',
+    'Accuracy':accuracy_score(y_test,y_pred_pc),
+    'Precision':precision_score(y_test,y_pred_pc),
+    'Recall':recall_score(y_test,y_pred_pc),
+    'F1':f1_score(y_test,y_pred_npc),
+    'ROC-AUC':roc_auc_score(y_test,y_pred_pc)
+}
+```
+
+```{python fig-sig-cm}
+#| label: fig-sig-cm
+#| fig-cap: Confusion Matrices for Sigmoid Kernel, C=1.5
+import matplotlib.pyplot as plt
+fig,axes=plt.subplots(nrows=1,ncols=2)
+ConfusionMatrixDisplay(
+    confusion_matrix(
+        y_pred=y_pred_pc,y_true=y_test
+    ),
+    display_labels=['Deny','Approve']
+).plot(ax=axes[0])
+ConfusionMatrixDisplay(
+    confusion_matrix(
+        y_pred=y_pred_npc,y_true=y_test
+    ),
+    display_labels=['Deny','Approve']
+).plot(ax=axes[1])
+axes[0].set_title('With Protected\nClasses')
+axes[1].set_title('Without Protected\nClasses')
+plt.suptitle("Confusion Matrices - SVM Sigmoid C=1.5")
+plt.tight_layout()
+plt.show()
+```
+
+```{python}
+# results.style.hide(axis='index')
+```
+
+```{python npc-data-preds}
+pred_inds = pd.read_csv('../data/SVM_test_indexes.csv')
+mc_npc = pd.read_csv('../data/mcaND-npc.csv')
+pred_inds = pred_inds.merge(
+    right=mc_npc[['MC1','MC2','MC3']],
+    left_on='ind',
+    right_index=True
+)
+pred_inds = pred_inds.merge(
+    right=default,
+    left_on='ind',
+    right_index=True
+)
+pred_inds.columns = ['ind','MC1','MC2','MC3','y_true','y_pred','y_pred2']
+pred_inds.drop(columns=['y_pred2'],inplace=True)
+pred_inds = pred_inds.melt(id_vars=['ind','MC1','MC2','MC3']).sort_values(by='ind')
+```
+
+```{python fig-npc-data-preds}
+#| label: fig-npc-data-preds
+#| fig-cap: Plot of MCA datapoints with SVM Predictions (Kernel=RBF,C=1)
+g = sns.FacetGrid(
+    data=pred_inds,
+    col='variable'
+)
+g.map_dataframe(
+    sns.scatterplot,x='MC1',y='MC2',hue='value'
+)
+plt.suptitle('SVM Predictions (C=1,Kernel=RBF)\nMCA Without Protected Class Information')
+plt.tight_layout()
+plt.show()
+```
+
+```{python pc-data-preds}
+pred_inds = pd.read_csv('../data/SVM_test_indexes.csv')
+mc_pc = pd.read_csv('../data/mcaND.csv')
+pred_inds = pred_inds.merge(
+    right=mc_pc[['MC1','MC2','MC3']],
+    left_on='ind',
+    right_index=True
+)
+pred_inds = pred_inds.merge(
+    right=default,
+    left_on='ind',
+    right_index=True
+)
+pred_inds.columns = ['ind','MC1','MC2','MC3','y_true','y_pred2','y_pred']
+pred_inds.drop(columns=['y_pred2'],inplace=True)
+pred_inds = pred_inds.melt(id_vars=['ind','MC1','MC2','MC3']).sort_values(by='ind')
+```
+
+```{python fig-pc-data-preds}
+#| label: fig-pc-data-preds
+#| fig-cap: Plot of MCA datapoints with SVM Predictions (Kernel=RBF,C=1)
+g = sns.FacetGrid(
+    data=pred_inds,
+    col='variable'
+)
+g.map_dataframe(
+    sns.scatterplot,x='MC1',y='MC2',hue='value'
+)
+plt.suptitle('SVM Predictions (C=1,Kernel=RBF)\nMCA With Protected Class Information')
+plt.tight_layout()
+plt.show()
+```
+
+```{python tbl-svm-results}
+#| label: tbl-svm-results
+#| tbl-cap: Summary Performance Metrics, all SVM models
+
+results.style.hide(axis='index')
+```
+
+Examining @tbl-svm-results, all models had very similar performance, with all having incredibly similar scores across accuracy, precision, recall, and F1, regardless of the model or the inclusion / exclusion of protected class information.  Directly comparing each run reveals less than a 0.3% difference between models trained with/without protected class data for accuracy, less than 0.3% for precision, less than 0.5% for recall, and less than 0.5% for F1.
+
+In this case, leveraging the Receiver Operator Curve - Area Under the Curve (ROC-AUC) may be a more useful metric for comparing the two classes (explain ROC AUC HERE).  With this metric, the base RBF kernel had the best performance, favoring the exclusion of protected class information with a difference of about 0.6%.  For Linear kernel with C=0.5, the performance was similar, but the RBF kernel had 0.1% higher performance on the best performing model.
+
+For the Sigmoid kernel, the ROC-AUC score was substantially lower (by about 6%).
+
+This reveals several important factors about the data: 
+
+* The data, with high accuracy, is best separated with RBF soft margins highly dimensional space
+
+* Effective modeling can be achieved when excluding protected class information in the models
+
+* Other items here?
+
+The metrics are quite revealing too.  SVM modeling with RBF kernel and exclusion of protected class information delivered high performance metrics above 94% for all values.  This modeling would likely be further improved through the inclusion of non-publically available information, such as applicant / co-applicant credit scores, alongside other relevant financial information variables.
+
+This resonates with the findings from other models executed and generated in this research - that there is little to no benefit in leveraging protected class information as part of machine learning models. 

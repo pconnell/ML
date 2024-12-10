@@ -1,0 +1,340 @@
+# Ensemble Modeling {#sec-Ensemble}
+
+```{python}
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import classification_report
+from sklearn.metrics import (
+    accuracy_score,roc_auc_score,
+    precision_score, recall_score, 
+    f1_score, confusion_matrix,
+    ConfusionMatrixDisplay
+)
+import pandas as pd, numpy as np, seaborn as sns
+from sklearn.tree import plot_tree
+from xgboost import XGBClassifier
+from sklearn.ensemble import RandomForestClassifier
+import matplotlib.pyplot as plt
+```
+
+```{python data-import}
+final = pd.read_csv('../data/final_clean_r2.csv')
+labels = final['outcome'].copy()
+clean = pd.read_csv('../data/cnb_pc.csv')
+clean_npc = pd.read_csv('../data/cnb_npc.csv')
+
+rf_pc,rf_npc = RandomForestClassifier(),RandomForestClassifier()
+xgb_pc,xgb_npc = XGBClassifier(),XGBClassifier()
+
+X_train,X_test,y_train,y_test = train_test_split(
+    clean,
+    labels,
+    stratify=labels,
+    test_size=0.2,
+    random_state=4444
+)
+
+X_train_npc,X_test_npc,y_train,y_test = train_test_split(
+    clean_npc,
+    labels,
+    stratify=labels,
+    test_size=0.2,
+    random_state=4444
+)
+```
+
+## Overview
+
+Ensemble methods are a combination of machine learning algorithms that are trained separately (either in series or parallel), and their outputs are combined to determine the classification of a given new vector of data.  This provides a method that can improve predictive performance of a model, mitigate issues of model overfitting, as one model may be overfit to the data, but other independently or separately trained models can not have such overfit, and as a result, better balance the bias-variance curve of the output predictions overall for the model.  What is meant by series and parallel, though?
+
+### Bagging
+
+Bagging is a *parallel* method.  This means that each model is trained independently of one another on separate random subset samplings of the source training data.  Each model is then optimized for that subset of the data, and each model gets a vote in the classification of a testing datapoint.  Because of this voting process, the output tends to have an odd number of models that are independently trained (at least for binary classification systems differentiating between a positive and negative outcome).  Random Forests are an example of a bagging ensemble learning method.
+
+### Boosting
+
+Boosting is a *series* method.  For models trained in series, each subsequent model is trained based on the outcomes of the previous model, tending to focus more on records that were misclassified by the previous model.  In this way, the subsequent models identify those misclassified records while still retaining appropriate predictive performance on the previous correctly classified records.  An example of a boosting algorithm is called Adaptive Boosting (or ada boost)
+
+### Random Forests
+
+Random forests take the decision tree algorithm as described in @sec-DT, and trains multiple decision trees using that algorithm in parallel.  Each tree gets a vote on the classification of new records.
+
+### XGBoost
+
+
+
+## Data and Code
+
+Data for this section leverages the same data as for decision trees and can be found here:
+
+* [Label Encoded Data - With Protected Classes](https://drive.google.com/file/d/1Nj2P23ZMlQCzdnMdvJVKH_dufNl_tmrr/view?usp=drive_link)
+
+* [Label Encoded Data - Without Protected Classes](https://drive.google.com/file/d/1ybGEqiSdRsqu0j9O1KJXZgyJrSlX7JNl/view?usp=drive_link)
+
+Code to execute XGBoost and Random Forests can be found in @app-Ensemble.
+
+## Results
+
+```{python}
+rf_pc.fit(X_train,y_train)
+rf_npc.fit(X_train_npc,y_train)
+y_pred_pc = rf_pc.predict(X_test)
+y_pred_npc = rf_npc.predict(X_test_npc)
+```
+
+```{python}
+results = pd.DataFrame({
+    'Model':[],
+    'Data':[],
+    'Accuracy':[],
+    'Precision':[],
+    'Recall':[],
+    'F1':[],
+    'ROC-AUC':[]
+})
+results.loc[len(results)] = {
+    'Model':'Random Forest',
+    'Data':'With Protected Classes',
+    'Accuracy':accuracy_score(y_test,y_pred_pc),
+    'Precision':precision_score(y_test,y_pred_pc),
+    'Recall':recall_score(y_test,y_pred_pc),
+    'F1':f1_score(y_test,y_pred_pc),
+    'ROC-AUC':roc_auc_score(y_test,y_pred_pc)
+}
+results.loc[len(results)] = {
+    'Model':'Random Forest',
+    'Data':'Without Protected Classes',
+    'Accuracy':accuracy_score(y_test,y_pred_npc),
+    'Precision':precision_score(y_test,y_pred_npc),
+    'Recall':recall_score(y_test,y_pred_npc),
+    'F1':f1_score(y_test,y_pred_npc),
+    'ROC-AUC':roc_auc_score(y_test,y_pred_npc)
+}
+
+display(results.style.hide(axis='index'))
+```
+
+```{python}
+fig,axes=plt.subplots(nrows=1,ncols=2)
+
+ConfusionMatrixDisplay(
+    confusion_matrix(
+        y_pred=y_pred_pc,y_true=y_test
+    ),
+        display_labels=['Deny','Approve']
+).plot(ax=axes[0])
+ConfusionMatrixDisplay(
+    confusion_matrix(
+        y_pred=y_pred_npc,y_true=y_test
+    ),
+        display_labels=['Deny','Approve']
+).plot(ax=axes[1])
+axes[0].set_title('With Protected\nClasses')
+axes[1].set_title('Without Protected\nClasses')
+plt.suptitle("Confusion Matrices - Decision Trees")
+plt.tight_layout()
+plt.show()
+```
+
+```{python}
+xgb_pc.fit(X_train,y_train)
+xgb_npc.fit(X_train_npc,y_train)
+y_pred_pc = xgb_pc.predict(X_test)
+y_pred_npc = xgb_npc.predict(X_test_npc)
+```
+
+```{python}
+results = pd.DataFrame({
+    'Model':[],
+    'Data':[],
+    'Accuracy':[],
+    'Precision':[],
+    'Recall':[],
+    'F1':[],
+    'ROC-AUC':[]
+})
+results.loc[len(results)] = {
+    'Model':'XGBoost',
+    'Data':'With Protected Classes',
+    'Accuracy':accuracy_score(y_test,y_pred_pc),
+    'Precision':precision_score(y_test,y_pred_pc),
+    'Recall':recall_score(y_test,y_pred_pc),
+    'F1':f1_score(y_test,y_pred_pc),
+    'ROC-AUC':roc_auc_score(y_test,y_pred_pc)
+}
+results.loc[len(results)] = {
+    'Model':'XGBoost',
+    'Data':'Without Protected Classes',
+    'Accuracy':accuracy_score(y_test,y_pred_npc),
+    'Precision':precision_score(y_test,y_pred_npc),
+    'Recall':recall_score(y_test,y_pred_npc),
+    'F1':f1_score(y_test,y_pred_npc),
+    'ROC-AUC':roc_auc_score(y_test,y_pred_npc)
+}
+
+display(results.style.hide(axis='index'))
+```
+
+```{python}
+fig,axes=plt.subplots(nrows=1,ncols=2)
+
+ConfusionMatrixDisplay(
+    confusion_matrix(
+        y_pred=y_pred_pc,y_true=y_test
+    ),
+        display_labels=['Deny','Approve']
+).plot(ax=axes[0])
+ConfusionMatrixDisplay(
+    confusion_matrix(
+        y_pred=y_pred_npc,y_true=y_test
+    ),
+        display_labels=['Deny','Approve']
+).plot(ax=axes[1])
+axes[0].set_title('With Protected\nClasses')
+axes[1].set_title('Without Protected\nClasses')
+plt.suptitle("Confusion Matrices - Decision Trees")
+plt.tight_layout()
+plt.show()
+```
+
+Of these two ensemble methods, one can see that XGBoost outperformed Random Forest classification.  However, the results compared to those in the other sections examining Bernoulli Naive Bayes, Logistic Regression, and Support Vector Machines far outshine the performance of XGBoost - especially when comparing ROC-AUC.  
+
+Both of these models had a more rapid time for training, fitting, and predicting outcomes, at the cost of accuracy and other model performance metrics.
+
+In the case of XGBoost, a single test appears to favor the inclusion of protected class data.  While that is the case, the difference in performance is less than 1% across all metrics.  Is this statistically significant?
+
+```{python}
+np.random.seed(7092)
+results = pd.DataFrame({
+    'Model':[],
+    'Data':[],
+    'Accuracy':[],
+    'Precision':[],
+    'Recall':[],
+    'F1':[],
+    'ROC-AUC':[]
+})
+for i in range(500):
+    r = np.random.randint(0,20000,1)[0]
+    X_train,X_test,y_train,y_test = train_test_split(
+        clean,
+        labels,
+        stratify=labels,
+        test_size=0.2,
+        random_state=r
+    )
+
+    X_train_npc,X_test_npc,y_train,y_test = train_test_split(
+        clean_npc,
+        labels,
+        stratify=labels,
+        test_size=0.2,
+        random_state=r
+    )
+    xgb_pc.fit(X_train,y_train)
+    xgb_npc.fit(X_train_npc,y_train)
+    y_pred_pc = xgb_pc.predict(X_test)
+    y_pred_npc = xgb_npc.predict(X_test_npc)
+    results.loc[len(results)] = {
+        'Model':'XGBoost',
+        'Data':'With Protected Classes',
+        'Accuracy':accuracy_score(y_test,y_pred_pc),
+        'Precision':precision_score(y_test,y_pred_pc),
+        'Recall':recall_score(y_test,y_pred_pc),
+        'F1':f1_score(y_test,y_pred_pc),
+        'ROC-AUC':roc_auc_score(y_test,y_pred_pc)
+    }
+    results.loc[len(results)] = {
+        'Model':'XGBoost',
+        'Data':'Without Protected Classes',
+        'Accuracy':accuracy_score(y_test,y_pred_npc),
+        'Precision':precision_score(y_test,y_pred_npc),
+        'Recall':recall_score(y_test,y_pred_npc),
+        'F1':f1_score(y_test,y_pred_npc),
+        'ROC-AUC':roc_auc_score(y_test,y_pred_npc)
+    }
+
+```
+
+```{python}
+from statsmodels.stats.weightstats import ztest
+tbl_pc = results[results['Data']=='With Protected Classes'].describe().T.reset_index()
+tbl_npc = results[results['Data']=='Without Protected Classes'].describe().T.reset_index()
+
+from scipy import stats
+sig = pd.DataFrame({
+    'Stat':[],
+    'z-score':[],
+    'p-value':[],
+    'top performer':[],
+    'top mean':[],
+    'difference in means':[]
+})
+
+z_stat,p_value = ztest(
+    results.loc[results['Data']=='With Protected Classes']['Accuracy'],
+    results.loc[results['Data']=='Without Protected Classes']['Accuracy'],
+)
+scores = tbl_pc['index'].unique()
+for score in scores: 
+    z_stat,p_value = ztest(
+        results.loc[results['Data']=='With Protected Classes'][score],
+        results.loc[results['Data']=='Without Protected Classes'][score],
+    )
+    mu_pc, mu_npc = (
+        tbl_pc.loc[tbl_pc['index']==score,'mean'].iloc[0],
+        tbl_npc.loc[tbl_npc['index']==score,'mean'].iloc[0]
+    )
+    winner = np.select(
+        [
+            mu_pc < mu_npc,
+            mu_npc < mu_pc
+        ],
+        [
+            'Without Protected Classes',
+            'With Protected Classes'
+        ],
+        default='tie'
+    )
+    diff = np.abs(mu_pc-mu_npc)
+    m = max(mu_pc,mu_npc)
+    sig.loc[len(sig)] = {
+        'Stat':score,
+        'z-score':z_stat,
+        'p-value':p_value,
+        'top performer':winner,
+        'top mean':m,
+        'difference in means':diff
+    }
+
+display(sig.style.hide(axis='index'))
+```
+
+```{python}
+res = results.copy()
+res = res.melt(id_vars=['Model','Data'],var_name='Metric',value_name='Score')
+g = sns.FacetGrid(data=res,col='Metric')
+g.map_dataframe(
+    sns.kdeplot,
+    x='Score',
+    hue='Data'
+)
+plt.suptitle("Distributions for Randomization of Training/Testing Data\nXGBoost")
+plt.tight_layout()
+plt.show()
+```
+
+In short - yes, statistically significant difference in performance exist, and they favor inclusion of protected classes for precision and ROC-AUC, and favor exclusion of protected classes in recall.  All other p-values are above the significance threshold of $\alpha$ = 0.003.  
+
+Operationally, however - there is no real impact.  The significant differences are less than a fraction of a percent and in no way shape or form justify their inclusion as a substantially better improvement over their exclustion.
+
+<!-- This is a common thread across almost every model implemented in this study.  The results are consistent across multiple model types and methodologies and is particularly revealing.  
+
+Use of any of the methods included in this research would not offer an organization a substantial edge, benefit, or higher performance when including protected class information as predictors.  In the case of the best performer yet, support vector machines with RBF kernel, has the highest performative ROC-AUC for the *exclusion* of protected classes, with similarly high metrics across the board.
+
+It's remarkable, revealing, and actually quite astounding.  Any statistical or data analytics researcher exploring publically available data and applying a thorough amount of rigor could clearly reach the same results and conclusions found in this study.  Other important, non-publically available information that is relevant to one's finanical status as a mortgage applicant, would likely provide a greater explanation of data variation and the reasons behind an applicant's denial for a mortgage than any racial, ethnic, age-based, or gender-based features of an applicant / co-applicant pair.
+
+It is unlikely, but possible, that financial institutions leverage machine learning models as those explored in this research, with or without protected class information (or proxies for it) in their training and prediction datasets.  It is clearly evident that for the best performing models in this study, the publically available information *does not favor* their inclusion in modeling.
+
+Sure, when one is talking about millions, or potentially billions, of dollars at stake, the small performative increases of between 0.1% and 0.4% may initially appear to be substantial in terms of a company's bottom-line.  It seems that these perceived benefits would be far outweighed by the cost of disenfranchising countless potential borrowers and facing a hefty risk of expensive lawsuits.  The cost of time in court, litigation, lawyer fees, settlements, and/or paying out an actual loss in court is likely to go far and beyond any potential financial gain.  
+
+Any financial institution leveraging machine learning models should expect a level of ethical due-diligence of their analysts to maximize predictive performance of any operational model while operating within the constraints of the law, regulatory guidance and requirements, corporate policy and procedure, and industry best-practices.  The inclusion of protected class information *clearly* runs counter to the law and regulatory requirements, and even if a company chose to break those lines, they're only hurting themselves and their potential borrowers. -->
