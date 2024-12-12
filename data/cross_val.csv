@@ -1,0 +1,21 @@
+﻿Model,Stat,z-score,p-value,top performer,top mean,difference in means
+BernoulliNB,Precision,-44.319309,0,Without Protected Classes,0.969658,0.002109
+BernoulliNB,F1,-52.8118,0,Without Protected Classes,0.965205,0.00204
+BernoulliNB,Recall,-31.047924,0,Without Protected Classes,0.960794,0.001971
+CategoricalNB,Recall,-21.365216,0,Without Protected Classes,0.948421,0.046966
+BernoulliNB,Accuracy,-53.447073,0,Without Protected Classes,0.940754,0.003477
+CategoricalNB,F1,-9.276604,0,Without Protected Classes,0.932983,0.020344
+CategoricalNB,Precision,2.768951,0.005624,With Protected Classes,0.924105,0.006065
+MultinomialNB,Precision,12.735062,0,With Protected Classes,0.914013,0.000778
+BernoulliNB,ROC-AUC,-49.602472,0,Without Protected Classes,0.891554,0.007172
+CategoricalNB,Accuracy,-8.27175,0,Without Protected Classes,0.883466,0.031069
+MultinomialNB,F1,-2.489032,0.012809,Without Protected Classes,0.881842,0.000228
+MultinomialNB,Recall,-7.701771,0,Without Protected Classes,0.852538,0.001103
+MultinomialNB,Accuracy,-1.242399,0.21409,Without Protected Classes,0.804602,0.000175
+CategoricalNB,ROC-AUC,1.049461,0.293966,With Protected Classes,0.731962,0.007958
+MultinomialNB,ROC-AUC,10.578913,0,With Protected Classes,0.689026,0.002104
+Logistic Regression,Accuracy,44.648798,0,With Protected Classes,0.963586,0.002457
+Logistic Regression,Precision,47.173034,0,With Protected Classes,0.983867,0.001985
+Logistic Regression,Recall,16.219786,0,With Protected Classes,0.973386,0.000889
+Logistic Regression,F1,43.977874,0,With Protected Classes,0.978598,0.001431
+Logistic Regression,ROC-AUC,50.590439,0,With Protected Classes,0.939526,0.006305

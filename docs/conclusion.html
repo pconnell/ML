@@ -23,7 +23,7 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="site_libs/quarto-nav/headroom.min.js"></script>
 <script src="site_libs/clipboard/clipboard.min.js"></script>
 <script src="site_libs/quarto-search/autocomplete.umd.js"></script>
@@ -69,9 +69,6 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 <style>html{ scroll-behavior: smooth; }</style>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
-
-<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 
 
 </head>
@@ -255,7 +252,11 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#summary-table-of-results" id="toc-summary-table-of-results" class="nav-link active" data-scroll-target="#summary-table-of-results"><span class="header-section-number">12.1</span> Summary Table of Results</a></li>
+  <li><a href="#summary-graphics-of-results" id="toc-summary-graphics-of-results" class="nav-link active" data-scroll-target="#summary-graphics-of-results"><span class="header-section-number">12.1</span> Summary Graphics of Results</a>
+  <ul class="collapse">
+  <li><a href="#fold-cross-validations" id="toc-fold-cross-validations" class="nav-link" data-scroll-target="#fold-cross-validations"><span class="header-section-number">12.1.1</span> 500-fold Cross Validations</a></li>
+  <li><a href="#single-run-test-comparisons" id="toc-single-run-test-comparisons" class="nav-link" data-scroll-target="#single-run-test-comparisons"><span class="header-section-number">12.1.2</span> Single-Run Test Comparisons</a></li>
+  </ul></li>
   <li><a href="#final-thoughts" id="toc-final-thoughts" class="nav-link" data-scroll-target="#final-thoughts"><span class="header-section-number">12.2</span> Final Thoughts</a></li>
   </ul>
 </nav>
@@ -282,93 +283,87 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>Several models produced strong results</p>
-<p>Many results between models trained with and without protected class information had statistically significant differences.</p>
-<p>Operationally and ethically speaking, the percentage difference in performance for the best models were insufficient to justify the inclusion of protected class data as part of a model to make a decision on mortgage loan applications.</p>
-<section id="summary-table-of-results" class="level2" data-number="12.1">
-<h2 data-number="12.1" class="anchored" data-anchor-id="summary-table-of-results"><span class="header-section-number">12.1</span> Summary Table of Results</h2>
-<div id="a09ff99a" class="cell" data-execution_count="1">
-<div class="cell-output cell-output-display" data-execution_count="1">
-<style type="text/css">
-</style>
-
-<table id="T_f0c69" data-quarto-postprocess="true" class="table table-sm table-striped small">
-<thead>
-<tr class="header">
-<th id="T_f0c69_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Model</th>
-<th id="T_f0c69_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">Metric</th>
-<th id="T_f0c69_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">z-score</th>
-<th id="T_f0c69_level0_col3" class="col_heading level0 col3" data-quarto-table-cell-role="th">p-value</th>
-<th id="T_f0c69_level0_col4" class="col_heading level0 col4" data-quarto-table-cell-role="th">significant difference</th>
-<th id="T_f0c69_level0_col5" class="col_heading level0 col5" data-quarto-table-cell-role="th">top performer</th>
-<th id="T_f0c69_level0_col6" class="col_heading level0 col6" data-quarto-table-cell-role="th">top mean</th>
-<th id="T_f0c69_level0_col7" class="col_heading level0 col7" data-quarto-table-cell-role="th">difference in means</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td id="T_f0c69_row0_col0" class="data row0 col0">BernoulliNB</td>
-<td id="T_f0c69_row0_col1" class="data row0 col1">Accuracy</td>
-<td id="T_f0c69_row0_col2" class="data row0 col2">-53.447000</td>
-<td id="T_f0c69_row0_col3" class="data row0 col3">0.000000</td>
-<td id="T_f0c69_row0_col4" class="data row0 col4">Yes</td>
-<td id="T_f0c69_row0_col5" class="data row0 col5">Without protected classes</td>
-<td id="T_f0c69_row0_col6" class="data row0 col6">94.08%</td>
-<td id="T_f0c69_row0_col7" class="data row0 col7">0.35%</td>
-</tr>
-<tr class="even">
-<td id="T_f0c69_row1_col0" class="data row1 col0">CategoricalNB</td>
-<td id="T_f0c69_row1_col1" class="data row1 col1">Accuracy</td>
-<td id="T_f0c69_row1_col2" class="data row1 col2">-8.212000</td>
-<td id="T_f0c69_row1_col3" class="data row1 col3">0.000000</td>
-<td id="T_f0c69_row1_col4" class="data row1 col4">Yes</td>
-<td id="T_f0c69_row1_col5" class="data row1 col5">Without protected classes</td>
-<td id="T_f0c69_row1_col6" class="data row1 col6">88.35%</td>
-<td id="T_f0c69_row1_col7" class="data row1 col7">3.11%</td>
-</tr>
-<tr class="odd">
-<td id="T_f0c69_row2_col0" class="data row2 col0">MultinomialNB</td>
-<td id="T_f0c69_row2_col1" class="data row2 col1">Accuracy</td>
-<td id="T_f0c69_row2_col2" class="data row2 col2">-1.242000</td>
-<td id="T_f0c69_row2_col3" class="data row2 col3">0.214000</td>
-<td id="T_f0c69_row2_col4" class="data row2 col4">No</td>
-<td id="T_f0c69_row2_col5" class="data row2 col5">Without protected classes</td>
-<td id="T_f0c69_row2_col6" class="data row2 col6">80.46%</td>
-<td id="T_f0c69_row2_col7" class="data row2 col7">0.018%</td>
-</tr>
-<tr class="even">
-<td id="T_f0c69_row3_col0" class="data row3 col0">Decision Trees</td>
-<td id="T_f0c69_row3_col1" class="data row3 col1">Accuracy</td>
-<td id="T_f0c69_row3_col2" class="data row3 col2">-0.063000</td>
-<td id="T_f0c69_row3_col3" class="data row3 col3">0.950000</td>
-<td id="T_f0c69_row3_col4" class="data row3 col4">No</td>
-<td id="T_f0c69_row3_col5" class="data row3 col5">Without protected classes</td>
-<td id="T_f0c69_row3_col6" class="data row3 col6">90.98%</td>
-<td id="T_f0c69_row3_col7" class="data row3 col7">0.0004%</td>
-</tr>
-<tr class="odd">
-<td id="T_f0c69_row4_col0" class="data row4 col0">Logistic Regression</td>
-<td id="T_f0c69_row4_col1" class="data row4 col1">Accuracy</td>
-<td id="T_f0c69_row4_col2" class="data row4 col2">44.649000</td>
-<td id="T_f0c69_row4_col3" class="data row4 col3">0.000000</td>
-<td id="T_f0c69_row4_col4" class="data row4 col4">Yes</td>
-<td id="T_f0c69_row4_col5" class="data row4 col5">With protected classes</td>
-<td id="T_f0c69_row4_col6" class="data row4 col6">96.36%</td>
-<td id="T_f0c69_row4_col7" class="data row4 col7">0.246%</td>
-</tr>
-</tbody>
-</table>
+<p>Many results between models trained with and without protected class information had statistically significant difference in performance, but not an impactful or operationally sufficient performance increase to justify their use or incorporation as a business practice.</p>
+<p>Operationally and ethically speaking, the percentage difference in performance for the best models were insufficient to justify the inclusion of protected class data as part of a model to make a decision on mortgage loan applications. They also do not seem to explain any disparities in loan approvals or denials for applicants on the basis of age, gender, or race.</p>
+<section id="summary-graphics-of-results" class="level2" data-number="12.1">
+<h2 data-number="12.1" class="anchored" data-anchor-id="summary-graphics-of-results"><span class="header-section-number">12.1</span> Summary Graphics of Results</h2>
+<section id="fold-cross-validations" class="level3" data-number="12.1.1">
+<h3 data-number="12.1.1" class="anchored" data-anchor-id="fold-cross-validations"><span class="header-section-number">12.1.1</span> 500-fold Cross Validations</h3>
+<div id="cell-fig-xfold-val" class="cell" data-execution_count="2">
+<div class="cell-output cell-output-display">
+<div id="fig-xfold-val" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-xfold-val-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="conclusion_files/figure-html/fig-xfold-val-output-1.png" width="804" height="757" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-xfold-val-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;12.1: Comparison of Models and Metrics, 500-fold cross validation
+</figcaption>
+</figure>
 </div>
 </div>
-<p>Here is a summary of the accuracy of models that were run 500 times and compared to one another for difference in performance. Any case where there is a significant difference is worth examining and noting. It is notable that logistic regression had the highest accuracy of all performances, yet the difference in performance was less than a quarter of a percent better than training without protected class information. In all other cases, the gap was similar, with the top performer being those models that <em>excluded</em> protected class information from the training data. In all cases - less Categorical Naive Bayes, the difference in performance remained within a fraction of a percent of the other model in terms of accuracy.</p>
+</div>
+<!-- Here is a summary of the accuracy of models that were run 500 times and compared to one another for difference in performance.  Any case where there is a significant difference is worth examining and noting.  It is notable that logistic regression had the highest accuracy of all performances, yet the difference in performance was less than a quarter of a percent better than training without protected class information.  In all other cases, the gap was similar, with the top performer being those models that *excluded* protected class information from the training data.  In all cases - less Categorical Naive Bayes, the difference in performance remained within a fraction of a percent of the other model in terms of accuracy. -->
+<p><a href="#fig-xfold-val" class="quarto-xref">Figure&nbsp;<span>12.1</span></a> depicts 6 models in pairs (per model type, one trained with, and one trained without, protected class information), and the mean model metrics for each coming out of the 500-fold cross validation. These only depict the cases in which there was a statistically signficant difference in performance between the models trained with and without predicted class information. The preferred model of the two per model category is highlighted in bold. For this portion - the concept of ensembles (namely bagging) will be applied here. Namely, were these models to be combined in an ensemble method, each would have a vote to the final classification, and in such a situation, the majority would rule. That concept is applied to each of the metrics that were evaluated for each model during cross validation.</p>
+<p>Examining this plot, the following facts are evident:</p>
+<ul>
+<li><p>Accuracy favors exclusion of protected class information in a majority of models</p></li>
+<li><p>F1 Score prefers exclusion of protected class information in a majority of models</p></li>
+<li><p>Precision favors inclusion of protected class information in a majority of models</p></li>
+<li><p>Recall favors exclusion of protected class information in a majority of models</p></li>
+<li><p>ROC-AUC favors inclusion of protected class information in a majority of models</p></li>
+</ul>
+<p>The favoring in precision and ROC-AUC may be of further concern. Examining in these cases, the greatest difference in scores is 0.63% for ROC-AUC for Logistic Regression, and 0.61% for precision. Regarding precision, this is a measure of the ratio of true positives to the total number of positive predictions (e.g.&nbsp;true and false positives). This means that the model with protected class information reduces false positives (people that shouldn’t get approved for a mortgage, but do) when protected class information is included in the model. ROC-AUC is a measure that examines the true positive rate and false positive rate at differing thresholds. This metric’s increase is directly correlated with the increase in precision</p>
+<!-- ```{python}
+data = pd.read_csv()
+``` -->
+<p>Recall should be taken into consideration here, though. This metric signifies the risk of false negatives being more costly than false positives. False negatives are impactful to a business with customers - in this case, lenders and potential borrowers, as the denial of a mortgage application to someone who should truly be eligible costs the lender business and potential income. In the case of a lender, a balance of accuracy and recall should be prioritized - the lender should seek to approve mortgages that need approval, deny mortgages that should be denied, while mitigating the opportunity cost of denying a mortgage to a worthy applicant. In this light, considering the outcomes for accuracy, recall, and F1 score - it makes more business sense to <em>exclude protected class information</em> from consideration in machine learning models.</p>
+<p>Similarly F1 score is a measure of how harmonically balanced recall and precision are. Good F1 score would signify a balance in the risk of false positives (those who are granted a mortgage when they should not be), and false negatives (those who are denied a mortgage, but should receive one). F1 score, the majority of the time, provides better balance when <em>protected class information is excluded</em>.</p>
+</section>
+<section id="single-run-test-comparisons" class="level3" data-number="12.1.2">
+<h3 data-number="12.1.2" class="anchored" data-anchor-id="single-run-test-comparisons"><span class="header-section-number">12.1.2</span> Single-Run Test Comparisons</h3>
+<p>Next are the single run model comparisons. Each set of models (trained with and without protected class information) are directly compared side-by-side on a per-model basis to examine model metrics of accuracy, precision, recall, F1, and ROC-AUC scores. These scores are important to determine how well a model is performing. As an administrative note - SVMs were executed multiple times with multiple cost values. The included results in this table are the SVMs of each kernel type that had the best performance in metrics for a given kernel and cost (Radial Basis Function, Linear, and Sigmoid, C=0.5, 1, or 1.5). The decision point for their inclusion was based upon ROC-AUC score.</p>
+<div id="cell-fig-sing-run" class="cell" data-execution_count="4">
+<div class="cell-output cell-output-display">
+<div id="fig-sing-run" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-sing-run-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="conclusion_files/figure-html/fig-sing-run-output-1.png" width="804" height="757" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-sing-run-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;12.2: Comparison of Models and Metrics, single run
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>In each of these result plots, the favored model is highlighted and bold in the percentage performance label for each metric in question. In some cases there are ties between the models (especially with the Decision Tree producing identical results). Cases of ties are excluded from the following statements regarding majority counts.</p>
+<p>Examining <a href="#fig-sing-run" class="quarto-xref">Figure&nbsp;<span>12.2</span></a>:</p>
+<ul>
+<li><p>For accuracy, exclusion of protected classes is favored over inclusion in the majority of models</p></li>
+<li><p>For F1, exclustion of protected classes is favored over inclusion in the majority of models</p></li>
+<li><p>For precision, exclusion of protected classes is favored over exclusion in the majority of models</p></li>
+<li><p>For ROC-AUC, <em>inclusion</em> of protected classes is favored over inclusion in the majority of models</p></li>
+<li><p>For recall, exclusion of protected classes is favored over inclusion in the majority of models.</p></li>
+</ul>
+<p>Examining these metrics in totality makes the following points immediately evident:</p>
+<ul>
+<li><p>the only case in which there was better performance in a majority of models with including protected classes was that of recall. Models here that favored inclusion of protected classes had performative increases of less than 0.27%. Furthermore, recall is a measure that examines the rate of true positives to the combination of true positives and false negatives. This means that including protected class information improves the true positive rate, and would reduce false negatives (people who should be offered a mortgage, but aren’t) on the basis of age, gender, and race. This performative increase is small, and there is no measure for significant differences in half of the models in which inclusion of protected classes was favored.</p></li>
+<li><p><strong>the inclusion of protected class information in machine learning models for assessing whether an applicant should be approved or denied for a mortgage appplication is not advantageous to lenders, given publicly available data and the methods used in this research.</strong></p></li>
+</ul>
+</section>
 </section>
 <section id="final-thoughts" class="level2" data-number="12.2">
 <h2 data-number="12.2" class="anchored" data-anchor-id="final-thoughts"><span class="header-section-number">12.2</span> Final Thoughts</h2>
 <p>There is a common thread across almost every model implemented in this study. The results are consistent across multiple model types and methodologies and is particularly revealing.</p>
-<p>Use of any of the methods included in this research would not offer an organization a substantial edge, benefit, or higher performance when including protected class information as predictors. In the case of the best performer yet, support vector machines with RBF kernel, has the highest performative ROC-AUC for the <em>exclusion</em> of protected classes, with similarly high metrics across the board.</p>
+<p>Use of any of the methods included in this research would not offer an organization a substantial edge, benefit, or higher performance when including protected class information as predictors. In the case of the best performer for singly-run models, support vector machines with RBF kernel, has the highest performative ROC-AUC for the <em>exclusion</em> of protected classes, with similarly high metrics across the board.</p>
 <p>It’s remarkable, revealing, and actually quite astounding. Any statistical or data analytics researcher exploring publically available data and applying a thorough amount of rigor could clearly reach the same results and conclusions found in this study. Other important, non-publically available information that is relevant to one’s finanical status as a mortgage applicant, would likely provide a greater explanation of data variation and the reasons behind an applicant’s denial for a mortgage than any racial, ethnic, age-based, or gender-based features of an applicant / co-applicant pair.</p>
-<p>It is unlikely, but possible, that financial institutions leverage machine learning models as those explored in this research, with or without protected class information (or proxies for it) in their training and prediction datasets. It is clearly evident that for the best performing models in this study, the publically available information <em>does not favor</em> their inclusion in modeling.</p>
-<p>Sure, when one is talking about millions, or potentially billions, of dollars at stake, the small performative increases of between 0.1% and 0.4% may initially appear to be substantial in terms of a company’s bottom-line. It seems that these perceived benefits would be far outweighed by the cost of disenfranchising countless potential borrowers and facing a hefty risk of expensive lawsuits. The cost of time in court, litigation, lawyer fees, settlements, and/or paying out an actual loss in court is likely to go far and beyond any potential financial gain. Overall, the gain is operationally ineffectual.</p>
+<p>It is unlikely, but possible, that financial institutions leverage machine learning models as those explored in this research, with or without protected class information (or proxies for it) in their training and prediction datasets. It is clearly evident that for the vast majority of models in this study, the publicly available information <em>does not favor</em> their inclusion in modeling.</p>
+<p>Sure, when one is talking about millions, or potentially billions, of dollars at stake for a company to gain, the small performative increases of between 0.1% and 0.6% may initially appear to be substantial in terms of a company’s bottom-line, where they exist. It seems that these perceived benefits would be far outweighed by the cost of disenfranchising countless potential borrowers and facing a hefty risk of expensive lawsuits. The cost of time in court, litigation, lawyer fees, settlements, and/or paying out an actual loss in court is likely to go far and beyond any potential financial gain. Overall, the gain is operationally ineffectual.</p>
+<p><a href="https://www.cornerstone.com/wp-content/uploads/2024/03/Securities-Class-Action-Settlements-2023-Review-and-Analysis.pdf#:~:text=The%20average%20settlement%20amount%20in,analysis%20of%20settlements%20by%20percentiles.">Per Cornerstone Research</a>&amp;text=In%202023%2C%206%25%20of%20cases,the%20highest%20level%20since%202010.), the median “simplified tiered damages” amount - the estimated potential per-share loss in the valuation of a company as a result of a class-action lawsuit, was $313.3 million dollars in 2023, and the average settlement amount was $47.3 million dollars.</p>
+<p>The performance increase would have to be at least X.XX% to <em>break even</em> at the one-billion-dollar-per-year business scale, and would have to factor in false positive rate alongside true positive and negative rates, maximizing true predictions while minimizing false positives. Similarly, with the given performance increase of including vs.&nbsp;excluding protected classes, in the best case, the amount of business a company would have to do in mortgages a year would have to be $X.XX to <em>cover the potential cost</em> of an average class-action lawsuit in 2023 using the mean accuracy from the cross-validated logistic regression model in this study. The loss of funds to class-action payouts, shareholder loss due to loss of public confidence in a company, and any other regulatory fines and fees on top of this, far out weigh the risk. As an example in 2023, Bank of America was ordered by the <a href="https://www.consumerfinance.gov/enforcement/actions/bank-of-america-na-hmda-data-2023/">Consumer Financial Protection Bureau</a> to pay $12 million in penalties for non-compliance with HMDA regulations. Other fines and fees can be imposed as well, and this exposes a company to substantial risk to their finances and future as a company. Fines can accrue up to $1 million per day for a company that knowingly or willingly violates a consumer finanical law. Intentional use of models including protected class information would fall within this category, and could accrue $365 million in fines to the US Government per year.</p>
+<p>Per <a href="https://www.navyfederal.org/content/dam/nfculibs/pdfs/membership/2023-Annual-Report.pdf">NFCU’s annual report for 2023</a> - NFCU gained an additional $17.2 billion in new loans from 2022. Leveraging the best performing model in cross validation - Logistic Regression with protected class information at a 0.246% increase - would correspond to a $41.82 million increase compared to not using protected class information. Here, one can can see the scale - at first glance, that looks like a whole lot of money. But considering the cost of a class-action lawsuit, however, the company would be out about $7 million in a settlement alone (assuming that the settlement was at the 2023 average for a class-action). This also doesn’t cover any legal fees a company may have to pay during the class-action process, or any regulatory fines and fees a company may have to cover as a result of any government or regulatory inspections. The $7M loss from a class-action alone is large, and when adding in the risk of other fines and fees - this seemingly large-scale gain in the short-term could learn to substantial finanical loss, damage to company reputation, and other challenges in the long-term.</p>
+<p>It appears more likely that any modeling performed in the lending industry would include non-public information (whether company proprietary, or private to an applicant) - and that such models would provide a greater explanation on the outcomes for predicting whether or not an applicant would be approved for denied a mortgage application. Performance increases are important for models, and getting there with relevant variables and data is paramount to moral and ethical business operations.</p>
 <p>Any financial institution leveraging machine learning models should expect a level of ethical due-diligence of their analysts to maximize predictive performance of any operational model while operating within the constraints of the law, regulatory guidance and requirements, corporate policy and procedure, and industry best-practices. The inclusion of protected class information <em>clearly</em> runs counter to the law and regulatory requirements, and even if a company chose to break those lines, they’re only hurting themselves and their potential borrowers.</p>
 
 

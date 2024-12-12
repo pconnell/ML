@@ -1,0 +1,17 @@
+﻿Model,Data,Accuracy,Precision,Recall,F1,ROC-AUC
+CategoricalNB,With Protected Classes,0.882012,0.943416,0.91705,0.930046,0.795993
+CategoricalNB,Without Protected Classes,0.912455,0.934819,0.964922,0.949632,0.783651
+MultinomialNB,With Protected Classes,0.936358,0.96788,0.957361,0.962591,0.884798
+MultinomialNB,Without Protected Classes,0.939653,0.969309,0.959833,0.964548,0.890112
+BernoulliNB,With Protected Classes,0.937514,0.97356,0.952818,0.963077,0.899943
+BernoulliNB,Without Protected Classes,0.939875,0.977551,0.951553,0.964377,0.911205
+Decision Tree,With Protected Classes,0.909013,0.911677,0.989477,0.948985,0.711476
+Decision Tree,Without Protected Classes,0.909013,0.911677,0.989477,0.948985,0.711476
+Logistic Regression,With Protected Classes,0.961859,0.983022,0.972197,0.977579,0.936481
+Logistic Regression,Without Protected Classes,0.958859,0.981304,0.970385,0.975814,0.930562
+SVM RBF(C=0.5),Without Protected Classes,0.963408,0.984684,0.97234,0.978473,0.94148
+SVM RBF(C=0.5),With Protected Classes,0.962671,0.981249,0.974986,0.978473,0.932438
+SVM LIN(C=1),Without Protected Classes,0.961343,0.982843,0.971765,0.977273,0.935755
+SVM LIN(C=1),With Protected Classes,0.964171,0.984896,0.97303,0.977273,0.94242
+SVM SIG(C=1.5),Without Protected Classes,0.964171,0.984726,0.973203,0.978931,0.941997
+SVM SIG(C=1.5),With Protected Classes,0.944375,0.96732,0.967654,0.978931,0.887225

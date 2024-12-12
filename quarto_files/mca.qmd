@@ -286,6 +286,7 @@ sns.scatterplot(
     data=mca_pc,
     x='MC1',y='MC2',hue='labels'
 )
+plt.show()
 ```
 ```{python}
 import seaborn as sns
@@ -293,10 +294,28 @@ sns.scatterplot(
     data=mca_pc,
     x='MC1',y='MC2',hue='y_pred'
 )
+plt.show()
+```
+
+```{python}
+import seaborn as sns
+sns.scatterplot(
+    data=mca_npc,
+    x='MC1',y='MC2',hue='labels'
+)
+plt.show()
+```
+```{python}
+import seaborn as sns
+sns.scatterplot(
+    data=mca_npc,
+    x='MC1',y='MC2',hue='y_pred'
+)
+plt.show()
 ```
 
 
-```{python}
+<!-- ```{python}
 X_train_pc,X_test_pc,y_train,y_test=train_test_split(
     mca_pc,
     labels,
@@ -310,47 +329,5 @@ X_train_npc,X_test_npc,y_train,y_test=train_test_split(
     stratify=labels,
     test_size=0.2,
     random_state=8808
-)
-```
-<!-- 
-```{python}
-ag_pc = AgglomerativeClustering(
-    distance_threshold=1,
-    compute_full_tree=True,
-    n_clusters=None,
-    metric='cosine',
-    linkage='average'
-)
-ag_npc = AgglomerativeClustering(
-    distance_threshold=1,
-    compute_full_tree=True,
-    n_clusters=None,
-    metric='cosine',
-    linkage='average'
-)
-y_pred = ag_pc.fit_predict(X_test_pc)
-y_pred_npc = ag_npc.fit_predict(X_test_npc)
-```
-
-
-```{python}
-X_test_pc['y_pred_ag_pc'] = y_pred
-X_test_pc['labels'] = y_test
-X_test_npc['y_pred_ag_npc'] = y_pred_npc
-X_test_npc['labels'] = y_test
-```
-
-```{python}
-import seaborn as sns
-sns.scatterplot(
-    data=X_test_pc,
-    x='MC1',y='MC2',hue='labels'
-)
-```
-```{python}
-import seaborn as sns
-sns.scatterplot(
-    data=mca_pc,
-    x='MC1',y='MC2',hue='y_pred_ag_pc'
 )
 ``` -->

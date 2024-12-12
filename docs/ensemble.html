@@ -324,17 +324,33 @@ window.Quarto = {
 <section id="bagging" class="level3" data-number="11.1.1">
 <h3 data-number="11.1.1" class="anchored" data-anchor-id="bagging"><span class="header-section-number">11.1.1</span> Bagging</h3>
 <p>Bagging is a <em>parallel</em> method. This means that each model is trained independently of one another on separate random subset samplings of the source training data. Each model is then optimized for that subset of the data, and each model gets a vote in the classification of a testing datapoint. Because of this voting process, the output tends to have an odd number of models that are independently trained (at least for binary classification systems differentiating between a positive and negative outcome). Random Forests are an example of a bagging ensemble learning method.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./imgs/bagging.png" class="img-fluid figure-img"></p>
+<figcaption>Bagging Models</figcaption>
+</figure>
+</div>
+<p>By training multiple models simultaneously and independently, and training them on different subsets of the rows and columns of the source training data, each model develops its own unique mathematical perspective of the data. Some models may “see” features and variables that are relevant that the other models do not, and vice-versa. By developing these unique data viewpoints, the combination of models together has the potential to become stronger than any one model on its own.</p>
 </section>
 <section id="boosting" class="level3" data-number="11.1.2">
 <h3 data-number="11.1.2" class="anchored" data-anchor-id="boosting"><span class="header-section-number">11.1.2</span> Boosting</h3>
-<p>Boosting is a <em>series</em> method. For models trained in series, each subsequent model is trained based on the outcomes of the previous model, tending to focus more on records that were misclassified by the previous model. In this way, the subsequent models identify those misclassified records while still retaining appropriate predictive performance on the previous correctly classified records. An example of a boosting algorithm is called Adaptive Boosting (or ada boost)</p>
+<p>Boosting is a <em>series</em> method. For models trained in series, each subsequent model is trained based on the outcomes of the previous model, tending to focus more on records that were misclassified by the previous model. In this way, the subsequent models identify those misclassified records while still retaining appropriate predictive performance on the previous correctly classified records. In boosting, a sequence or series of weak learners are combined, with each feeding the next model in the series to improve upon the misclassified records of the previous model. The focus on misclassification allows the chain of simpler, weaker, base learning models to work together and improve overall predictive performance. This can be particularly effective with binary classifiers (that predict a yes or no outcome) as a result of the model.</p>
+<p>An example of a boosting algorithm is called Adaptive Boosting (or ADABoost). This method examines a series of weaker classification models and assigns weights to each based upon their performance. The weight assigned to each model is based upon its output error rate - the higher the error rate, the lower the weight it is assigned.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./imgs/boosting.png" class="img-fluid figure-img"></p>
+<figcaption>Boosting Models</figcaption>
+</figure>
+</div>
+<p>Boosting, through focus on classification errors, does progressive clean up of prediction results, arriving at a point where, similar to bagging, the combined result of all the base learners in the chain has the potential to produce better or stronger predictive results than any one classifier on its own.</p>
 </section>
 <section id="random-forests" class="level3" data-number="11.1.3">
 <h3 data-number="11.1.3" class="anchored" data-anchor-id="random-forests"><span class="header-section-number">11.1.3</span> Random Forests</h3>
-<p>Random forests take the decision tree algorithm as described in <a href="dt.html" class="quarto-xref"><span>Chapter 8</span></a>, and trains multiple decision trees using that algorithm in parallel. Each tree gets a vote on the classification of new records.</p>
+<p>Random forests take the decision tree algorithm as described in <a href="dt.html" class="quarto-xref"><span>Chapter 8</span></a>, and trains multiple decision trees using that algorithm in parallel, on differing subsets of the rows and columns of the training dataset. Each tree gets a vote on the classification of new records after the training process. As such, random forests are quite popular in implementation because of their simplicity and ease of implementation.</p>
 </section>
 <section id="xgboost" class="level3" data-number="11.1.4">
 <h3 data-number="11.1.4" class="anchored" data-anchor-id="xgboost"><span class="header-section-number">11.1.4</span> XGBoost</h3>
+<p>Extreme Gradient Boosting (XGBoost) is another popular method for implementing ensembles. Its construct is similar to that of random forests, and also leverages ideas like those in logistic regression and support vector machines - identifying a gradient that can be minimized or maximized. In the case of XGBoost, the gradient optimization targets the gradient of the prediction error (akin to mean squared error in linear regression), and assigns weights to each tree within the model to minimize said prediction error. In this sense, XGBoost is a weighted voting algorithm that is akin to the performance of a neural network, but in lieu of neurons, uses the outcomes of multiple independently constructed decision trees.</p>
 </section>
 </section>
 <section id="data-and-code" class="level2" data-number="11.2">
@@ -348,47 +364,47 @@ window.Quarto = {
 </section>
 <section id="results" class="level2" data-number="11.3">
 <h2 data-number="11.3" class="anchored" data-anchor-id="results"><span class="header-section-number">11.3</span> Results</h2>
-<div id="d0160479" class="cell" data-execution_count="4">
+<div id="cfc54aad" class="cell" data-execution_count="4">
 <div class="cell-output cell-output-display">
 <style type="text/css">
 </style>
 
-<table id="T_01d3d" data-quarto-postprocess="true" class="table table-sm table-striped small">
+<table id="T_5ff01" data-quarto-postprocess="true" class="table table-sm table-striped small">
 <thead>
 <tr class="header">
-<th id="T_01d3d_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Model</th>
-<th id="T_01d3d_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">Data</th>
-<th id="T_01d3d_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">Accuracy</th>
-<th id="T_01d3d_level0_col3" class="col_heading level0 col3" data-quarto-table-cell-role="th">Precision</th>
-<th id="T_01d3d_level0_col4" class="col_heading level0 col4" data-quarto-table-cell-role="th">Recall</th>
-<th id="T_01d3d_level0_col5" class="col_heading level0 col5" data-quarto-table-cell-role="th">F1</th>
-<th id="T_01d3d_level0_col6" class="col_heading level0 col6" data-quarto-table-cell-role="th">ROC-AUC</th>
+<th id="T_5ff01_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Model</th>
+<th id="T_5ff01_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">Data</th>
+<th id="T_5ff01_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">Accuracy</th>
+<th id="T_5ff01_level0_col3" class="col_heading level0 col3" data-quarto-table-cell-role="th">Precision</th>
+<th id="T_5ff01_level0_col4" class="col_heading level0 col4" data-quarto-table-cell-role="th">Recall</th>
+<th id="T_5ff01_level0_col5" class="col_heading level0 col5" data-quarto-table-cell-role="th">F1</th>
+<th id="T_5ff01_level0_col6" class="col_heading level0 col6" data-quarto-table-cell-role="th">ROC-AUC</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td id="T_01d3d_row0_col0" class="data row0 col0">Random Forest</td>
-<td id="T_01d3d_row0_col1" class="data row0 col1">With Protected Classes</td>
-<td id="T_01d3d_row0_col2" class="data row0 col2">0.926817</td>
-<td id="T_01d3d_row0_col3" class="data row0 col3">0.935313</td>
-<td id="T_01d3d_row0_col4" class="data row0 col4">0.982375</td>
-<td id="T_01d3d_row0_col5" class="data row0 col5">0.958267</td>
-<td id="T_01d3d_row0_col6" class="data row0 col6">0.790423</td>
+<td id="T_5ff01_row0_col0" class="data row0 col0">Random Forest</td>
+<td id="T_5ff01_row0_col1" class="data row0 col1">With Protected Classes</td>
+<td id="T_5ff01_row0_col2" class="data row0 col2">0.927899</td>
+<td id="T_5ff01_row0_col3" class="data row0 col3">0.935844</td>
+<td id="T_5ff01_row0_col4" class="data row0 col4">0.983094</td>
+<td id="T_5ff01_row0_col5" class="data row0 col5">0.958887</td>
+<td id="T_5ff01_row0_col6" class="data row0 col6">0.792396</td>
 </tr>
 <tr class="even">
-<td id="T_01d3d_row1_col0" class="data row1 col0">Random Forest</td>
-<td id="T_01d3d_row1_col1" class="data row1 col1">Without Protected Classes</td>
-<td id="T_01d3d_row1_col2" class="data row1 col2">0.925710</td>
-<td id="T_01d3d_row1_col3" class="data row1 col3">0.939595</td>
-<td id="T_01d3d_row1_col4" class="data row1 col4">0.975877</td>
-<td id="T_01d3d_row1_col5" class="data row1 col5">0.957392</td>
-<td id="T_01d3d_row1_col6" class="data row1 col6">0.802552</td>
+<td id="T_5ff01_row1_col0" class="data row1 col0">Random Forest</td>
+<td id="T_5ff01_row1_col1" class="data row1 col1">Without Protected Classes</td>
+<td id="T_5ff01_row1_col2" class="data row1 col2">0.926546</td>
+<td id="T_5ff01_row1_col3" class="data row1 col3">0.940310</td>
+<td id="T_5ff01_row1_col4" class="data row1 col4">0.976078</td>
+<td id="T_5ff01_row1_col5" class="data row1 col5">0.957860</td>
+<td id="T_5ff01_row1_col6" class="data row1 col6">0.804946</td>
 </tr>
 </tbody>
 </table>
 </div>
 </div>
-<div id="fbfaf4cb" class="cell" data-execution_count="5">
+<div id="9d1d7d7a" class="cell" data-execution_count="5">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -397,47 +413,47 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<div id="73827008" class="cell" data-execution_count="7">
+<div id="f284c0f8" class="cell" data-execution_count="7">
 <div class="cell-output cell-output-display">
 <style type="text/css">
 </style>
 
-<table id="T_d7a6d" data-quarto-postprocess="true" class="table table-sm table-striped small">
+<table id="T_041e4" data-quarto-postprocess="true" class="table table-sm table-striped small">
 <thead>
 <tr class="header">
-<th id="T_d7a6d_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Model</th>
-<th id="T_d7a6d_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">Data</th>
-<th id="T_d7a6d_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">Accuracy</th>
-<th id="T_d7a6d_level0_col3" class="col_heading level0 col3" data-quarto-table-cell-role="th">Precision</th>
-<th id="T_d7a6d_level0_col4" class="col_heading level0 col4" data-quarto-table-cell-role="th">Recall</th>
-<th id="T_d7a6d_level0_col5" class="col_heading level0 col5" data-quarto-table-cell-role="th">F1</th>
-<th id="T_d7a6d_level0_col6" class="col_heading level0 col6" data-quarto-table-cell-role="th">ROC-AUC</th>
+<th id="T_041e4_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Model</th>
+<th id="T_041e4_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">Data</th>
+<th id="T_041e4_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">Accuracy</th>
+<th id="T_041e4_level0_col3" class="col_heading level0 col3" data-quarto-table-cell-role="th">Precision</th>
+<th id="T_041e4_level0_col4" class="col_heading level0 col4" data-quarto-table-cell-role="th">Recall</th>
+<th id="T_041e4_level0_col5" class="col_heading level0 col5" data-quarto-table-cell-role="th">F1</th>
+<th id="T_041e4_level0_col6" class="col_heading level0 col6" data-quarto-table-cell-role="th">ROC-AUC</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td id="T_d7a6d_row0_col0" class="data row0 col0">XGBoost</td>
-<td id="T_d7a6d_row0_col1" class="data row0 col1">With Protected Classes</td>
-<td id="T_d7a6d_row0_col2" class="data row0 col2">0.933653</td>
-<td id="T_d7a6d_row0_col3" class="data row0 col3">0.939455</td>
-<td id="T_d7a6d_row0_col4" class="data row0 col4">0.985969</td>
-<td id="T_d7a6d_row0_col5" class="data row0 col5">0.962150</td>
-<td id="T_d7a6d_row0_col6" class="data row0 col6">0.805219</td>
+<td id="T_041e4_row0_col0" class="data row0 col0">XGBoost</td>
+<td id="T_041e4_row0_col1" class="data row0 col1">With Protected Classes</td>
+<td id="T_041e4_row0_col2" class="data row0 col2">0.933653</td>
+<td id="T_041e4_row0_col3" class="data row0 col3">0.939455</td>
+<td id="T_041e4_row0_col4" class="data row0 col4">0.985969</td>
+<td id="T_041e4_row0_col5" class="data row0 col5">0.962150</td>
+<td id="T_041e4_row0_col6" class="data row0 col6">0.805219</td>
 </tr>
 <tr class="even">
-<td id="T_d7a6d_row1_col0" class="data row1 col0">XGBoost</td>
-<td id="T_d7a6d_row1_col1" class="data row1 col1">Without Protected Classes</td>
-<td id="T_d7a6d_row1_col2" class="data row1 col2">0.932645</td>
-<td id="T_d7a6d_row1_col3" class="data row1 col3">0.939074</td>
-<td id="T_d7a6d_row1_col4" class="data row1 col4">0.985164</td>
-<td id="T_d7a6d_row1_col5" class="data row1 col5">0.961567</td>
-<td id="T_d7a6d_row1_col6" class="data row1 col6">0.803712</td>
+<td id="T_041e4_row1_col0" class="data row1 col0">XGBoost</td>
+<td id="T_041e4_row1_col1" class="data row1 col1">Without Protected Classes</td>
+<td id="T_041e4_row1_col2" class="data row1 col2">0.932645</td>
+<td id="T_041e4_row1_col3" class="data row1 col3">0.939074</td>
+<td id="T_041e4_row1_col4" class="data row1 col4">0.985164</td>
+<td id="T_041e4_row1_col5" class="data row1 col5">0.961567</td>
+<td id="T_041e4_row1_col6" class="data row1 col6">0.803712</td>
 </tr>
 </tbody>
 </table>
 </div>
 </div>
-<div id="51159692" class="cell" data-execution_count="8">
+<div id="55a47d4f" class="cell" data-execution_count="8">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -449,68 +465,68 @@ window.Quarto = {
 <p>Of these two ensemble methods, one can see that XGBoost outperformed Random Forest classification. However, the results compared to those in the other sections examining Bernoulli Naive Bayes, Logistic Regression, and Support Vector Machines far outshine the performance of XGBoost - especially when comparing ROC-AUC.</p>
 <p>Both of these models had a more rapid time for training, fitting, and predicting outcomes, at the cost of accuracy and other model performance metrics.</p>
 <p>In the case of XGBoost, a single test appears to favor the inclusion of protected class data. While that is the case, the difference in performance is less than 1% across all metrics. Is this statistically significant?</p>
-<div id="868fd21d" class="cell" data-execution_count="10">
+<div id="80323eab" class="cell" data-execution_count="10">
 <div class="cell-output cell-output-display">
 <style type="text/css">
 </style>
 
-<table id="T_0b12d" data-quarto-postprocess="true" class="table table-sm table-striped small">
+<table id="T_21cb7" data-quarto-postprocess="true" class="table table-sm table-striped small">
 <thead>
 <tr class="header">
-<th id="T_0b12d_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Stat</th>
-<th id="T_0b12d_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">z-score</th>
-<th id="T_0b12d_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">p-value</th>
-<th id="T_0b12d_level0_col3" class="col_heading level0 col3" data-quarto-table-cell-role="th">top performer</th>
-<th id="T_0b12d_level0_col4" class="col_heading level0 col4" data-quarto-table-cell-role="th">top mean</th>
-<th id="T_0b12d_level0_col5" class="col_heading level0 col5" data-quarto-table-cell-role="th">difference in means</th>
+<th id="T_21cb7_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Stat</th>
+<th id="T_21cb7_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">z-score</th>
+<th id="T_21cb7_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">p-value</th>
+<th id="T_21cb7_level0_col3" class="col_heading level0 col3" data-quarto-table-cell-role="th">top performer</th>
+<th id="T_21cb7_level0_col4" class="col_heading level0 col4" data-quarto-table-cell-role="th">top mean</th>
+<th id="T_21cb7_level0_col5" class="col_heading level0 col5" data-quarto-table-cell-role="th">difference in means</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td id="T_0b12d_row0_col0" class="data row0 col0">Accuracy</td>
-<td id="T_0b12d_row0_col1" class="data row0 col1">0.177171</td>
-<td id="T_0b12d_row0_col2" class="data row0 col2">0.859374</td>
-<td id="T_0b12d_row0_col3" class="data row0 col3">With Protected Classes</td>
-<td id="T_0b12d_row0_col4" class="data row0 col4">0.934603</td>
-<td id="T_0b12d_row0_col5" class="data row0 col5">0.000011</td>
+<td id="T_21cb7_row0_col0" class="data row0 col0">Accuracy</td>
+<td id="T_21cb7_row0_col1" class="data row0 col1">0.177171</td>
+<td id="T_21cb7_row0_col2" class="data row0 col2">0.859374</td>
+<td id="T_21cb7_row0_col3" class="data row0 col3">With Protected Classes</td>
+<td id="T_21cb7_row0_col4" class="data row0 col4">0.934603</td>
+<td id="T_21cb7_row0_col5" class="data row0 col5">0.000011</td>
 </tr>
 <tr class="even">
-<td id="T_0b12d_row1_col0" class="data row1 col0">Precision</td>
-<td id="T_0b12d_row1_col1" class="data row1 col1">4.179453</td>
-<td id="T_0b12d_row1_col2" class="data row1 col2">0.000029</td>
-<td id="T_0b12d_row1_col3" class="data row1 col3">With Protected Classes</td>
-<td id="T_0b12d_row1_col4" class="data row1 col4">0.940035</td>
-<td id="T_0b12d_row1_col5" class="data row1 col5">0.000229</td>
+<td id="T_21cb7_row1_col0" class="data row1 col0">Precision</td>
+<td id="T_21cb7_row1_col1" class="data row1 col1">4.179453</td>
+<td id="T_21cb7_row1_col2" class="data row1 col2">0.000029</td>
+<td id="T_21cb7_row1_col3" class="data row1 col3">With Protected Classes</td>
+<td id="T_21cb7_row1_col4" class="data row1 col4">0.940035</td>
+<td id="T_21cb7_row1_col5" class="data row1 col5">0.000229</td>
 </tr>
 <tr class="odd">
-<td id="T_0b12d_row2_col0" class="data row2 col0">Recall</td>
-<td id="T_0b12d_row2_col1" class="data row2 col1">-6.218760</td>
-<td id="T_0b12d_row2_col2" class="data row2 col2">0.000000</td>
-<td id="T_0b12d_row2_col3" class="data row2 col3">Without Protected Classes</td>
-<td id="T_0b12d_row2_col4" class="data row2 col4">0.986727</td>
-<td id="T_0b12d_row2_col5" class="data row2 col5">0.000260</td>
+<td id="T_21cb7_row2_col0" class="data row2 col0">Recall</td>
+<td id="T_21cb7_row2_col1" class="data row2 col1">-6.218760</td>
+<td id="T_21cb7_row2_col2" class="data row2 col2">0.000000</td>
+<td id="T_21cb7_row2_col3" class="data row2 col3">Without Protected Classes</td>
+<td id="T_21cb7_row2_col4" class="data row2 col4">0.986727</td>
+<td id="T_21cb7_row2_col5" class="data row2 col5">0.000260</td>
 </tr>
 <tr class="even">
-<td id="T_0b12d_row3_col0" class="data row3 col0">F1</td>
-<td id="T_0b12d_row3_col1" class="data row3 col1">-0.107982</td>
-<td id="T_0b12d_row3_col2" class="data row3 col2">0.914010</td>
-<td id="T_0b12d_row3_col3" class="data row3 col3">Without Protected Classes</td>
-<td id="T_0b12d_row3_col4" class="data row3 col4">0.962694</td>
-<td id="T_0b12d_row3_col5" class="data row3 col5">0.000004</td>
+<td id="T_21cb7_row3_col0" class="data row3 col0">F1</td>
+<td id="T_21cb7_row3_col1" class="data row3 col1">-0.107982</td>
+<td id="T_21cb7_row3_col2" class="data row3 col2">0.914010</td>
+<td id="T_21cb7_row3_col3" class="data row3 col3">Without Protected Classes</td>
+<td id="T_21cb7_row3_col4" class="data row3 col4">0.962694</td>
+<td id="T_21cb7_row3_col5" class="data row3 col5">0.000004</td>
 </tr>
 <tr class="odd">
-<td id="T_0b12d_row4_col0" class="data row4 col0">ROC-AUC</td>
-<td id="T_0b12d_row4_col1" class="data row4 col1">3.743439</td>
-<td id="T_0b12d_row4_col2" class="data row4 col2">0.000182</td>
-<td id="T_0b12d_row4_col3" class="data row4 col3">With Protected Classes</td>
-<td id="T_0b12d_row4_col4" class="data row4 col4">0.807282</td>
-<td id="T_0b12d_row4_col5" class="data row4 col5">0.000676</td>
+<td id="T_21cb7_row4_col0" class="data row4 col0">ROC-AUC</td>
+<td id="T_21cb7_row4_col1" class="data row4 col1">3.743439</td>
+<td id="T_21cb7_row4_col2" class="data row4 col2">0.000182</td>
+<td id="T_21cb7_row4_col3" class="data row4 col3">With Protected Classes</td>
+<td id="T_21cb7_row4_col4" class="data row4 col4">0.807282</td>
+<td id="T_21cb7_row4_col5" class="data row4 col5">0.000676</td>
 </tr>
 </tbody>
 </table>
 </div>
 </div>
-<div id="3264ac90" class="cell" data-execution_count="11">
+<div id="fad5dd4a" class="cell" data-execution_count="11">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -519,8 +535,8 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<p>In short - yes, statistically significant difference in performance exist, and they favor inclusion of protected classes for precision and ROC-AUC, and favor exclusion of protected classes in recall. All other p-values are above the significance threshold of <span class="math inline">\(\alpha\)</span> = 0.003.</p>
-<p>Operationally, however - there is no real impact. The significant differences are less than a fraction of a percent and in no way shape or form justify their inclusion as a substantially better improvement over their exclustion.</p>
+<p>In short - yes, statistically significant difference in performance exist, and they favor inclusion of protected classes for precision and ROC-AUC, and favor exclusion of protected classes in recall. All other p-values are above the significance threshold of <span class="math inline">\(\alpha\)</span> = 0.003. Operationally, however - there is no real impact. The significant differences are less than a fraction of a percent and in no way shape or form justify their inclusion as a substantially better improvement over their exclusion.</p>
+<p>Using ensemble learning methods can help mitigate risks in models such as overfitting, underfitting, and mitigating the bias-variance balance within a machine learning algorithm. While these methods can support such goals, they remain underperformers in comparison to the other modeling and work performed in this study. The 500-fold cross-validation of several other models are substantially better in performance compared to XGBoost</p>
 <!-- This is a common thread across almost every model implemented in this study.  The results are consistent across multiple model types and methodologies and is particularly revealing.  
 
 Use of any of the methods included in this research would not offer an organization a substantial edge, benefit, or higher performance when including protected class information as predictors.  In the case of the best performer yet, support vector machines with RBF kernel, has the highest performative ROC-AUC for the *exclusion* of protected classes, with similarly high metrics across the board.
