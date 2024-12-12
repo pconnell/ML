@@ -355,7 +355,7 @@ Figure&nbsp;10.1: Random Gaussian Points in 2 Classes
 <section id="infinite-possibilities" class="level3" data-number="10.1.1">
 <h3 data-number="10.1.1" class="anchored" data-anchor-id="infinite-possibilities"><span class="header-section-number">10.1.1</span> Infinite Possibilities</h3>
 <p>Using the same data as above, there are countless means and methods to attempt to divide the data on a hard boundary to support the classification of points. Consider these examples:</p>
-<div id="e0de9e0d" class="cell" data-execution_count="3">
+<div id="e1404a0f" class="cell" data-execution_count="3">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -365,7 +365,7 @@ Figure&nbsp;10.1: Random Gaussian Points in 2 Classes
 </div>
 </div>
 <p>Here’s one such line, with the equation <span class="math inline">\(y=-2x+27\)</span></p>
-<div id="6cea8357" class="cell" data-execution_count="4">
+<div id="db7affbd" class="cell" data-execution_count="4">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -375,7 +375,7 @@ Figure&nbsp;10.1: Random Gaussian Points in 2 Classes
 </div>
 </div>
 <p>Here’s another such line, with the equation <span class="math inline">\(y=-1.7x=25\)</span></p>
-<div id="114c15de" class="cell" data-execution_count="5">
+<div id="c6120992" class="cell" data-execution_count="5">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -396,7 +396,7 @@ Figure&nbsp;10.1: Random Gaussian Points in 2 Classes
 <p><span class="math inline">\(y=-2x+27\)</span> <span class="math inline">\(2x+y-27=0\)</span> <span class="math inline">\(w_1 = 2, w_2 = 1\)</span> <span class="math inline">\(w=[2,1]\)</span></p>
 <p>The slope of w, then is the rise over the run, thus being <span class="math inline">\(\frac{1}{2}\)</span></p>
 <p>Plotting a line from the origin with slope of .5, the following result is produced:</p>
-<div id="bf9d1a24" class="cell" data-execution_count="6">
+<div id="7c0d295d" class="cell" data-execution_count="6">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -406,7 +406,7 @@ Figure&nbsp;10.1: Random Gaussian Points in 2 Classes
 </div>
 </div>
 <p>This doesn’t look perpendicular - let’s zoom in</p>
-<div id="e8038eea" class="cell" data-execution_count="7">
+<div id="1b5acb55" class="cell" data-execution_count="7">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -423,7 +423,7 @@ Figure&nbsp;10.1: Random Gaussian Points in 2 Classes
 \text{projection}(p,w) = \frac{w}{||w||} \times \bigg(p\cdot \frac{w}{||w||}\bigg)
 \tag{10.1}\]</span></span></p>
 <p>Where <span class="math inline">\(\times\)</span> signifies multiplication and <span class="math inline">\(\cdot\)</span> signifies the dot product of two vectors.</p>
-<div id="f54848c6" class="cell" data-execution_count="8">
+<div id="d017149f" class="cell" data-execution_count="8">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -434,7 +434,7 @@ Figure&nbsp;10.1: Random Gaussian Points in 2 Classes
 </div>
 <p>This is beneficial to us in the pursuit of optimization. One can see that the original point (in blue) is beyond the current best separator line (also in blue). The projected point (in black) lies directly along the vector <span class="math inline">\(w\)</span> and also remains beyond the current best separator line. The transformation provides intuition and a starting important and useful metric one can use for optimization - the distance along <span class="math inline">\(w\)</span> of a projected point tells which class the point should fall into. If the projected point is beyond the distance to the intersection of w and the best fit line, it should be in one class, whereas if it is shorter than the distance to the intersection, then it should fall into the other class.</p>
 <p>This can be peformed for every data point in the source data:</p>
-<div id="c83bd84e" class="cell" data-execution_count="9">
+<div id="1c8184f1" class="cell" data-execution_count="9">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -506,7 +506,7 @@ y_v(w^Tx)-1\geq 0
 \text{upper margin} = w^Tx +b  + 1 = 0
 \]</span></p>
 <p>The previous example graph clearly does not provide a good example to move forward. In order to have a better example, the separation line <span class="math inline">\(y=-2.3x+28\)</span> will be used, with margin lines at <span class="math inline">\(\pm 1\)</span> from the separation line:</p>
-<div id="508dd743" class="cell" data-execution_count="10">
+<div id="d0a307bd" class="cell" data-execution_count="10">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -622,7 +622,7 @@ L = \sum_{i=1}^n - \frac{1}{2}\sum_{i=1}^n\sum_{j=1}^{n}\lambda_i\lambda_jy_iy_j
 <p>The decision rule solely depends on the dot product of the vector <span class="math inline">\(w\)</span> with each <span class="math inline">\(x_i\)</span></p>
 <p>Taking these equations, the solution to the problem can be found using a system of partial differential equations. The data provides every <span class="math inline">\(x_i\)</span> and <span class="math inline">\(y_i\)</span>. Since one seeks the values for <span class="math inline">\(w\)</span> and <span class="math inline">\(b\)</span> and so the solution lay within taking <a href="#eq-dual" class="quarto-xref">Equation&nbsp;<span>10.14</span></a>, transforming it into a system of differential equations, performing substitutions, and solving for each <span class="math inline">\(\lambda_i\)</span> to derive <span class="math inline">\(w\)</span> and <span class="math inline">\(b\)</span></p>
 <p>Having performed these calculations, there’s the truly best linear separating line:</p>
-<div id="f00d7980" class="cell" data-execution_count="11">
+<div id="56f91eee" class="cell" data-execution_count="11">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -636,7 +636,21 @@ L = \sum_{i=1}^n - \frac{1}{2}\sum_{i=1}^n\sum_{j=1}^{n}\lambda_i\lambda_jy_iy_j
 <section id="kernels" class="level3" data-number="10.1.5">
 <h3 data-number="10.1.5" class="anchored" data-anchor-id="kernels"><span class="header-section-number">10.1.5</span> Kernels</h3>
 <p>Soft-margin SVM doesn’t always solve the problem, though - and that’s where kernels come into play. Kernels are a special kind of function (one that can be expressed as the dot product of two vectors) that can be used to project the source data into a higher dimensional space. When data is not linearly separable in its given input vector space, a translation and projection into higher dimensional space may indeed render the data as linearly separable in that dimension. Additionally, those transformations themselves are always linear, in a sense, as they can be expressed as the dot product of two vectors! As such, many transformations that “reshape” or “curve” the data can be applied (in our current dimension) that allow for that separation.</p>
-<p>Essentially a kernel function can be expressed as <span class="math inline">\(\phi(a,b) = a^T\cdot b\)</span> where <span class="math inline">\(\phi\)</span> is the kernel function and <span class="math inline">\(a\)</span> <span class="math inline">\(b\)</span> are two vectors of equal dimension. The key in making a kernel work is that it is expressible as the dot-product of two vectors. Because of this, a kernel function can be applied to each data point <em>without transforming the datapoint into the new vector space</em>, which reduces time and resource requirements to compute the transformation of the dual function.=</p>
+<p>Essentially a kernel function can be expressed as <span class="math inline">\(\phi(a,b) = a^T\cdot b\)</span> where <span class="math inline">\(\phi\)</span> is the kernel function and <span class="math inline">\(a\)</span> <span class="math inline">\(b\)</span> are two vectors of equal dimension. The key in making a kernel work is that it is expressible as the dot-product of two vectors. Because of this, a kernel function can be applied to each data point <em>without transforming the datapoint into the new vector space</em>, which reduces time and resource requirements to compute the transformation of the dual function.</p>
+<p>An example of a kernel function could be considered the cubic function. A cube of the product of two vectors can be expressed as the dot product of two vectors as follows:</p>
+<p><span class="math inline">\((a^Tb)^3 = (a^Tb) (a^Tb) (a^Tb)\)</span></p>
+<p><span class="math inline">\((a^Tb)^3 = (a_1b_1+a_2b_2) (a_1b_1+a_2b_2) (a_1b_1+a_2b_2)\)</span></p>
+<p><span class="math inline">\((a^Tb)^3 = (a_1^2b_1^2+ 2a_1a_2b_1b_2 + a_2^2b_2^2) (a_1b_1+a_2b_2)\)</span></p>
+<p><span class="math inline">\((a^Tb)^3 = a_1^3b_1^3 + a_1^2b_1^2a_2b_2 + 2a_1^2b_1^2a_2b_2 + 2a_2^2b_2^2a_1b_1 + a_2^2b_2^2a_1b_1 + a_2^3b_2^3\)</span></p>
+<p><span class="math inline">\((a^Tb)^3 = a_1^3b_1^3 + 3a_1^2b_1^2a_2b_2 + 3a_2^2b_2^2a_1b_1+a_2^3b_2^3\)</span></p>
+<p><span class="math inline">\((a^Tb)^3 = [a_1^3,\sqrt{3}a_1^2a_2,\sqrt{3}a_2^2a_1,a_2^3]^\text{T} \cdot [b_1^3,\sqrt{3}b_1^2b_2,\sqrt{3}b_2^2b_1,b_2^3]\)</span></p>
+<p>Where <span class="math inline">\([a_1^3,\sqrt{3}a_1^2a_2,\sqrt{3}a_2^2a_1,a_2^3]\)</span> signifies the transformation of a 2d point <span class="math inline">\(a=(x_1,y_1)\)</span> and <span class="math inline">\([b_1^3,\sqrt{3}b_1^2b_2,\sqrt{3}b_2^2b_1,b_2^3]\)</span> signfies the transformation of a 2d point <span class="math inline">\(b=(x_2,y_2)\)</span></p>
+<p>As such, this cubic function can be used to project a point (x,y) from 2d to 4d space. Let’s take the 2d point <span class="math inline">\(a=(2,3)\)</span>:</p>
+<p><span class="math inline">\(\text{transformation of a}= [a_1^3,\sqrt{3}a_1^2a_2,\sqrt{3}a_2^2a_1,a_2^3]\)</span></p>
+<p><span class="math inline">\(\text{transformation of a}=[-2^3,\sqrt{3}(-2)^2\cdot -3, \sqrt{3}(-3)^2\cdot -2, (-3)^3]\)</span></p>
+<p><span class="math inline">\(\text{transformation of a}=[-8,\sqrt{3}\cdot 4\cdot -3, \sqrt{3}\cdot 9 \cdot -2, -27]\)</span></p>
+<p><span class="math inline">\(\text{transformation of a}=[-8,-12\sqrt{3}, -18\sqrt{3}, -27]\)</span></p>
+<p>This provides the transformation of a to 4 dimensions.</p>
 <div id="cell-fig-svm-bound" class="cell" data-execution_count="13">
 <div class="cell-output cell-output-display">
 <div id="fig-svm-bound" class="quarto-figure quarto-figure-center quarto-float anchored">
@@ -1859,41 +1873,41 @@ Table&nbsp;10.4: Testing Data (No Protected Classes), first 10 rows
 <h3 data-number="10.3.1" class="anchored" data-anchor-id="rbf-kernel"><span class="header-section-number">10.3.1</span> RBF Kernel</h3>
 <section id="c0.5" class="level4" data-number="10.3.1.1">
 <h4 data-number="10.3.1.1" class="anchored" data-anchor-id="c0.5"><span class="header-section-number">10.3.1.1</span> C=0.5</h4>
-<div id="a1296e83" class="cell" data-execution_count="22">
+<div id="5bf44125" class="cell" data-execution_count="22">
 <div class="cell-output cell-output-display" data-execution_count="22">
 <style type="text/css">
 </style>
 
-<table id="T_6061b" data-quarto-postprocess="true" class="table table-sm table-striped small">
+<table id="T_3294b" data-quarto-postprocess="true" class="table table-sm table-striped small">
 <thead>
 <tr class="header">
-<th id="T_6061b_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Model</th>
-<th id="T_6061b_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">Data</th>
-<th id="T_6061b_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">Accuracy</th>
-<th id="T_6061b_level0_col3" class="col_heading level0 col3" data-quarto-table-cell-role="th">Precision</th>
-<th id="T_6061b_level0_col4" class="col_heading level0 col4" data-quarto-table-cell-role="th">Recall</th>
-<th id="T_6061b_level0_col5" class="col_heading level0 col5" data-quarto-table-cell-role="th">F1</th>
-<th id="T_6061b_level0_col6" class="col_heading level0 col6" data-quarto-table-cell-role="th">ROC-AUC</th>
+<th id="T_3294b_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Model</th>
+<th id="T_3294b_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">Data</th>
+<th id="T_3294b_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">Accuracy</th>
+<th id="T_3294b_level0_col3" class="col_heading level0 col3" data-quarto-table-cell-role="th">Precision</th>
+<th id="T_3294b_level0_col4" class="col_heading level0 col4" data-quarto-table-cell-role="th">Recall</th>
+<th id="T_3294b_level0_col5" class="col_heading level0 col5" data-quarto-table-cell-role="th">F1</th>
+<th id="T_3294b_level0_col6" class="col_heading level0 col6" data-quarto-table-cell-role="th">ROC-AUC</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td id="T_6061b_row0_col0" class="data row0 col0">SVM RBF(C=0.5)</td>
-<td id="T_6061b_row0_col1" class="data row0 col1">Without Protected Classes</td>
-<td id="T_6061b_row0_col2" class="data row0 col2">0.963408</td>
-<td id="T_6061b_row0_col3" class="data row0 col3">0.984684</td>
-<td id="T_6061b_row0_col4" class="data row0 col4">0.972340</td>
-<td id="T_6061b_row0_col5" class="data row0 col5">0.978473</td>
-<td id="T_6061b_row0_col6" class="data row0 col6">0.941480</td>
+<td id="T_3294b_row0_col0" class="data row0 col0">SVM RBF(C=0.5)</td>
+<td id="T_3294b_row0_col1" class="data row0 col1">Without Protected Classes</td>
+<td id="T_3294b_row0_col2" class="data row0 col2">0.963408</td>
+<td id="T_3294b_row0_col3" class="data row0 col3">0.984684</td>
+<td id="T_3294b_row0_col4" class="data row0 col4">0.972340</td>
+<td id="T_3294b_row0_col5" class="data row0 col5">0.978473</td>
+<td id="T_3294b_row0_col6" class="data row0 col6">0.941480</td>
 </tr>
 <tr class="even">
-<td id="T_6061b_row1_col0" class="data row1 col0">SVM RBF(C=0.5)</td>
-<td id="T_6061b_row1_col1" class="data row1 col1">With Protected Classes</td>
-<td id="T_6061b_row1_col2" class="data row1 col2">0.962671</td>
-<td id="T_6061b_row1_col3" class="data row1 col3">0.981249</td>
-<td id="T_6061b_row1_col4" class="data row1 col4">0.974986</td>
-<td id="T_6061b_row1_col5" class="data row1 col5">0.978473</td>
-<td id="T_6061b_row1_col6" class="data row1 col6">0.932438</td>
+<td id="T_3294b_row1_col0" class="data row1 col0">SVM RBF(C=0.5)</td>
+<td id="T_3294b_row1_col1" class="data row1 col1">With Protected Classes</td>
+<td id="T_3294b_row1_col2" class="data row1 col2">0.962671</td>
+<td id="T_3294b_row1_col3" class="data row1 col3">0.981249</td>
+<td id="T_3294b_row1_col4" class="data row1 col4">0.974986</td>
+<td id="T_3294b_row1_col5" class="data row1 col5">0.978473</td>
+<td id="T_3294b_row1_col6" class="data row1 col6">0.932438</td>
 </tr>
 </tbody>
 </table>
@@ -1950,77 +1964,77 @@ Figure&nbsp;10.7: Confusion Matrices for RBF Kernel, C=1.5
 </section>
 <section id="summary-table-all-rbf-models" class="level4" data-number="10.3.1.4">
 <h4 data-number="10.3.1.4" class="anchored" data-anchor-id="summary-table-all-rbf-models"><span class="header-section-number">10.3.1.4</span> Summary Table (All RBF Models)</h4>
-<div id="8b354e31" class="cell" data-execution_count="28">
+<div id="c44edb11" class="cell" data-execution_count="28">
 <div class="cell-output cell-output-display" data-execution_count="28">
 <style type="text/css">
 </style>
 
-<table id="T_6a913" data-quarto-postprocess="true" class="table table-sm table-striped small">
+<table id="T_9e4bc" data-quarto-postprocess="true" class="table table-sm table-striped small">
 <thead>
 <tr class="header">
-<th id="T_6a913_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Model</th>
-<th id="T_6a913_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">Data</th>
-<th id="T_6a913_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">Accuracy</th>
-<th id="T_6a913_level0_col3" class="col_heading level0 col3" data-quarto-table-cell-role="th">Precision</th>
-<th id="T_6a913_level0_col4" class="col_heading level0 col4" data-quarto-table-cell-role="th">Recall</th>
-<th id="T_6a913_level0_col5" class="col_heading level0 col5" data-quarto-table-cell-role="th">F1</th>
-<th id="T_6a913_level0_col6" class="col_heading level0 col6" data-quarto-table-cell-role="th">ROC-AUC</th>
+<th id="T_9e4bc_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Model</th>
+<th id="T_9e4bc_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">Data</th>
+<th id="T_9e4bc_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">Accuracy</th>
+<th id="T_9e4bc_level0_col3" class="col_heading level0 col3" data-quarto-table-cell-role="th">Precision</th>
+<th id="T_9e4bc_level0_col4" class="col_heading level0 col4" data-quarto-table-cell-role="th">Recall</th>
+<th id="T_9e4bc_level0_col5" class="col_heading level0 col5" data-quarto-table-cell-role="th">F1</th>
+<th id="T_9e4bc_level0_col6" class="col_heading level0 col6" data-quarto-table-cell-role="th">ROC-AUC</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td id="T_6a913_row0_col0" class="data row0 col0">SVM RBF(C=0.5)</td>
-<td id="T_6a913_row0_col1" class="data row0 col1">Without Protected Classes</td>
-<td id="T_6a913_row0_col2" class="data row0 col2">0.963408</td>
-<td id="T_6a913_row0_col3" class="data row0 col3">0.984684</td>
-<td id="T_6a913_row0_col4" class="data row0 col4">0.972340</td>
-<td id="T_6a913_row0_col5" class="data row0 col5">0.978473</td>
-<td id="T_6a913_row0_col6" class="data row0 col6">0.941480</td>
+<td id="T_9e4bc_row0_col0" class="data row0 col0">SVM RBF(C=0.5)</td>
+<td id="T_9e4bc_row0_col1" class="data row0 col1">Without Protected Classes</td>
+<td id="T_9e4bc_row0_col2" class="data row0 col2">0.963408</td>
+<td id="T_9e4bc_row0_col3" class="data row0 col3">0.984684</td>
+<td id="T_9e4bc_row0_col4" class="data row0 col4">0.972340</td>
+<td id="T_9e4bc_row0_col5" class="data row0 col5">0.978473</td>
+<td id="T_9e4bc_row0_col6" class="data row0 col6">0.941480</td>
 </tr>
 <tr class="even">
-<td id="T_6a913_row1_col0" class="data row1 col0">SVM RBF(C=0.5)</td>
-<td id="T_6a913_row1_col1" class="data row1 col1">With Protected Classes</td>
-<td id="T_6a913_row1_col2" class="data row1 col2">0.962671</td>
-<td id="T_6a913_row1_col3" class="data row1 col3">0.981249</td>
-<td id="T_6a913_row1_col4" class="data row1 col4">0.974986</td>
-<td id="T_6a913_row1_col5" class="data row1 col5">0.978473</td>
-<td id="T_6a913_row1_col6" class="data row1 col6">0.932438</td>
+<td id="T_9e4bc_row1_col0" class="data row1 col0">SVM RBF(C=0.5)</td>
+<td id="T_9e4bc_row1_col1" class="data row1 col1">With Protected Classes</td>
+<td id="T_9e4bc_row1_col2" class="data row1 col2">0.962671</td>
+<td id="T_9e4bc_row1_col3" class="data row1 col3">0.981249</td>
+<td id="T_9e4bc_row1_col4" class="data row1 col4">0.974986</td>
+<td id="T_9e4bc_row1_col5" class="data row1 col5">0.978473</td>
+<td id="T_9e4bc_row1_col6" class="data row1 col6">0.932438</td>
 </tr>
 <tr class="odd">
-<td id="T_6a913_row2_col0" class="data row2 col0">SVM (RBF,C=1)</td>
-<td id="T_6a913_row2_col1" class="data row2 col1">Without Protected Classes</td>
-<td id="T_6a913_row2_col2" class="data row2 col2">0.963925</td>
-<td id="T_6a913_row2_col3" class="data row2 col3">0.985485</td>
-<td id="T_6a913_row2_col4" class="data row2 col4">0.972139</td>
-<td id="T_6a913_row2_col5" class="data row2 col5">0.978767</td>
-<td id="T_6a913_row2_col6" class="data row2 col6">0.943759</td>
+<td id="T_9e4bc_row2_col0" class="data row2 col0">SVM (RBF,C=1)</td>
+<td id="T_9e4bc_row2_col1" class="data row2 col1">Without Protected Classes</td>
+<td id="T_9e4bc_row2_col2" class="data row2 col2">0.963925</td>
+<td id="T_9e4bc_row2_col3" class="data row2 col3">0.985485</td>
+<td id="T_9e4bc_row2_col4" class="data row2 col4">0.972139</td>
+<td id="T_9e4bc_row2_col5" class="data row2 col5">0.978767</td>
+<td id="T_9e4bc_row2_col6" class="data row2 col6">0.943759</td>
 </tr>
 <tr class="even">
-<td id="T_6a913_row3_col0" class="data row3 col0">SVM (RBF,C=1)</td>
-<td id="T_6a913_row3_col1" class="data row3 col1">With Protected Classes</td>
-<td id="T_6a913_row3_col2" class="data row3 col2">0.963999</td>
-<td id="T_6a913_row3_col3" class="data row3 col3">0.982785</td>
-<td id="T_6a913_row3_col4" class="data row3 col4">0.974986</td>
-<td id="T_6a913_row3_col5" class="data row3 col5">0.978767</td>
-<td id="T_6a913_row3_col6" class="data row3 col6">0.937026</td>
+<td id="T_9e4bc_row3_col0" class="data row3 col0">SVM (RBF,C=1)</td>
+<td id="T_9e4bc_row3_col1" class="data row3 col1">With Protected Classes</td>
+<td id="T_9e4bc_row3_col2" class="data row3 col2">0.963999</td>
+<td id="T_9e4bc_row3_col3" class="data row3 col3">0.982785</td>
+<td id="T_9e4bc_row3_col4" class="data row3 col4">0.974986</td>
+<td id="T_9e4bc_row3_col5" class="data row3 col5">0.978767</td>
+<td id="T_9e4bc_row3_col6" class="data row3 col6">0.937026</td>
 </tr>
 <tr class="odd">
-<td id="T_6a913_row4_col0" class="data row4 col0">SVM (RBF,C=1.5)</td>
-<td id="T_6a913_row4_col1" class="data row4 col1">Without Protected Classes</td>
-<td id="T_6a913_row4_col2" class="data row4 col2">0.963925</td>
-<td id="T_6a913_row4_col3" class="data row4 col3">0.985485</td>
-<td id="T_6a913_row4_col4" class="data row4 col4">0.972139</td>
-<td id="T_6a913_row4_col5" class="data row4 col5">0.978767</td>
-<td id="T_6a913_row4_col6" class="data row4 col6">0.943759</td>
+<td id="T_9e4bc_row4_col0" class="data row4 col0">SVM (RBF,C=1.5)</td>
+<td id="T_9e4bc_row4_col1" class="data row4 col1">Without Protected Classes</td>
+<td id="T_9e4bc_row4_col2" class="data row4 col2">0.963925</td>
+<td id="T_9e4bc_row4_col3" class="data row4 col3">0.985485</td>
+<td id="T_9e4bc_row4_col4" class="data row4 col4">0.972139</td>
+<td id="T_9e4bc_row4_col5" class="data row4 col5">0.978767</td>
+<td id="T_9e4bc_row4_col6" class="data row4 col6">0.943759</td>
 </tr>
 <tr class="even">
-<td id="T_6a913_row5_col0" class="data row5 col0">SVM (RBF,C=1.5)</td>
-<td id="T_6a913_row5_col1" class="data row5 col1">With Protected Classes</td>
-<td id="T_6a913_row5_col2" class="data row5 col2">0.963999</td>
-<td id="T_6a913_row5_col3" class="data row5 col3">0.982785</td>
-<td id="T_6a913_row5_col4" class="data row5 col4">0.974986</td>
-<td id="T_6a913_row5_col5" class="data row5 col5">0.978767</td>
-<td id="T_6a913_row5_col6" class="data row5 col6">0.937026</td>
+<td id="T_9e4bc_row5_col0" class="data row5 col0">SVM (RBF,C=1.5)</td>
+<td id="T_9e4bc_row5_col1" class="data row5 col1">With Protected Classes</td>
+<td id="T_9e4bc_row5_col2" class="data row5 col2">0.963999</td>
+<td id="T_9e4bc_row5_col3" class="data row5 col3">0.982785</td>
+<td id="T_9e4bc_row5_col4" class="data row5 col4">0.974986</td>
+<td id="T_9e4bc_row5_col5" class="data row5 col5">0.978767</td>
+<td id="T_9e4bc_row5_col6" class="data row5 col6">0.937026</td>
 </tr>
 </tbody>
 </table>
@@ -2084,77 +2098,77 @@ Figure&nbsp;10.10: Confusion Matrices for LIN Kernel, C=1.5
 </section>
 <section id="summary-table-all-lin-models" class="level4" data-number="10.3.2.4">
 <h4 data-number="10.3.2.4" class="anchored" data-anchor-id="summary-table-all-lin-models"><span class="header-section-number">10.3.2.4</span> Summary Table (All LIN Models)</h4>
-<div id="0b409712" class="cell" data-execution_count="35">
+<div id="c69c1145" class="cell" data-execution_count="35">
 <div class="cell-output cell-output-display" data-execution_count="35">
 <style type="text/css">
 </style>
 
-<table id="T_7dfa2" data-quarto-postprocess="true" class="table table-sm table-striped small">
+<table id="T_03005" data-quarto-postprocess="true" class="table table-sm table-striped small">
 <thead>
 <tr class="header">
-<th id="T_7dfa2_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Model</th>
-<th id="T_7dfa2_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">Data</th>
-<th id="T_7dfa2_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">Accuracy</th>
-<th id="T_7dfa2_level0_col3" class="col_heading level0 col3" data-quarto-table-cell-role="th">Precision</th>
-<th id="T_7dfa2_level0_col4" class="col_heading level0 col4" data-quarto-table-cell-role="th">Recall</th>
-<th id="T_7dfa2_level0_col5" class="col_heading level0 col5" data-quarto-table-cell-role="th">F1</th>
-<th id="T_7dfa2_level0_col6" class="col_heading level0 col6" data-quarto-table-cell-role="th">ROC-AUC</th>
+<th id="T_03005_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Model</th>
+<th id="T_03005_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">Data</th>
+<th id="T_03005_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">Accuracy</th>
+<th id="T_03005_level0_col3" class="col_heading level0 col3" data-quarto-table-cell-role="th">Precision</th>
+<th id="T_03005_level0_col4" class="col_heading level0 col4" data-quarto-table-cell-role="th">Recall</th>
+<th id="T_03005_level0_col5" class="col_heading level0 col5" data-quarto-table-cell-role="th">F1</th>
+<th id="T_03005_level0_col6" class="col_heading level0 col6" data-quarto-table-cell-role="th">ROC-AUC</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td id="T_7dfa2_row0_col0" class="data row0 col0">SVM LIN(C=0.5)</td>
-<td id="T_7dfa2_row0_col1" class="data row0 col1">Without Protected Classes</td>
-<td id="T_7dfa2_row0_col2" class="data row0 col2">0.961638</td>
-<td id="T_7dfa2_row0_col3" class="data row0 col3">0.983777</td>
-<td id="T_7dfa2_row0_col4" class="data row0 col4">0.971162</td>
-<td id="T_7dfa2_row0_col5" class="data row0 col5">0.977429</td>
-<td id="T_7dfa2_row0_col6" class="data row0 col6">0.938257</td>
+<td id="T_03005_row0_col0" class="data row0 col0">SVM LIN(C=0.5)</td>
+<td id="T_03005_row0_col1" class="data row0 col1">Without Protected Classes</td>
+<td id="T_03005_row0_col2" class="data row0 col2">0.961638</td>
+<td id="T_03005_row0_col3" class="data row0 col3">0.983777</td>
+<td id="T_03005_row0_col4" class="data row0 col4">0.971162</td>
+<td id="T_03005_row0_col5" class="data row0 col5">0.977429</td>
+<td id="T_03005_row0_col6" class="data row0 col6">0.938257</td>
 </tr>
 <tr class="even">
-<td id="T_7dfa2_row1_col0" class="data row1 col0">SVM LIN(C=0.5)</td>
-<td id="T_7dfa2_row1_col1" class="data row1 col1">With Protected Classes</td>
-<td id="T_7dfa2_row1_col2" class="data row1 col2">0.964048</td>
-<td id="T_7dfa2_row1_col3" class="data row1 col3">0.984922</td>
-<td id="T_7dfa2_row1_col4" class="data row1 col4">0.972858</td>
-<td id="T_7dfa2_row1_col5" class="data row1 col5">0.977429</td>
-<td id="T_7dfa2_row1_col6" class="data row1 col6">0.942419</td>
+<td id="T_03005_row1_col0" class="data row1 col0">SVM LIN(C=0.5)</td>
+<td id="T_03005_row1_col1" class="data row1 col1">With Protected Classes</td>
+<td id="T_03005_row1_col2" class="data row1 col2">0.964048</td>
+<td id="T_03005_row1_col3" class="data row1 col3">0.984922</td>
+<td id="T_03005_row1_col4" class="data row1 col4">0.972858</td>
+<td id="T_03005_row1_col5" class="data row1 col5">0.977429</td>
+<td id="T_03005_row1_col6" class="data row1 col6">0.942419</td>
 </tr>
 <tr class="odd">
-<td id="T_7dfa2_row2_col0" class="data row2 col0">SVM LIN(C=1)</td>
-<td id="T_7dfa2_row2_col1" class="data row2 col1">Without Protected Classes</td>
-<td id="T_7dfa2_row2_col2" class="data row2 col2">0.961343</td>
-<td id="T_7dfa2_row2_col3" class="data row2 col3">0.982843</td>
-<td id="T_7dfa2_row2_col4" class="data row2 col4">0.971765</td>
-<td id="T_7dfa2_row2_col5" class="data row2 col5">0.977273</td>
-<td id="T_7dfa2_row2_col6" class="data row2 col6">0.935755</td>
+<td id="T_03005_row2_col0" class="data row2 col0">SVM LIN(C=1)</td>
+<td id="T_03005_row2_col1" class="data row2 col1">Without Protected Classes</td>
+<td id="T_03005_row2_col2" class="data row2 col2">0.961343</td>
+<td id="T_03005_row2_col3" class="data row2 col3">0.982843</td>
+<td id="T_03005_row2_col4" class="data row2 col4">0.971765</td>
+<td id="T_03005_row2_col5" class="data row2 col5">0.977273</td>
+<td id="T_03005_row2_col6" class="data row2 col6">0.935755</td>
 </tr>
 <tr class="even">
-<td id="T_7dfa2_row3_col0" class="data row3 col0">SVM LIN(C=1)</td>
-<td id="T_7dfa2_row3_col1" class="data row3 col1">With Protected Classes</td>
-<td id="T_7dfa2_row3_col2" class="data row3 col2">0.964171</td>
-<td id="T_7dfa2_row3_col3" class="data row3 col3">0.984896</td>
-<td id="T_7dfa2_row3_col4" class="data row3 col4">0.973030</td>
-<td id="T_7dfa2_row3_col5" class="data row3 col5">0.977273</td>
-<td id="T_7dfa2_row3_col6" class="data row3 col6">0.942420</td>
+<td id="T_03005_row3_col0" class="data row3 col0">SVM LIN(C=1)</td>
+<td id="T_03005_row3_col1" class="data row3 col1">With Protected Classes</td>
+<td id="T_03005_row3_col2" class="data row3 col2">0.964171</td>
+<td id="T_03005_row3_col3" class="data row3 col3">0.984896</td>
+<td id="T_03005_row3_col4" class="data row3 col4">0.973030</td>
+<td id="T_03005_row3_col5" class="data row3 col5">0.977273</td>
+<td id="T_03005_row3_col6" class="data row3 col6">0.942420</td>
 </tr>
 <tr class="odd">
-<td id="T_7dfa2_row4_col0" class="data row4 col0">SVM LIN(C=1.5)</td>
-<td id="T_7dfa2_row4_col1" class="data row4 col1">Without Protected Classes</td>
-<td id="T_7dfa2_row4_col2" class="data row4 col2">0.961416</td>
-<td id="T_7dfa2_row4_col3" class="data row4 col3">0.982564</td>
-<td id="T_7dfa2_row4_col4" class="data row4 col4">0.972139</td>
-<td id="T_7dfa2_row4_col5" class="data row4 col5">0.977324</td>
-<td id="T_7dfa2_row4_col6" class="data row4 col6">0.935093</td>
+<td id="T_03005_row4_col0" class="data row4 col0">SVM LIN(C=1.5)</td>
+<td id="T_03005_row4_col1" class="data row4 col1">Without Protected Classes</td>
+<td id="T_03005_row4_col2" class="data row4 col2">0.961416</td>
+<td id="T_03005_row4_col3" class="data row4 col3">0.982564</td>
+<td id="T_03005_row4_col4" class="data row4 col4">0.972139</td>
+<td id="T_03005_row4_col5" class="data row4 col5">0.977324</td>
+<td id="T_03005_row4_col6" class="data row4 col6">0.935093</td>
 </tr>
 <tr class="even">
-<td id="T_7dfa2_row5_col0" class="data row5 col0">SVM LIN(C=1.5)</td>
-<td id="T_7dfa2_row5_col1" class="data row5 col1">With Protected Classes</td>
-<td id="T_7dfa2_row5_col2" class="data row5 col2">0.964171</td>
-<td id="T_7dfa2_row5_col3" class="data row5 col3">0.984726</td>
-<td id="T_7dfa2_row5_col4" class="data row5 col4">0.973203</td>
-<td id="T_7dfa2_row5_col5" class="data row5 col5">0.977324</td>
-<td id="T_7dfa2_row5_col6" class="data row5 col6">0.941997</td>
+<td id="T_03005_row5_col0" class="data row5 col0">SVM LIN(C=1.5)</td>
+<td id="T_03005_row5_col1" class="data row5 col1">With Protected Classes</td>
+<td id="T_03005_row5_col2" class="data row5 col2">0.964171</td>
+<td id="T_03005_row5_col3" class="data row5 col3">0.984726</td>
+<td id="T_03005_row5_col4" class="data row5 col4">0.973203</td>
+<td id="T_03005_row5_col5" class="data row5 col5">0.977324</td>
+<td id="T_03005_row5_col6" class="data row5 col6">0.941997</td>
 </tr>
 </tbody>
 </table>
@@ -2217,77 +2231,77 @@ Figure&nbsp;10.13: Confusion Matrices for SIG Kernel, C=1.5
 </section>
 <section id="summary-table-all-sig-models" class="level4" data-number="10.3.3.4">
 <h4 data-number="10.3.3.4" class="anchored" data-anchor-id="summary-table-all-sig-models"><span class="header-section-number">10.3.3.4</span> Summary Table (All SIG Models)</h4>
-<div id="6391d06a" class="cell" data-execution_count="42">
+<div id="39f0633b" class="cell" data-execution_count="42">
 <div class="cell-output cell-output-display" data-execution_count="42">
 <style type="text/css">
 </style>
 
-<table id="T_919e8" data-quarto-postprocess="true" class="table table-sm table-striped small">
+<table id="T_fb80d" data-quarto-postprocess="true" class="table table-sm table-striped small">
 <thead>
 <tr class="header">
-<th id="T_919e8_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Model</th>
-<th id="T_919e8_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">Data</th>
-<th id="T_919e8_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">Accuracy</th>
-<th id="T_919e8_level0_col3" class="col_heading level0 col3" data-quarto-table-cell-role="th">Precision</th>
-<th id="T_919e8_level0_col4" class="col_heading level0 col4" data-quarto-table-cell-role="th">Recall</th>
-<th id="T_919e8_level0_col5" class="col_heading level0 col5" data-quarto-table-cell-role="th">F1</th>
-<th id="T_919e8_level0_col6" class="col_heading level0 col6" data-quarto-table-cell-role="th">ROC-AUC</th>
+<th id="T_fb80d_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Model</th>
+<th id="T_fb80d_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">Data</th>
+<th id="T_fb80d_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">Accuracy</th>
+<th id="T_fb80d_level0_col3" class="col_heading level0 col3" data-quarto-table-cell-role="th">Precision</th>
+<th id="T_fb80d_level0_col4" class="col_heading level0 col4" data-quarto-table-cell-role="th">Recall</th>
+<th id="T_fb80d_level0_col5" class="col_heading level0 col5" data-quarto-table-cell-role="th">F1</th>
+<th id="T_fb80d_level0_col6" class="col_heading level0 col6" data-quarto-table-cell-role="th">ROC-AUC</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td id="T_919e8_row0_col0" class="data row0 col0">SVM SIG(C=0.5)</td>
-<td id="T_919e8_row0_col1" class="data row0 col1">Without Protected Classes</td>
-<td id="T_919e8_row0_col2" class="data row0 col2">0.944375</td>
-<td id="T_919e8_row0_col3" class="data row0 col3">0.967320</td>
-<td id="T_919e8_row0_col4" class="data row0 col4">0.967654</td>
-<td id="T_919e8_row0_col5" class="data row0 col5">0.967487</td>
-<td id="T_919e8_row0_col6" class="data row0 col6">0.887225</td>
+<td id="T_fb80d_row0_col0" class="data row0 col0">SVM SIG(C=0.5)</td>
+<td id="T_fb80d_row0_col1" class="data row0 col1">Without Protected Classes</td>
+<td id="T_fb80d_row0_col2" class="data row0 col2">0.944375</td>
+<td id="T_fb80d_row0_col3" class="data row0 col3">0.967320</td>
+<td id="T_fb80d_row0_col4" class="data row0 col4">0.967654</td>
+<td id="T_fb80d_row0_col5" class="data row0 col5">0.967487</td>
+<td id="T_fb80d_row0_col6" class="data row0 col6">0.887225</td>
 </tr>
 <tr class="even">
-<td id="T_919e8_row1_col0" class="data row1 col0">SVM SIG(C=0.5)</td>
-<td id="T_919e8_row1_col1" class="data row1 col1">With Protected Classes</td>
-<td id="T_919e8_row1_col2" class="data row1 col2">0.947031</td>
-<td id="T_919e8_row1_col3" class="data row1 col3">0.970495</td>
-<td id="T_919e8_row1_col4" class="data row1 col4">0.967481</td>
-<td id="T_919e8_row1_col5" class="data row1 col5">0.967487</td>
-<td id="T_919e8_row1_col6" class="data row1 col6">0.896825</td>
+<td id="T_fb80d_row1_col0" class="data row1 col0">SVM SIG(C=0.5)</td>
+<td id="T_fb80d_row1_col1" class="data row1 col1">With Protected Classes</td>
+<td id="T_fb80d_row1_col2" class="data row1 col2">0.947031</td>
+<td id="T_fb80d_row1_col3" class="data row1 col3">0.970495</td>
+<td id="T_fb80d_row1_col4" class="data row1 col4">0.967481</td>
+<td id="T_fb80d_row1_col5" class="data row1 col5">0.967487</td>
+<td id="T_fb80d_row1_col6" class="data row1 col6">0.896825</td>
 </tr>
 <tr class="odd">
-<td id="T_919e8_row2_col0" class="data row2 col0">SVM SIG(C=1)</td>
-<td id="T_919e8_row2_col1" class="data row2 col1">Without Protected Classes</td>
-<td id="T_919e8_row2_col2" class="data row2 col2">0.939407</td>
-<td id="T_919e8_row2_col3" class="data row2 col3">0.965541</td>
-<td id="T_919e8_row2_col4" class="data row2 col4">0.963542</td>
-<td id="T_919e8_row2_col5" class="data row2 col5">0.964541</td>
-<td id="T_919e8_row2_col6" class="data row2 col6">0.880157</td>
+<td id="T_fb80d_row2_col0" class="data row2 col0">SVM SIG(C=1)</td>
+<td id="T_fb80d_row2_col1" class="data row2 col1">Without Protected Classes</td>
+<td id="T_fb80d_row2_col2" class="data row2 col2">0.939407</td>
+<td id="T_fb80d_row2_col3" class="data row2 col3">0.965541</td>
+<td id="T_fb80d_row2_col4" class="data row2 col4">0.963542</td>
+<td id="T_fb80d_row2_col5" class="data row2 col5">0.964541</td>
+<td id="T_fb80d_row2_col6" class="data row2 col6">0.880157</td>
 </tr>
 <tr class="even">
-<td id="T_919e8_row3_col0" class="data row3 col0">SVM SIG(C=1)</td>
-<td id="T_919e8_row3_col1" class="data row3 col1">With Protected Classes</td>
-<td id="T_919e8_row3_col2" class="data row3 col2">0.944473</td>
-<td id="T_919e8_row3_col3" class="data row3 col3">0.967593</td>
-<td id="T_919e8_row3_col4" class="data row3 col4">0.967481</td>
-<td id="T_919e8_row3_col5" class="data row3 col5">0.964541</td>
-<td id="T_919e8_row3_col6" class="data row3 col6">0.887989</td>
+<td id="T_fb80d_row3_col0" class="data row3 col0">SVM SIG(C=1)</td>
+<td id="T_fb80d_row3_col1" class="data row3 col1">With Protected Classes</td>
+<td id="T_fb80d_row3_col2" class="data row3 col2">0.944473</td>
+<td id="T_fb80d_row3_col3" class="data row3 col3">0.967593</td>
+<td id="T_fb80d_row3_col4" class="data row3 col4">0.967481</td>
+<td id="T_fb80d_row3_col5" class="data row3 col5">0.964541</td>
+<td id="T_fb80d_row3_col6" class="data row3 col6">0.887989</td>
 </tr>
 <tr class="odd">
-<td id="T_919e8_row4_col0" class="data row4 col0">SVM SIG(C=1.5)</td>
-<td id="T_919e8_row4_col1" class="data row4 col1">Without Protected Classes</td>
-<td id="T_919e8_row4_col2" class="data row4 col2">0.964171</td>
-<td id="T_919e8_row4_col3" class="data row4 col3">0.984726</td>
-<td id="T_919e8_row4_col4" class="data row4 col4">0.973203</td>
-<td id="T_919e8_row4_col5" class="data row4 col5">0.978931</td>
-<td id="T_919e8_row4_col6" class="data row4 col6">0.941997</td>
+<td id="T_fb80d_row4_col0" class="data row4 col0">SVM SIG(C=1.5)</td>
+<td id="T_fb80d_row4_col1" class="data row4 col1">Without Protected Classes</td>
+<td id="T_fb80d_row4_col2" class="data row4 col2">0.964171</td>
+<td id="T_fb80d_row4_col3" class="data row4 col3">0.984726</td>
+<td id="T_fb80d_row4_col4" class="data row4 col4">0.973203</td>
+<td id="T_fb80d_row4_col5" class="data row4 col5">0.978931</td>
+<td id="T_fb80d_row4_col6" class="data row4 col6">0.941997</td>
 </tr>
 <tr class="even">
-<td id="T_919e8_row5_col0" class="data row5 col0">SVM SIG(C=1.5)</td>
-<td id="T_919e8_row5_col1" class="data row5 col1">With Protected Classes</td>
-<td id="T_919e8_row5_col2" class="data row5 col2">0.944375</td>
-<td id="T_919e8_row5_col3" class="data row5 col3">0.967320</td>
-<td id="T_919e8_row5_col4" class="data row5 col4">0.967654</td>
-<td id="T_919e8_row5_col5" class="data row5 col5">0.978931</td>
-<td id="T_919e8_row5_col6" class="data row5 col6">0.887225</td>
+<td id="T_fb80d_row5_col0" class="data row5 col0">SVM SIG(C=1.5)</td>
+<td id="T_fb80d_row5_col1" class="data row5 col1">With Protected Classes</td>
+<td id="T_fb80d_row5_col2" class="data row5 col2">0.944375</td>
+<td id="T_fb80d_row5_col3" class="data row5 col3">0.967320</td>
+<td id="T_fb80d_row5_col4" class="data row5 col4">0.967654</td>
+<td id="T_fb80d_row5_col5" class="data row5 col5">0.978931</td>
+<td id="T_fb80d_row5_col6" class="data row5 col6">0.887225</td>
 </tr>
 </tbody>
 </table>
@@ -2336,180 +2350,180 @@ Table&nbsp;10.5: Summary Performance Metrics, all SVM models
 <style type="text/css">
 </style>
 
-<table id="T_68715" class="do-not-create-environment cell table table-sm table-striped small" data-quarto-postprocess="true">
+<table id="T_35959" class="do-not-create-environment cell table table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
-<th id="T_68715_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Model</th>
-<th id="T_68715_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">Data</th>
-<th id="T_68715_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">Accuracy</th>
-<th id="T_68715_level0_col3" class="col_heading level0 col3" data-quarto-table-cell-role="th">Precision</th>
-<th id="T_68715_level0_col4" class="col_heading level0 col4" data-quarto-table-cell-role="th">Recall</th>
-<th id="T_68715_level0_col5" class="col_heading level0 col5" data-quarto-table-cell-role="th">F1</th>
-<th id="T_68715_level0_col6" class="col_heading level0 col6" data-quarto-table-cell-role="th">ROC-AUC</th>
+<th id="T_35959_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Model</th>
+<th id="T_35959_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">Data</th>
+<th id="T_35959_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">Accuracy</th>
+<th id="T_35959_level0_col3" class="col_heading level0 col3" data-quarto-table-cell-role="th">Precision</th>
+<th id="T_35959_level0_col4" class="col_heading level0 col4" data-quarto-table-cell-role="th">Recall</th>
+<th id="T_35959_level0_col5" class="col_heading level0 col5" data-quarto-table-cell-role="th">F1</th>
+<th id="T_35959_level0_col6" class="col_heading level0 col6" data-quarto-table-cell-role="th">ROC-AUC</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td id="T_68715_row0_col0" class="data row0 col0">SVM RBF(C=0.5)</td>
-<td id="T_68715_row0_col1" class="data row0 col1">Without Protected Classes</td>
-<td id="T_68715_row0_col2" class="data row0 col2">0.963408</td>
-<td id="T_68715_row0_col3" class="data row0 col3">0.984684</td>
-<td id="T_68715_row0_col4" class="data row0 col4">0.972340</td>
-<td id="T_68715_row0_col5" class="data row0 col5">0.978473</td>
-<td id="T_68715_row0_col6" class="data row0 col6">0.941480</td>
+<td id="T_35959_row0_col0" class="data row0 col0">SVM RBF(C=0.5)</td>
+<td id="T_35959_row0_col1" class="data row0 col1">Without Protected Classes</td>
+<td id="T_35959_row0_col2" class="data row0 col2">0.963408</td>
+<td id="T_35959_row0_col3" class="data row0 col3">0.984684</td>
+<td id="T_35959_row0_col4" class="data row0 col4">0.972340</td>
+<td id="T_35959_row0_col5" class="data row0 col5">0.978473</td>
+<td id="T_35959_row0_col6" class="data row0 col6">0.941480</td>
 </tr>
 <tr class="even">
-<td id="T_68715_row1_col0" class="data row1 col0">SVM RBF(C=0.5)</td>
-<td id="T_68715_row1_col1" class="data row1 col1">With Protected Classes</td>
-<td id="T_68715_row1_col2" class="data row1 col2">0.962671</td>
-<td id="T_68715_row1_col3" class="data row1 col3">0.981249</td>
-<td id="T_68715_row1_col4" class="data row1 col4">0.974986</td>
-<td id="T_68715_row1_col5" class="data row1 col5">0.978473</td>
-<td id="T_68715_row1_col6" class="data row1 col6">0.932438</td>
+<td id="T_35959_row1_col0" class="data row1 col0">SVM RBF(C=0.5)</td>
+<td id="T_35959_row1_col1" class="data row1 col1">With Protected Classes</td>
+<td id="T_35959_row1_col2" class="data row1 col2">0.962671</td>
+<td id="T_35959_row1_col3" class="data row1 col3">0.981249</td>
+<td id="T_35959_row1_col4" class="data row1 col4">0.974986</td>
+<td id="T_35959_row1_col5" class="data row1 col5">0.978473</td>
+<td id="T_35959_row1_col6" class="data row1 col6">0.932438</td>
 </tr>
 <tr class="odd">
-<td id="T_68715_row2_col0" class="data row2 col0">SVM (RBF,C=1)</td>
-<td id="T_68715_row2_col1" class="data row2 col1">Without Protected Classes</td>
-<td id="T_68715_row2_col2" class="data row2 col2">0.963925</td>
-<td id="T_68715_row2_col3" class="data row2 col3">0.985485</td>
-<td id="T_68715_row2_col4" class="data row2 col4">0.972139</td>
-<td id="T_68715_row2_col5" class="data row2 col5">0.978767</td>
-<td id="T_68715_row2_col6" class="data row2 col6">0.943759</td>
+<td id="T_35959_row2_col0" class="data row2 col0">SVM (RBF,C=1)</td>
+<td id="T_35959_row2_col1" class="data row2 col1">Without Protected Classes</td>
+<td id="T_35959_row2_col2" class="data row2 col2">0.963925</td>
+<td id="T_35959_row2_col3" class="data row2 col3">0.985485</td>
+<td id="T_35959_row2_col4" class="data row2 col4">0.972139</td>
+<td id="T_35959_row2_col5" class="data row2 col5">0.978767</td>
+<td id="T_35959_row2_col6" class="data row2 col6">0.943759</td>
 </tr>
 <tr class="even">
-<td id="T_68715_row3_col0" class="data row3 col0">SVM (RBF,C=1)</td>
-<td id="T_68715_row3_col1" class="data row3 col1">With Protected Classes</td>
-<td id="T_68715_row3_col2" class="data row3 col2">0.963999</td>
-<td id="T_68715_row3_col3" class="data row3 col3">0.982785</td>
-<td id="T_68715_row3_col4" class="data row3 col4">0.974986</td>
-<td id="T_68715_row3_col5" class="data row3 col5">0.978767</td>
-<td id="T_68715_row3_col6" class="data row3 col6">0.937026</td>
+<td id="T_35959_row3_col0" class="data row3 col0">SVM (RBF,C=1)</td>
+<td id="T_35959_row3_col1" class="data row3 col1">With Protected Classes</td>
+<td id="T_35959_row3_col2" class="data row3 col2">0.963999</td>
+<td id="T_35959_row3_col3" class="data row3 col3">0.982785</td>
+<td id="T_35959_row3_col4" class="data row3 col4">0.974986</td>
+<td id="T_35959_row3_col5" class="data row3 col5">0.978767</td>
+<td id="T_35959_row3_col6" class="data row3 col6">0.937026</td>
 </tr>
 <tr class="odd">
-<td id="T_68715_row4_col0" class="data row4 col0">SVM (RBF,C=1.5)</td>
-<td id="T_68715_row4_col1" class="data row4 col1">Without Protected Classes</td>
-<td id="T_68715_row4_col2" class="data row4 col2">0.963925</td>
-<td id="T_68715_row4_col3" class="data row4 col3">0.985485</td>
-<td id="T_68715_row4_col4" class="data row4 col4">0.972139</td>
-<td id="T_68715_row4_col5" class="data row4 col5">0.978767</td>
-<td id="T_68715_row4_col6" class="data row4 col6">0.943759</td>
+<td id="T_35959_row4_col0" class="data row4 col0">SVM (RBF,C=1.5)</td>
+<td id="T_35959_row4_col1" class="data row4 col1">Without Protected Classes</td>
+<td id="T_35959_row4_col2" class="data row4 col2">0.963925</td>
+<td id="T_35959_row4_col3" class="data row4 col3">0.985485</td>
+<td id="T_35959_row4_col4" class="data row4 col4">0.972139</td>
+<td id="T_35959_row4_col5" class="data row4 col5">0.978767</td>
+<td id="T_35959_row4_col6" class="data row4 col6">0.943759</td>
 </tr>
 <tr class="even">
-<td id="T_68715_row5_col0" class="data row5 col0">SVM (RBF,C=1.5)</td>
-<td id="T_68715_row5_col1" class="data row5 col1">With Protected Classes</td>
-<td id="T_68715_row5_col2" class="data row5 col2">0.963999</td>
-<td id="T_68715_row5_col3" class="data row5 col3">0.982785</td>
-<td id="T_68715_row5_col4" class="data row5 col4">0.974986</td>
-<td id="T_68715_row5_col5" class="data row5 col5">0.978767</td>
-<td id="T_68715_row5_col6" class="data row5 col6">0.937026</td>
+<td id="T_35959_row5_col0" class="data row5 col0">SVM (RBF,C=1.5)</td>
+<td id="T_35959_row5_col1" class="data row5 col1">With Protected Classes</td>
+<td id="T_35959_row5_col2" class="data row5 col2">0.963999</td>
+<td id="T_35959_row5_col3" class="data row5 col3">0.982785</td>
+<td id="T_35959_row5_col4" class="data row5 col4">0.974986</td>
+<td id="T_35959_row5_col5" class="data row5 col5">0.978767</td>
+<td id="T_35959_row5_col6" class="data row5 col6">0.937026</td>
 </tr>
 <tr class="odd">
-<td id="T_68715_row6_col0" class="data row6 col0">SVM LIN(C=0.5)</td>
-<td id="T_68715_row6_col1" class="data row6 col1">Without Protected Classes</td>
-<td id="T_68715_row6_col2" class="data row6 col2">0.961638</td>
-<td id="T_68715_row6_col3" class="data row6 col3">0.983777</td>
-<td id="T_68715_row6_col4" class="data row6 col4">0.971162</td>
-<td id="T_68715_row6_col5" class="data row6 col5">0.977429</td>
-<td id="T_68715_row6_col6" class="data row6 col6">0.938257</td>
+<td id="T_35959_row6_col0" class="data row6 col0">SVM LIN(C=0.5)</td>
+<td id="T_35959_row6_col1" class="data row6 col1">Without Protected Classes</td>
+<td id="T_35959_row6_col2" class="data row6 col2">0.961638</td>
+<td id="T_35959_row6_col3" class="data row6 col3">0.983777</td>
+<td id="T_35959_row6_col4" class="data row6 col4">0.971162</td>
+<td id="T_35959_row6_col5" class="data row6 col5">0.977429</td>
+<td id="T_35959_row6_col6" class="data row6 col6">0.938257</td>
 </tr>
 <tr class="even">
-<td id="T_68715_row7_col0" class="data row7 col0">SVM LIN(C=0.5)</td>
-<td id="T_68715_row7_col1" class="data row7 col1">With Protected Classes</td>
-<td id="T_68715_row7_col2" class="data row7 col2">0.964048</td>
-<td id="T_68715_row7_col3" class="data row7 col3">0.984922</td>
-<td id="T_68715_row7_col4" class="data row7 col4">0.972858</td>
-<td id="T_68715_row7_col5" class="data row7 col5">0.977429</td>
-<td id="T_68715_row7_col6" class="data row7 col6">0.942419</td>
+<td id="T_35959_row7_col0" class="data row7 col0">SVM LIN(C=0.5)</td>
+<td id="T_35959_row7_col1" class="data row7 col1">With Protected Classes</td>
+<td id="T_35959_row7_col2" class="data row7 col2">0.964048</td>
+<td id="T_35959_row7_col3" class="data row7 col3">0.984922</td>
+<td id="T_35959_row7_col4" class="data row7 col4">0.972858</td>
+<td id="T_35959_row7_col5" class="data row7 col5">0.977429</td>
+<td id="T_35959_row7_col6" class="data row7 col6">0.942419</td>
 </tr>
 <tr class="odd">
-<td id="T_68715_row8_col0" class="data row8 col0">SVM LIN(C=1)</td>
-<td id="T_68715_row8_col1" class="data row8 col1">Without Protected Classes</td>
-<td id="T_68715_row8_col2" class="data row8 col2">0.961343</td>
-<td id="T_68715_row8_col3" class="data row8 col3">0.982843</td>
-<td id="T_68715_row8_col4" class="data row8 col4">0.971765</td>
-<td id="T_68715_row8_col5" class="data row8 col5">0.977273</td>
-<td id="T_68715_row8_col6" class="data row8 col6">0.935755</td>
+<td id="T_35959_row8_col0" class="data row8 col0">SVM LIN(C=1)</td>
+<td id="T_35959_row8_col1" class="data row8 col1">Without Protected Classes</td>
+<td id="T_35959_row8_col2" class="data row8 col2">0.961343</td>
+<td id="T_35959_row8_col3" class="data row8 col3">0.982843</td>
+<td id="T_35959_row8_col4" class="data row8 col4">0.971765</td>
+<td id="T_35959_row8_col5" class="data row8 col5">0.977273</td>
+<td id="T_35959_row8_col6" class="data row8 col6">0.935755</td>
 </tr>
 <tr class="even">
-<td id="T_68715_row9_col0" class="data row9 col0">SVM LIN(C=1)</td>
-<td id="T_68715_row9_col1" class="data row9 col1">With Protected Classes</td>
-<td id="T_68715_row9_col2" class="data row9 col2">0.964171</td>
-<td id="T_68715_row9_col3" class="data row9 col3">0.984896</td>
-<td id="T_68715_row9_col4" class="data row9 col4">0.973030</td>
-<td id="T_68715_row9_col5" class="data row9 col5">0.977273</td>
-<td id="T_68715_row9_col6" class="data row9 col6">0.942420</td>
+<td id="T_35959_row9_col0" class="data row9 col0">SVM LIN(C=1)</td>
+<td id="T_35959_row9_col1" class="data row9 col1">With Protected Classes</td>
+<td id="T_35959_row9_col2" class="data row9 col2">0.964171</td>
+<td id="T_35959_row9_col3" class="data row9 col3">0.984896</td>
+<td id="T_35959_row9_col4" class="data row9 col4">0.973030</td>
+<td id="T_35959_row9_col5" class="data row9 col5">0.977273</td>
+<td id="T_35959_row9_col6" class="data row9 col6">0.942420</td>
 </tr>
 <tr class="odd">
-<td id="T_68715_row10_col0" class="data row10 col0">SVM LIN(C=1.5)</td>
-<td id="T_68715_row10_col1" class="data row10 col1">Without Protected Classes</td>
-<td id="T_68715_row10_col2" class="data row10 col2">0.961416</td>
-<td id="T_68715_row10_col3" class="data row10 col3">0.982564</td>
-<td id="T_68715_row10_col4" class="data row10 col4">0.972139</td>
-<td id="T_68715_row10_col5" class="data row10 col5">0.977324</td>
-<td id="T_68715_row10_col6" class="data row10 col6">0.935093</td>
+<td id="T_35959_row10_col0" class="data row10 col0">SVM LIN(C=1.5)</td>
+<td id="T_35959_row10_col1" class="data row10 col1">Without Protected Classes</td>
+<td id="T_35959_row10_col2" class="data row10 col2">0.961416</td>
+<td id="T_35959_row10_col3" class="data row10 col3">0.982564</td>
+<td id="T_35959_row10_col4" class="data row10 col4">0.972139</td>
+<td id="T_35959_row10_col5" class="data row10 col5">0.977324</td>
+<td id="T_35959_row10_col6" class="data row10 col6">0.935093</td>
 </tr>
 <tr class="even">
-<td id="T_68715_row11_col0" class="data row11 col0">SVM LIN(C=1.5)</td>
-<td id="T_68715_row11_col1" class="data row11 col1">With Protected Classes</td>
-<td id="T_68715_row11_col2" class="data row11 col2">0.964171</td>
-<td id="T_68715_row11_col3" class="data row11 col3">0.984726</td>
-<td id="T_68715_row11_col4" class="data row11 col4">0.973203</td>
-<td id="T_68715_row11_col5" class="data row11 col5">0.977324</td>
-<td id="T_68715_row11_col6" class="data row11 col6">0.941997</td>
+<td id="T_35959_row11_col0" class="data row11 col0">SVM LIN(C=1.5)</td>
+<td id="T_35959_row11_col1" class="data row11 col1">With Protected Classes</td>
+<td id="T_35959_row11_col2" class="data row11 col2">0.964171</td>
+<td id="T_35959_row11_col3" class="data row11 col3">0.984726</td>
+<td id="T_35959_row11_col4" class="data row11 col4">0.973203</td>
+<td id="T_35959_row11_col5" class="data row11 col5">0.977324</td>
+<td id="T_35959_row11_col6" class="data row11 col6">0.941997</td>
 </tr>
 <tr class="odd">
-<td id="T_68715_row12_col0" class="data row12 col0">SVM SIG(C=0.5)</td>
-<td id="T_68715_row12_col1" class="data row12 col1">Without Protected Classes</td>
-<td id="T_68715_row12_col2" class="data row12 col2">0.944375</td>
-<td id="T_68715_row12_col3" class="data row12 col3">0.967320</td>
-<td id="T_68715_row12_col4" class="data row12 col4">0.967654</td>
-<td id="T_68715_row12_col5" class="data row12 col5">0.967487</td>
-<td id="T_68715_row12_col6" class="data row12 col6">0.887225</td>
+<td id="T_35959_row12_col0" class="data row12 col0">SVM SIG(C=0.5)</td>
+<td id="T_35959_row12_col1" class="data row12 col1">Without Protected Classes</td>
+<td id="T_35959_row12_col2" class="data row12 col2">0.944375</td>
+<td id="T_35959_row12_col3" class="data row12 col3">0.967320</td>
+<td id="T_35959_row12_col4" class="data row12 col4">0.967654</td>
+<td id="T_35959_row12_col5" class="data row12 col5">0.967487</td>
+<td id="T_35959_row12_col6" class="data row12 col6">0.887225</td>
 </tr>
 <tr class="even">
-<td id="T_68715_row13_col0" class="data row13 col0">SVM SIG(C=0.5)</td>
-<td id="T_68715_row13_col1" class="data row13 col1">With Protected Classes</td>
-<td id="T_68715_row13_col2" class="data row13 col2">0.947031</td>
-<td id="T_68715_row13_col3" class="data row13 col3">0.970495</td>
-<td id="T_68715_row13_col4" class="data row13 col4">0.967481</td>
-<td id="T_68715_row13_col5" class="data row13 col5">0.967487</td>
-<td id="T_68715_row13_col6" class="data row13 col6">0.896825</td>
+<td id="T_35959_row13_col0" class="data row13 col0">SVM SIG(C=0.5)</td>
+<td id="T_35959_row13_col1" class="data row13 col1">With Protected Classes</td>
+<td id="T_35959_row13_col2" class="data row13 col2">0.947031</td>
+<td id="T_35959_row13_col3" class="data row13 col3">0.970495</td>
+<td id="T_35959_row13_col4" class="data row13 col4">0.967481</td>
+<td id="T_35959_row13_col5" class="data row13 col5">0.967487</td>
+<td id="T_35959_row13_col6" class="data row13 col6">0.896825</td>
 </tr>
 <tr class="odd">
-<td id="T_68715_row14_col0" class="data row14 col0">SVM SIG(C=1)</td>
-<td id="T_68715_row14_col1" class="data row14 col1">Without Protected Classes</td>
-<td id="T_68715_row14_col2" class="data row14 col2">0.939407</td>
-<td id="T_68715_row14_col3" class="data row14 col3">0.965541</td>
-<td id="T_68715_row14_col4" class="data row14 col4">0.963542</td>
-<td id="T_68715_row14_col5" class="data row14 col5">0.964541</td>
-<td id="T_68715_row14_col6" class="data row14 col6">0.880157</td>
+<td id="T_35959_row14_col0" class="data row14 col0">SVM SIG(C=1)</td>
+<td id="T_35959_row14_col1" class="data row14 col1">Without Protected Classes</td>
+<td id="T_35959_row14_col2" class="data row14 col2">0.939407</td>
+<td id="T_35959_row14_col3" class="data row14 col3">0.965541</td>
+<td id="T_35959_row14_col4" class="data row14 col4">0.963542</td>
+<td id="T_35959_row14_col5" class="data row14 col5">0.964541</td>
+<td id="T_35959_row14_col6" class="data row14 col6">0.880157</td>
 </tr>
 <tr class="even">
-<td id="T_68715_row15_col0" class="data row15 col0">SVM SIG(C=1)</td>
-<td id="T_68715_row15_col1" class="data row15 col1">With Protected Classes</td>
-<td id="T_68715_row15_col2" class="data row15 col2">0.944473</td>
-<td id="T_68715_row15_col3" class="data row15 col3">0.967593</td>
-<td id="T_68715_row15_col4" class="data row15 col4">0.967481</td>
-<td id="T_68715_row15_col5" class="data row15 col5">0.964541</td>
-<td id="T_68715_row15_col6" class="data row15 col6">0.887989</td>
+<td id="T_35959_row15_col0" class="data row15 col0">SVM SIG(C=1)</td>
+<td id="T_35959_row15_col1" class="data row15 col1">With Protected Classes</td>
+<td id="T_35959_row15_col2" class="data row15 col2">0.944473</td>
+<td id="T_35959_row15_col3" class="data row15 col3">0.967593</td>
+<td id="T_35959_row15_col4" class="data row15 col4">0.967481</td>
+<td id="T_35959_row15_col5" class="data row15 col5">0.964541</td>
+<td id="T_35959_row15_col6" class="data row15 col6">0.887989</td>
 </tr>
 <tr class="odd">
-<td id="T_68715_row16_col0" class="data row16 col0">SVM SIG(C=1.5)</td>
-<td id="T_68715_row16_col1" class="data row16 col1">Without Protected Classes</td>
-<td id="T_68715_row16_col2" class="data row16 col2">0.964171</td>
-<td id="T_68715_row16_col3" class="data row16 col3">0.984726</td>
-<td id="T_68715_row16_col4" class="data row16 col4">0.973203</td>
-<td id="T_68715_row16_col5" class="data row16 col5">0.978931</td>
-<td id="T_68715_row16_col6" class="data row16 col6">0.941997</td>
+<td id="T_35959_row16_col0" class="data row16 col0">SVM SIG(C=1.5)</td>
+<td id="T_35959_row16_col1" class="data row16 col1">Without Protected Classes</td>
+<td id="T_35959_row16_col2" class="data row16 col2">0.964171</td>
+<td id="T_35959_row16_col3" class="data row16 col3">0.984726</td>
+<td id="T_35959_row16_col4" class="data row16 col4">0.973203</td>
+<td id="T_35959_row16_col5" class="data row16 col5">0.978931</td>
+<td id="T_35959_row16_col6" class="data row16 col6">0.941997</td>
 </tr>
 <tr class="even">
-<td id="T_68715_row17_col0" class="data row17 col0">SVM SIG(C=1.5)</td>
-<td id="T_68715_row17_col1" class="data row17 col1">With Protected Classes</td>
-<td id="T_68715_row17_col2" class="data row17 col2">0.944375</td>
-<td id="T_68715_row17_col3" class="data row17 col3">0.967320</td>
-<td id="T_68715_row17_col4" class="data row17 col4">0.967654</td>
-<td id="T_68715_row17_col5" class="data row17 col5">0.978931</td>
-<td id="T_68715_row17_col6" class="data row17 col6">0.887225</td>
+<td id="T_35959_row17_col0" class="data row17 col0">SVM SIG(C=1.5)</td>
+<td id="T_35959_row17_col1" class="data row17 col1">With Protected Classes</td>
+<td id="T_35959_row17_col2" class="data row17 col2">0.944375</td>
+<td id="T_35959_row17_col3" class="data row17 col3">0.967320</td>
+<td id="T_35959_row17_col4" class="data row17 col4">0.967654</td>
+<td id="T_35959_row17_col5" class="data row17 col5">0.978931</td>
+<td id="T_35959_row17_col6" class="data row17 col6">0.887225</td>
 </tr>
 </tbody>
 </table>
